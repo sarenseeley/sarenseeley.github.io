@@ -2,7 +2,7 @@
 title: "Saren H. Seeley"
 author: "Saren Seeley"
 output:
-  html_notebook:
+  html_document:
     number_sections: no
     theme: paper
     toc: yes
