@@ -1,4 +1,6 @@
 name: "my-website"
+output_dir: "."
+exclude: ["*.Rproj", "*.css"]
 navbar:
   title: "Saren H. Seeley"
   left:
