@@ -1,9 +1,15 @@
 ---
-title: "Saren Seeley"
+title: "Saren H. Seeley"
 author: "Saren Seeley"
-date: "4/19/2019"
-output: html_document
+output:
+  html_notebook:
+    number_sections: no
+    theme: paper
+    toc: yes
+    toc_float: yes
+    code_folding: show
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
