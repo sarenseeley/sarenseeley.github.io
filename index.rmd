@@ -1,5 +1,10 @@
 ---
 title: "My Website"
+author: "Saren Seeley"
+output:
+  html_document:
+    number_sections: no
+    theme: paper
 ---
 
 Hello, Website!
