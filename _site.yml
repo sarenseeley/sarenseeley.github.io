@@ -9,7 +9,9 @@ navbar:
     - text: "About"
       href: about.html
     - text: "CV"
-      href: cv.html
+      href: CVmar2019.pdf
+    - text: "Notebooks"
+      href: notebooks.html
 output:
   html_document:
     theme: cosmo
