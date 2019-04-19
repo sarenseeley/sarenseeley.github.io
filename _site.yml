@@ -3,7 +3,7 @@ navbar:
   title: "Saren H. Seeley"
   left:
     - text: "Home"
-      href: index.html
+      href: README.html
     - text: "About"
       href: about.html
     - text: "CV"
