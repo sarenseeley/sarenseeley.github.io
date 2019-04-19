@@ -8,6 +8,8 @@ output:
     toc: yes
     toc_float: yes
     code_folding: show
+editor_options: 
+  chunk_output_type: inline
 ---
 
 
