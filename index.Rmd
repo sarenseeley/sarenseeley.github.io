@@ -2,5 +2,4 @@
 title: ""
 ---
 
-<p>
 (In progress - making a personal website using RMarkdown to see if I can figure it out.)
