@@ -6,3 +6,6 @@ setwd("~/Documents/website/sarenseeley.github.io")
 
 #render your sweet site. 
 rmarkdown::render_site()
+
+
+
