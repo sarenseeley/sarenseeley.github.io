@@ -1,5 +1,5 @@
 name: "my-website"
-output_dir: "/Users/sarenseeley/Documents/website/sarenseeley.github.io"
+output_dir: "."
 exclude: ["*.Rproj", "*.css"]
 navbar:
   title: "Saren H. Seeley"
