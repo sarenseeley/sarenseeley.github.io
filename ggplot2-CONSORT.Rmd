@@ -1,5 +1,4 @@
 ---
-<<<<<<< HEAD
 title: 'CONSORT diagram: OT fMRI study / dissertation'
 author: "Saren Seeley"
 date: "02-17-2019"
@@ -12,17 +11,7 @@ output:
     theme: paper
     toc: no
     toc_float: no
-=======
-title: "CONSORT diagram: OT fMRI study"
-author: "Saren Seeley"
-date: "02-17-2019"
-output: 
-  html_notebook:
-    toc: no
-    number_sections: no
-    toc_float: no
-    theme: "paper"
->>>>>>> b8786153794af192a802b2d2b3a6045bde2d6bb8
+
 ---
 
 ### Making a CONSORT diagram using ggplot2
@@ -161,8 +150,8 @@ p6
 ggsave("consort.png", plot = p6, dpi=600, width = 8, height = 6)
 ```
 
-<<<<<<< HEAD
+
 The saved file looks like this:
-=======
->>>>>>> b8786153794af192a802b2d2b3a6045bde2d6bb8
+
 ![](consort.png)
+

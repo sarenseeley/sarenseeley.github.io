@@ -8,7 +8,7 @@ Various notebooks, resources, and other tidbits from some of my projects.
 
 [Slides: Intro to using BIDS/dcm2niix and fMRIPrep](https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0) presentation from UA Brain Mapping Workgroup meeting 11/16/18 
 
-[Drawing a CONSORT plot with ggplot2](/ggplot2_CONSORT.html) (based on Peter Higgins' [tutorial](https://rpubs.com/phiggins/461686))
+[Drawing a CONSORT diagram with ggplot2](/ggplot2_CONSORT.nb.html) (based on [this tutorial](https://rpubs.com/phiggins/461686))
 
 <p>&nbsp;<p>
 ####Other resources I've found helpful
