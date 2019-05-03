@@ -5,13 +5,6 @@ date: "02-17-2019"
 output:
   html_document:
     df_print: paged
-    toc: no
-  html_notebook:
-    number_sections: no
-    theme: paper
-    toc: no
-    toc_float: no
-
 ---
 
 ### Making a CONSORT diagram using ggplot2

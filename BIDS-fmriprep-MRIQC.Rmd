@@ -3,11 +3,10 @@ title: "Tutorial: BIDS, fMRIPrep, MRIQC"
 author: "Saren Seeley"
 date: "Last updated 03-20-2019"
 output: 
-  html_notebook:
+  html_document:
     toc: yes
     number_sections: no
     toc_float: yes
-    theme: "default"
 ---
 # BIDS
 The Brain Imaging Data Structure (BIDS) is a standardized format for organizing and describing neuroimaging data and study outputs ([Gorgolewski et al., 2016](https://www.nature.com/articles/sdata201644)). 

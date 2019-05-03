@@ -321,16 +321,9 @@ $(document).ready(function () {
 <div id="making-a-consort-diagram-using-ggplot2" class="section level3">
 <h3>Making a CONSORT diagram using ggplot2</h3>
 <p>Based on this very helpful tutorial: <a href="https://rpubs.com/phiggins/461686" class="uri">https://rpubs.com/phiggins/461686</a></p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.4
-## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
-## ✔ tidyr   0.8.1     ✔ stringr 1.4.0
-## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code># create an empty 100x100 grid
+<pre class="r"><code>library(tidyverse)
+
+# create an empty 100x100 grid
 data &lt;- tibble(x= 0:100, y= 0:100)
 
 data %&gt;% 
