@@ -1,0 +1,827 @@
+---
+title: "Tutorial: BIDS, fMRIPrep, MRIQC"
+author: "Saren Seeley"
+date: "Last updated 03-20-2019"
+output: 
+  html_notebook:
+    toc: yes
+    number_sections: no
+    toc_float: yes
+    theme: "default"
+---
+# BIDS
+The Brain Imaging Data Structure (BIDS) is a standardized format for organizing and describing neuroimaging data and study outputs ([Gorgolewski et al., 2016](https://www.nature.com/articles/sdata201644)). 
+
+## Why BIDS?
+
+Having your data in BIDS format is helpful in several ways:
+
+1. Heterogeneity in how complex data are organized can lead to confusion (including within-lab as well as between-lab), and unnecessary manual metadata input.
+2. Researchers can take advantage of the numerous and ever-expanding library of "BIDS apps", or software packages that are written to take valid BIDS datasets as input. 
+3. Avoids the need for highly study- or lab-specific pipelines --> improves reproducibility --> for the field as a whole, we can be more confident in our results.
+4. The ability to automatically validate a dataset allows you to spot issues (files missing or in the wrong place, inconsistent naming, etc.) and makes curation easier and faster.
+5. Having a standardized format facilitates data reuse/sharing (benefits for cost-effectiveness of research $).
+
+## Getting started with BIDS
+The [BIDS Starter Kit](https://github.com/bids-standard/bids-starter-kit) is a "community-curated collection of tutorials, wikis, and templates to get you started with creating BIDS compliant datasets." As the name implies, this is a good place to start.
+
+Also spend some time checking out the [BIDS website](http://bids.neuroimaging.io) and looking over the [specification](https://bids-specification.readthedocs.io/en/latest/).
+
+## The BIDS structure
+
+Great simple description of the BIDS folder hierarchy here: https://github.com/bids-standard/bids-starter-kit/wiki/The-BIDS-folder-hierarchy
+
+As well, there are three main types of files you’ll find in a BIDS dataset:
+
+* .json files that contain metadata as key:value pairs
+* .tsv files that contain tables of metadata
+* Raw data files (usually .nii.gz files for fMRI data)
+
+### Example
+This is my directory structure from the oxytocin grief study (resting state data only), where we administered two different treatments ("A" and "B") at two sessions a week apart:
+
+```
+restingstate/
+└─ sourcedata
+   └── <DICOMS go here>
+└─ sub-101
+   └── ses-txA
+       └── anat
+       └── func
+   └── ses-txB
+       └── anat
+       └── func
+└── derivatives
+       └── fmriprep
+           dataset_description.json
+           └─ sub-101
+              sub-101.html 
+              └── anat
+              └── figures
+              └── ses-txA
+                  └── anat
+                  └── func
+              └── ses-txB
+                  └── anat
+                  └── func
+README
+dataset_description.json
+participants.tsv
+```
+
+* `/restingstate` is the main BIDS directory.
+* `./sourcedata` contains the DICOMs, in whatever haphazard organization they came in from Osirix. Note the [BIDS distinction between "raw" and "sourcedata"](https://github.com/bids-standard/bids-specification/blob/master/src/02-common-principles.md#sourcevs-raw-vs-derived-data): raw = unprocessed or minimally processed due to file format conversion; source = data before conversion to BIDS.
+* `./sub-101` contains two sub-directories, one for each session. Each has an `anat` and a `func` folder for the T1w and EPI images, respectively. These are where the NIFTIs go after they're imported from `/sourcedata`.
+* `./derivatives` contains any files that result from doing anything to the raw data, including brain masks, processed images, reports, logs, metadata files, reports...
+
+Each pipeline/software/BIDS app you use gets its own subdirectory. Here, I just have `fmriprep`. Different apps will organize their outputs differently, but they do it automatically so you don't have to worry about this.
+
+A valid BIDS dataset also needs these three files:
+
+1. **dataset_description.json**: A JSON file with information about the dataset (BIDS version, authors, funding, license, etc.).
+2. **README.txt**: A .txt file.<br>
+*This file should describe the nature of the raw data or the derived data. In the case of the existence of a derivatives folder, we RECOMMEND including details about the software stack and settings used to generate the results. Inclusion of non-imaging objects that improve reproducibility are encouraged (scripts, settings files, etc.)*
+3. **participants.tsv**: A TSV file.<br>
+*The purpose of this file is to describe properties of participants such as age, handedness, sex, etc. In case of single session studies this file has one compulsory column participant_id that consists of sub-, followed by a list of optional columns describing participants. Each participant needs to be described by one and only one row.*
+
+The naming of both directories and files is highly specific, and detailed in the [BIDS Specification document](https://bids-specification.readthedocs.io/en/latest/).
+
+## Making your data BIDS-compliant
+This is probably the steepest curve in using BIDS, but luckily there are a multitude of software packages and approaches to make this happen.
+
+Some of these only convert, some convert and create JSON sidecars, some do all of that + organize your files for you.
+
+* [dcm2niix](https://github.com/rordenlab/dcm2niix/releases)
+* [dcm2niibatch](https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst)
+* [heudiconv](https://github.com/nipy/heudiconv) - (Dianne Patterson has some really great documentation on this [here](https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/heudiconv.html))
+* [dcm2bids](https://github.com/cbedetti/Dcm2Bids)
+* Using a [custom shell script](http://reproducibility.stanford.edu/bids-tutorial-series-part-1b/)
+* & more - see the [BIDS website](http://bids.neuroimaging.io)
+
+## Using dcm2niibatch
+
+For the oxytocin study, there were a ton of inconsistencies in how the DICOMs were named and organized for each participant/session (and I wasn't savvy enough to successfully modify the custom shell script), so **dcm2niibatch** ended up being the best option for my dissertation. 
+
+dcm2niibatch "_performs a batch conversion of multiple dicoms using dcm2niibatch, which is run by passing a configuration file e.g dcm2niibatch batch_config.yml_" ([manual](https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst))
+
+### Installation and setup
+*N.B.: All of this assumes you're using OSX.*
+
+First,  install [Homebrew](https://brew.sh), which is a package manager for OSX. 
+
+```
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
+```
+The script explains what it will do and then pauses before it does it.
+
+Then install dcm2niix, with a flag to install dcm2niibatch too:
+```
+$ brew install dcm2niix --with-batch
+```
+
+Then make the subdirectories where each subject's raw NIFTIs will ultimately live (assuming you already set up the top level directory, in this case `/restingstate`, and moved your DICOMs into `/restingstate/sourcedata`):
+```
+$ cd <your BIDS directory>
+$ mkdir -p sub-{101,102,103,104,105,107,110,113,114,115,117,118,119,120,121,122,123,125,126,127,128,129,130,131,132,133,134,135,137,138,139,140,141,142,144,145,146,147,148,149}/ses-{txA,txB}/{func,anat}
+```
+
+### Config files
+The next step is to build the configuration files, which move each subject's data from `/sourcedata` into where it should be according to the BIDS spec.
+
+[Configuration files for dcm2niibatch](https://github.com/rordenlab/dcm2niix/blob/master/BATCH.md) need to be in a very specific format called YAML that keeps data stored as key-value pairs. [This is a good overview of YAML.](https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml)
+
+*Note: YAML uses whitespace as formatting, so be very careful about which text editor you use (I used Atom). TextEdit (the default on OSX) does not work. You need something that isn't going to insert any invisible formatting whatsoever.*
+
+In order to make the configuration file for dcm2niibatch, I needed to first get the paths for all of the DICOM source data:
+```
+$ find . -type d -name *MPRAGE* > ~/Desktop/restingstate/sourcedata/mprage-files.txt
+$ find . -type d -name *Rest* > ~/Desktop/restingstate/sourcedata/rest-files.txt
+```
+
+The config files follow the format:
+```
+Options:
+  isGz:             false
+  isFlipY:          false
+  isVerbose:        false
+  isCreateBIDS:     true
+  isOnlySingleFile: false
+Files:
+    -
+      in_dir:           /path/to/first/folder
+      out_dir:          /path/to/output/folder
+      filename:         firstfile
+    -
+      in_dir:           /path/to/second/folder
+      out_dir:          /path/to/output/folder
+      filename:         secondfile
+``` 
+
+`isCreateBIDS: true` makes a BIDS-compliant JSON sidecar that contains metadata from the NIFTI header. <br>
+You can specify as many files as you want, as long as they are separated by a dash. 
+
+For T1w images, filenames are `sub-1**_ses-tx*_T1w`. Note the very specific naming, including the `sub-` prefix, the `ses-` prefix (for multi-session/longitudinal data), and the modality (`t1w`):
+```
+Options:
+    isGz: false
+    isFlipY: false
+    isVerbose: true
+    isCreateBIDS: true
+    isOnlySingleFile: false
+Files:
+    -
+        in_dir: './sourcedata/D101A/T1-MPRAGE - 12'
+        out_dir: ./sub-101/ses-txA/anat
+        filename: sub-101_ses-txA_T1w
+    -
+        in_dir: './sourcedata/D101B/T1-MPRAGE - 8'
+        out_dir: ./sub-101/ses-txB/anat
+        filename: sub-101_ses-txB_T1w
+```
+
+For the functional images, filenames will be `sub-1**_ses-tx*_task-*_bold`. Again, very specific naming, including the subject ID, session ID, task (`task-` prefix), and modality.
+```
+Options:
+    isGz: false
+    isFlipY: false
+    isVerbose: true
+    isCreateBIDS: true
+    isOnlySingleFile: false
+Files:
+    -
+        in_dir: './sourcedata/D101A/RestingState - 11'
+        out_dir: ./sub-101/ses-txA/func
+        filename: sub-101_ses-txA_task-rest_bold
+    -
+        in_dir: './sourcedata/D101B/RestingState - 7'
+        out_dir: ./sub-101/ses-txB/func
+        filename: sub-101_ses-txB_task-rest_bold
+```
+
+### .bidsignore file
+The validator will throw a "NOT_INCLUDED" error due to the configuration files being in the dataset.
+
+To avoid this, add a [.bidsignore file](https://github.com/bids-standard/bids-validator#bidsignore) containing the following:
+
+```
+/restingstate
+*.yaml
+```
+
+### Run dcm2niibatch
+This is pretty simple, assuming the config files are all in order:
+```
+$ dcm2niibatch batch_config_anat.yaml
+$ dcm2niibatch batch_config_rest.yaml
+```
+
+
+## Validate the dataset
+
+The [BIDS validator](http://bids-standard.github.io/bids-validator/) can be run online. I think you can also install the software but I haven't. The site notes: "Selecting a dataset only performs validation. Files are never uploaded."
+
+**Note: Works in Chrome or Firefox only.**
+
+1. Select your BIDS directory (e.g., `/restingstate`) and wait for it to finish validating. 
+2. View errors and warnings. You can click the link at the bottom of the page to download the error log.
+3. Fix any errors and try it again.
+
+### Errors and warnings
+*Section IN PROGRESS. For now, some of the errors I ran into (and their solutions) are listed in the BIDS-conversion notebook on [my Github](https://github.com/sarenseeley/seeley-dissertation).*
+
+
+# fMRIPrep
+## BIDS apps
+Generally, a BIDS app is "*a container image capturing a neuroimaging pipeline that takes a BIDS-formatted dataset as input. Since the input is a whole dataset, apps are able to combine multiple modalities, sessions, and/or subjects, but at the same time need to implement ways to query input datasets. Each BIDS App has the same core set of command-line arguments, making them easy to run and integrate into automated platforms.*" ([Gorgolweski et al., 2017](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005209))
+
+Containers are similar to Virtual Machines, but still rely on some OS subprocesses. 
+
+BIDS apps rely on two technologies for container computing:
+
+1. Docker: For building, hosting, & running containers on local hardware (Windows, Mac OS X, Linux) or in the cloud [(Docker cheat sheet)](https://github.com/wsargent/docker-cheat-sheet).
+2. Singularity: For running containers on HPC clusters.
+
+Container softwares such as Docker bundle all relevant software for processing. This lets you avoid "dependencies hell" -- especially important for something like fMRIPrep that uses modules from various neuroimaging software (FreeSurfer, FSL, AFNI, etc.) As well, having the exact version numbers of bundled software allows for reproducibility. 
+
+Many BIDS apps are also available to run in the cloud via GUI on [OpenNeuro.org](http://openneuro.org) (based on the idea of ["science as a service"](http://reproducibility.stanford.edu/announcing-the-openneuro-platform-open-and-reproducible-science-as-a-service/); datasets automatically published after 3 years if >2 subjects.)
+
+[fMRIPrep](http://fmriprep.readthedocs.io) is one of many BIDS apps, or "*portable neuroimaging pipelines that understand BIDS datasets*". fMRIPrep is a generic fMRI preprocessing pipeline providing results robust to the input data quality as well as informative reports.
+
+## About
+* fMRIPrep was developed by Russ Poldrack’s lab and the Stanford Center for Reproducible Neuroscience.
+* Open-source Nipype-based pipeline for transparent and reproducible preprocessing workflows.
+* Uses a combination of tools from common software packages including FSL, ANTs, FreeSurfer, and AFNI to provide the best implementation for each step of preprocessing. 
+* Performs “minimal preprocessing” (skull stripping, motion correction, segmentation, coregistration, normalization etc.)
+* Robust to variation across datasets; intended to be “analysis-agnostic” (e.g., does not include smoothing because the smoothing parameters you choose depend in part on how you want to analyze the data).
+* Provides optional integration of Freesurfer for surface based processing.
+
+fMRIPrep was built around three principles:
+
+1. **Robustness**: <ul><li>fMRIPrep adapts the preprocessing steps depending on the input dataset. The idea is that it should provide results as good as possible independently of scanner make, scanning parameters or presence of additional correction scans (such as fieldmaps).</ul></li>
+2. **Ease of use**: <ul><li>Depends on BIDS standard so requires minimal manual parameter input.</ul>
+3. **"Glass box" philosophy**: <ul><li>Just because it's automated doesn't mean that you shouldn't use your brain (i.e., look at your data/results or understand the methods.) Thus, fMRIPrep generates visual reports for each subject detailing the outcomes and accuracy of the most important steps, in service of QC and helping researchers understand the process.</ul></li>
+
+## Workflow
+From https://fmriprep.readthedocs.io/en/latest/workflows.html:
+
+1. The anatomical sub-workflow begins by constructing an average image by conforming all found T1w images to RAS orientation and a common voxel size, and, in the case of multiple images, averages them into a single reference template. In the case of multiple T1w images (across sessions and/or runs), T1w images are merged into a single template image using FreeSurfer’s mri_robust_template.
+2. Then, the T1w image/average is skull-stripped using ANTs’ antsBrainExtraction.sh, which is an atlas-based brain extraction workflow.
+3. Once the brain mask is computed, FSL fast is utilized for brain tissue segmentation.
+4. Finally, spatial normalization to MNI-space is performed using ANTs’ antsRegistration in a multiscale, mutual-information based, nonlinear registration scheme. In particular, spatial normalization is done using the ICBM 2009c Nonlinear Asymmetric template (1×1×1mm).
+5. BOLD preprocessing is split into multiple workflows:
+<ul><li>Reference image estimation
+<li>Head-motion estimation</li>
+<li>Slice time correction</li>
+<li>T2* driven coregistration</li>
+<li>Susceptibility distortion correction</li>
+<li>Preprocessed BOLD images are resampled to their native space</li>
+<li>EPI to T1W registration</li>
+<li>EPI to MNI transformation</li>
+<li>Confounds estimation:
+<li>Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the --use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy).</li>
+<li>“Non-aggressive” AROMA denoising can also be performed manually.</li></ul></ul>
+
+### T1w details
+* N4 bias field correction (ANTs)
+* Skull stripping (ANTs)
+* 3 class tissue segmentation (FSL FAST)
+* Robust MNI coregistration (ANTs)
+
+### EPI details
+* Motion correction (FSL MCFLIRT)
+* Skull stripping (nilearn)
+* Coregistration to T1 (FSL FLIRT with BBR / FreeSurfer bbregister if Freesurfer run)
+* Confounds estimation (nipype)<ul>
+<li>Framewise displacement</li>
+<li>Global signal</li>
+<li>Mean tissue signal</li>
+<li>Temporal & anatomical CompCor</li>
+
+
+## Outputs
+Source: https://fmriprep.readthedocs.io/en/latest/outputs.html 
+
+1. Visual QA (quality assessment) reports: One HTML per subject, that allows the user a thorough visual assessment of the quality of processing and ensures the transparency of fMRIPrep operation.
+2. Pre-processed imaging data which are derivatives of the original anatomical and functional images after various preparation procedures have been applied. 
+3. Additional data for subsequent analysis, e.g. the transformations between different spaces or the estimated confounds. 
+
+### T1w outputs
+* Bias-corrected volume
+* Brain mask
+* Tissue segmentation (+ probability maps)
+* Affine and warp to MNI (both ways)
+
+### EPI outputs
+* Motion-corrected images
+* Brain mask
+* Affine T1w
+* TSV file with all noise confounds
+* All volumes in MNI and native (EPI) space
+
+## Installation
+
+1. Install Docker: https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac
+2. Install `pip`: `$ sudo easy_install pip`
+<ul> _Later OSX versions no longer come with `pip`. Must log in as admin user to use `sudo`. Some people suggest that you should use homebrew to install pip instead of messing with the system Python, but then you have two versions of Python on your computer - which also seems like it has high potential to lead to issues. So I'm not sure which approach is better._ </ul> 
+3. Register for & download a FreeSurfer license: https://surfer.nmr.mgh.harvard.edu/registration.html 
+<ul>Put the license.txt file somewhere in your BIDS directory.</ul>
+<ul>https://fmriprep.readthedocs.io/en/latest/installation.html#the-freesurfer-license</ul>
+4. Install `fmriprep`: https://fmriprep.readthedocs.io/en/stable/installation.html
+
+To install the Docker wrapper (recommended way of running fMRIPrep): 
+```
+$ pip install --user --upgrade fmriprep-docker
+```
+
+<a id="cmdnotfound"></a>
+The first time I tried to use the wrapper, I kept getting `-bash: fmriprep-docker: command not found`. Turns out this is because `pip` installed `fmriprep-docker` into _/Users/sarenseeley/Library/Python/2.7/bin/_. `which` didn't turn it up, but this worked:
+
+```
+$ yes n | pip uninstall fmriprep-docker | grep bin 
+```
+
+_What does this command do?_
+`yes n | pip uninstall fmriprep-docker | grep bin` tells you where the program is (as if it were going to uninstall it) but doesn't actually do so because of the `yes n` part. Then once you find out where it is, you can add the path to that location to your global environment.
+See effigies' response in this thread: https://github.com/poldracklab/fmriprep/issues/909#issuecomment-353322728
+
+<a id="freesurf"></a>
+
+fMRIPrep also had issues locating the FreeSurfer license for some reason, or when it could find it, wanted to treat it as an executable file.
+
+To solve both of these issues, I had to add their paths to the global environment.
+
+To add this path permanently to the global environment, follow the instructions here: [Setting permanent environment variable using terminal](https://medium.com/@himanshuagarwal1395/setting-up-environment-variables-in-macos-sierra-f5978369b255)
+
+```
+$ cd ~/
+$ nano .bash_profile
+```
+
+When nano opens up, add the following (change to reflect where your stuff is):
+```
+export PATH=$PATH:/Users/sarenseeley/Library/Python/2.7/bin
+export FS_LICENSE=$HOME/Desktop/restingstate/derivatives/license.txt
+```
+Then save and exit nano.
+
+### A note on RAM
+If you only have 8GB RAM on your computer, you will receive a warning:
+```
+$ fmriprep-docker /Users/sarenseeley/Desktop/test/ /Users/sarenseeley/Desktop/test/derivatives participant
+ Warning: <8GB of RAM is available within your Docker environment.
+ Some parts of fMRIPrep may fail to complete.
+ Continue anyway? [y/N]
+```
+2GB is the default RAM available with Docker for Mac. `fmriprep` did fail while running the test subject with 2GB RAM so I increased the RAM available to Docker:
+
+* Go to Docker > Preferences > Advanced and increase the memory to 6GB.
+* Wait for Docker to restart.
+* Re-run `fmriprep-docker`.
+
+I still get the warning about RAM, but it runs.
+FYI: This will probably slow down your system like crazy, so don't forget to quit Docker when you're done.
+
+Upgrading to 24GB RAM and increasing the memory available to Docker to 16GB RAM sped things up significantly: 4 hours/subject vs. 12 hours/subject (no FreeSurfer). (My lab computer is a late-2013 iMac with 3.2 GHz Intel Core i5 processor.)
+
+
+## Usage
+
+Helpful links:
+
+* A simple [tutorial on running the fmriprep Docker image](http://reproducibility.stanford.edu/fmriprep-tutorial-running-the-docker-image/) 
+* [fMRIPrep ReadTheDocs page with details of usage](https://fmriprep.readthedocs.io/en/stable/usage.html)
+
+Using the Docker wrapper is recommended:
+```
+$ fmriprep-docker /Users/sarenseeley/Desktop/restingstate/ /Users/sarenseeley/Desktop/restingstate/derivatives --longitudinal --participant_label sub-110 sub-113 sub-114 sub-115 sub-117
+```
+
+But you can also invoke Docker directly:
+```
+$ docker run -ti --rm \
+    -v filepath/to/data/dir:/data:ro \
+    -v filepath/to/output/dir:/out \
+    poldracklab/fmriprep:latest \
+    /data /out/out \
+    participant
+```
+
+### Usage w/specific CLI arguments
+Lots of different options!
+
+From https://fmriprep.readthedocs.io/en/stable/usage.html#command-line-arguments:
+
+```
+[-h] [--version]
+[--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
+[-t TASK_ID] [--debug] [--nthreads NTHREADS]
+[--omp-nthreads OMP_NTHREADS] [--mem_mb MEM_MB] [--low-mem]
+[--use-plugin USE_PLUGIN] [--anat-only] [--boilerplate]
+[--ignore-aroma-denoising-errors] [-v]
+[--ignore {fieldmaps,slicetiming,sbref} [{fieldmaps,slicetiming,sbref} ...]]
+[--longitudinal] [--t2s-coreg] [--bold2t1w-dof {6,9,12}]
+[--output-space {T1w,template,fsnative,fsaverage,fsaverage6,fsaverage5} [{T1w,template,fsnative,fsaverage,fsaverage6,fsaverage5} ...]]
+[--force-bbr] [--force-no-bbr]
+[--template {MNI152NLin2009cAsym}]
+[--output-grid-reference OUTPUT_GRID_REFERENCE]
+[--template-resampling-grid TEMPLATE_RESAMPLING_GRID]
+[--medial-surface-nan] [--use-aroma]
+[--aroma-melodic-dimensionality AROMA_MELODIC_DIMENSIONALITY]
+[--skull-strip-template {OASIS,NKI}]
+[--skull-strip-fixed-seed] [--fmap-bspline] [--fmap-no-demean]
+[--use-syn-sdc] [--force-syn] [--fs-license-file PATH]
+[--no-submm-recon] [--cifti-output | --fs-no-reconall]
+[-w WORK_DIR] [--resource-monitor] [--reports-only]
+[--run-uuid RUN_UUID] [--write-graph] [--stop-on-first-crash]
+[--notrack]
+bids_dir output_dir {participant}
+```
+
+Example of how you might use these arguments:
+```
+fmriprep-docker --low-mem --resource-monitor --stop-on-first-crash --longitudinal --use-syn-sdc --use-aroma  /Users/sarenseeley/Desktop/restingstate/ /Users/sarenseeley/Desktop/restingstate/derivatives -w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch --participant_label sub-110 sub-113 sub-114 sub-115 sub-117
+```
+(I am only running a few participants at a time because I'm not yet sure how many I can run together before it crashes.)
+
+
+These are some of the ones I am using:
+
+`--use-aroma`: "Given a motion-corrected fMRI, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the --use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy)" & see section on ICA-AROMA [(source)](https://fmriprep.readthedocs.io/en/stable/workflows.html?highlight=--use_aroma#confounds-estimation)
+<ul><li>_**Notes on aggressive vs non-aggressive ICA AROMA from 2017 UNC workshop:**_
+<ul><li>Aggressive: use nuisance time courses as regressors - problem is that they can share variance with signal, they are spatially independent but not necessarily temporally independent.</li>
+<li>Non-aggressive: leaves in more signal variance (*this is what you should do*) but means you have to run two models to avoid multicollinearity from dumping signal, noise, motion, and task regressors all in the same model (i.e., task-correlated signal).</li></ul></ul>
+
+`--use-syn-sdc`: "In the absence of direct measurements of fieldmap data, we provide an (experimental) option to estimate the susceptibility distortion based on the ANTs symmetric normalization (SyN) technique. This feature may be enabled, using the --use-syn-sdc flag, and will only be applied if fieldmaps are unavailable." [(source)](https://fmriprep.readthedocs.io/en/stable/api/index.html#sdc-fieldmapless)
+<ul><li>So far, this seems to be helping.
+<ul><li>*"Fieldmap-less susceptibility-derived distortion correction (SDC)...takes a skull-stripped T1w image and reference BOLD image, and estimates a field of displacements that compensates for the warp caused by susceptibility distortion. The tool uses ANTs’ antsRegistration configured with symmetric normalization (SyN) to align a fieldmap template 18 and applies the template as prior information to regularize a follow-up registration process. The follow-up registration process also uses antsRegistration with SyN deformation, with displacements restricted to the PE direction. If no PE direction is specified, anterior-posterior PE is assumed. Based on the fieldmap atlas, the displacement field is optimized only within regions that are expected to have a >3mm (approximately 1 voxel) warp. This technique is a variation on previous work5,19."* [(source)](https://www.biorxiv.org/content/biorxiv/suppl/2018/04/25/306951.DC1/306951-1.pdf)
+</li></ul></ul>
+
+`--longitudinal`: "In the case of multiple T1w images (across sessions and/or runs), T1w images are merged into a single template image using FreeSurfer’s mri_robust_template. This template may be unbiased, or equidistant from all source images, or aligned to the first image (determined lexicographically by session label). For two images, the additional cost of estimating an unbiased template is trivial and is the default behavior, but, for greater than two images, the cost can be a slowdown of an order of magnitude. Therefore, in the case of three or more images, fmriprep constructs templates aligned to the first image, unless passed the --longitudinal flag, which forces the estimation of an unbiased template." [(source)](https://fmriprep.readthedocs.io/en/stable/workflows.html#longitudinal-processing)
+
+`--low-mem`: Option to reduce memory usage for large BOLD series (will increase disk usage in working directory). "This will wait until the end of the pipeline to compress the resampled BOLD series, which allows tasks that need to read these files to read only the necessary parts of the file into memory." (https://neurostars.org/t/memory-usage-of-fmriprep/1552/3)
+
+`--fs-no-reconall`: Disables surface preprocessing, which saves a ton of time. If your registration looks okay without it, then great! If you're seeing issues with the registration, like "brain" is identified outside of the brain, then give it a try using Freesurfer's `bbregister` instead (this is the default, so don't need to specify, just remove `--fs-no-reconall`).
+
+`-w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch`: Specifies your own local scratch directory (vs. having interim files written somewhere in the Docker container). This is really helpful because if fMRIPrep crashes, it can use the previously computed outputs to pick up where it left off, saving you from having to wait for it to rerun the whole thing.
+
+## Reports
+(SECTION IN PROGRESS)
+
+![](https://fmriprep.readthedocs.io/en/stable/_images/sub-01_task-mixedgamblestask_run-01_bold_carpetplot.svg)
+_The figure shows on top several confounds estimated for the BOLD series: global signals (‘GlobalSignal’, ‘WM’, ‘GM’), standardized DVARS (‘stdDVARS’), and framewise-displacement (‘FramewiseDisplacement’). At the bottom, a ‘carpetplot’ summarizing the BOLD series. The colormap on the left-side of the carpetplot denotes signals located in cortical gray matter regions (blue), subcortical gray matter (orange), cerebellum (green) and the union of white-matter and CSF compartments (red)._ [(source)](https://fmriprep.readthedocs.io/en/stable/outputs.html)
+
+# MRIQC
+## Installation
+```
+$ docker run -it poldracklab/mriqc:latest --version
+```
+
+It will say first that it's unable to find poldracklab/mriqc, then proceed to download what it needs. When it's done, it will display something like this in your Terminal window:
+```
+Unable to find image 'poldracklab/mriqc:latest' locally
+latest: Pulling from poldracklab/mriqc
+c83208261473: Already exists 
+6e1a85c1d66a: Already exists 
+f1320ef45e20: Already exists 
+5a6ab6e6fbf6: Already exists 
+6fd240c27767: Already exists 
+1828068ad6eb: Pull complete 
+528745c08a55: Pull complete 
+530dab2d8e28: Pull complete 
+e9891514a831: Pull complete 
+b8ad75f9d970: Pull complete 
+eab4cecd4547: Pull complete 
+1d3085e349cc: Pull complete 
+9988cf33f2a0: Pull complete 
+280fa0d97559: Pull complete 
+1a24ef3ab05e: Pull complete 
+73df75811875: Pull complete 
+d72de75b4797: Pull complete 
+b56f3fdfbf2d: Pull complete 
+ce152749c1db: Pull complete 
+58a3bd8fa030: Pull complete 
+f3e3661defbc: Pull complete 
+47da0cb1bc78: Pull complete 
+ef820cb9cdfe: Pull complete 
+3888bc11a283: Pull complete 
+a4cca34e324b: Pull complete 
+Digest: sha256:6609a2427d6f270947f466c00591c3948b7682360be8259b661dc4009455af94
+Status: Downloaded newer image for poldracklab/mriqc:latest
+mriqc v0.14.2
+```
+
+## Usage
+```
+$ docker run -it --rm -v /Users/sarenseeley/Desktop/restingstate:/data:ro -v /Users/sarenseeley/Desktop/restingstate/derivatives/mriqc:/out poldracklab/mriqc:latest /data /out participant -m T1w bold
+```
+
+This runs both the participant- and group-level analysis.
+
+`/Users/sarenseeley/Desktop/restingstate` is the input directory. Must be a valid BIDS directory.
+
+`/Users/sarenseeley/Desktop/restingstate/derivatives/mriqc` is wherever you want MRIQC to put the output.
+
+`-m T1w bold` indicates that the dataset contains images in T1w and BOLD modalities. 
+
+To run a single subject (or set of subjects):
+```
+$ docker run -it --rm -v /Users/sarenseeley/Desktop/restingstate:/data:ro -v /Users/sarenseeley/Desktop/restingstate/derivatives/mriqc:/out poldracklab/mriqc:latest /data /out participant --participant_label 138 -m T1w bold
+```
+
+Note that you only have to put the number, and not the `sub-` prefix (i.e., `--participant_label 138` vs. `--participant_label sub-138` - the latter will not run.)
+
+## Reports
+Example  (MRIQC on the ABIDE dataset - this is a clinical population so more quality issues than might see in non-clinical dataset):
+
+* [T1w group report](https://mriqc.s3.amazonaws.com/abide/bold_group.html)
+* [BOLD group report](https://mriqc.s3.amazonaws.com/abide/T1w_group.html)
+
+These are the summary metrics provided by MRIQC [(source)](https://www.slideshare.net/OscarEsteban5/fmriprep-mriqc-focus-mriqc):
+
+#### Structural IQMs
+![](/Users/sarenseeley/Desktop/mriqc_s.png)
+
+
+#### Functional IQMs
+![](/Users/sarenseeley/Desktop/mriqc_f.png)
+### Using the T1w image classifier
+
+Read more about the classifier here: https://mriqc.readthedocs.io/en/stable/classifier.html
+
+Usage with docker:
+```
+$ docker run -v $PWD:/scratch -w /scratch --entrypoint=mriqc_clf poldracklab/mriqc:latest --load-classifier -X group_T1w.tsv`
+```
+
+Explanation from https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU (commands modified to work on my data):
+`docker run` - invokes Docker.
+`-v $PWD:/scratch` - provides a folder to communicate data into the container and off the container.
+`-w /scratch` - changes the working directory to read the input file and write the results.
+`--entrypoint=mriqc_clf` - tells Docker to run a different binary (`mriqc_clf`) rather than the default (`mriqc`). 
+`poldracklab/mriqc:latest` - pulls the latest version of MRIQC. You can also have it pull a specific version (e.g., `poldracklab/mriqc:0.9.6`).
+`--load-classifier -X` - loads the classifier trained on the ABIDE dataset (default) or your custom classifier, if you created one.
+`group_T1w.tsv` - tells MRIQC to apply the classifier to group T1w report.
+
+There is currently no MRIQC classifier for BOLD images that I'm aware of.
+
+### Results template
+
+Here's a template I made for inspecting the MRIQC group reports, listing each metric and its definition:
+https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing
+
+# Singularity
+Broadly, in order to run fMRIPrep or MRIQC on the HPC, several things need to happen:
+
+1. You need to create a Singularity image of the Docker container.
+2. You need to transfer that image to the HPC.
+<ul><li>If your HPC does not automatically bind (mount or expose) host folders to the container, you will need to bind the necessary folders using the `-B <host_folder>:<container_folder>` Singularity argument.</li></ul>
+3. Your data need to be on the HPC.
+<ul><li>Images must first be de-identified before transfering to the HPC, so that someone's identity could not be obtained from facial structure. There are several utilities for this out there, including pydeface and mri_deface: https://openfmri.org/de-identification/</li></ul>
+<ul><li>Any potential identifying elements should also be removed from text files and image headers.</li></ul>
+
+See https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container
+
+See also Chidi's slides from Nov. 16th '18 BMW meeting: https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq
+
+# Misc. problems & solutions
+Below are some miscellaneous problems I encountered, and how I solved them.
+
+### dcm2niix/dcm2niibatch 
+#### Warning: "slices stacked despite varying acquisition numbers"
+What does dcm2niix's message _"slices stacked despite varying acquisition numbers (if this is not desired please recompile)"_ mean?
+
+##### Solution 
+Look at your data to know whether this is okay or not. You can look at the DICOMs (converted to .nii) in your image viewer of choice (SPM, Mango, FSLview...) against the .nii files generated by `dcm2niix` to check that they look the same.
+
+From Dianne Patterson:<br>
+<i>There are different ways to order the data, especially 4d data like fmri...
+slice 1 vol1, slice 1 vol2, slice 1 vol3... vs
+vol1, slice1, slice 2, slice3 etc....vol2 slice1, slice2, slice 3 etc....<br>
+I think there can be a difference between the way the scanner exports them and the program stacks them, though I generally don't learn these gory details unless something breaks. Did you look at the fmris to make sure the volumes display all their slices in order (I suspect it'll seem okay or look like a total hot mess)?</i>
+
+
+#### Error: "No valid DICOMs found"
+This means exactly what it says.
+
+##### Solution
+When running `dcm2niibatch`, I specified `isVerbose: true` and copied the command line output into a .txt file to inspect for any issues with files that `dcm2niix` was unable to covert. For D110B, there was the following error:
+
+```
+Found 192 DICOM file(s) #repeated 192x
+Unsupported transfer syntax '1.2.840.10008.1.2.4.90' (see www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage)
+No valid DICOM images were found
+Conversion required 0.165132 seconds.
+```
+
+The problem is that for some weird reason, these DICOMs were JPEG-compressed so `dcm2niix` doesn't know what to do with them.
+
+* "Transfer syntax 1.2.840.10008.1.2.4.90" = JPEG 2000 Image Compression (Lossless Only)<br>
+*  * http://www.mccauslandcenter.sc.edu/crnl/tools/jpeg-formats 
+*  * https://www.dicomlibrary.com/dicom/transfer-syntax/
+
+I had to decompress the files, using GDCM (https://github.com/malaterre/GDCM/releases; http://gdcm.sourceforge.net/wiki/index.php/Main_Page).
+
+How to install and compile GDCM, following instructions in the `INSTALL.txt` file in `/gdcm` (included when you clone `/gdcm` to your local machine):
+```
+$ git clone --branch release git://git.code.sf.net/p/gdcm/gdcm
+$ mkdir gdcmbin
+$ cd gdcmbin
+$ ccmake ../gdcm
+```
+
+Then you need to add the path to `/gdcm` so that the software can be located and used:
+```
+$ export PATH=$PATH:~/gdcmbin/bin 
+$ echo $PATH
+```
+
+For-loop to decompress each of the DICOMs in the specified directory and print `converting [filename]...` while doing so (_note that GDCM cannot handle spaces in the directory names_):
+```
+$ DIR='/Users/sarenseeley/Desktop/restingstate/data/sourcedata/D110B/AnonymizedD1D0D305/OconnorSequences/T1MPRAGE5/*.dcm'; for f in  $DIR; do echo "converting $f..."; gdcmconv -w $f $f; done
+$ DIR='/Users/sarenseeley/Desktop/restingstate/data/sourcedata/D110B/AnonymizedD1D0D305/OconnorSequences/RestingState8/*.dcm'; for f in  $DIR; do echo "converting $f..."; gdcmconv -w $f $f; done
+```
+
+Then the next step is to build two more configuration files (anat and rest) specific to D110B, and run `dcm2niix` on just those files:
+
+```
+$ dcm2niibatch /Users/sarenseeley/Desktop/restingstate/data/batch_config_anat-D110B.yaml
+$ dcm2niibatch /Users/sarenseeley/Desktop/restingstate/data/batch_config_rest-D110B.yaml
+```
+
+After this, I went back to the original configuration files and updated them to reflect the new directory path for D110B, then ran the BIDS validator again on the dataset.
+
+### BIDS validator
+Below are some errors and warnings that the validator gave me. Warnings can be ignored (at your own peril), but errors mean that your dataset is not BIDS-compliant.
+
+#### Warning: "Not all subjects contain the same files"
+
+This means you're probably missing some files for certain participants in your BIDS dataset.
+Example:
+```
+Warning: 1 (4 files)
+Not all subjects contain the same files. Each subject should contain the same number of files with the same naming unless some files are known to be missing.
+
+sub-110_ses-txB_T1w.jsonNaN KB |
+Location:
+/sub-110/ses-txB/anat/sub-110_ses-txB_T1w.json
+
+Reason:
+This file is missing for subject sub-110, but is present for at least one other subject.
+
+sub-110_ses-txB_T1w.niiNaN KB |
+Location:
+/sub-110/ses-txB/anat/sub-110_ses-txB_T1w.nii
+
+Reason:
+This file is missing for subject sub-110, but is present for at least one other subject.
+
+sub-110_ses-txB_task-rest_bold.jsonNaN KB |
+Location:
+/sub-110/ses-txB/func/sub-110_ses-txB_task-rest_bold.json
+
+Reason:
+This file is missing for subject sub-110, but is present for at least one other subject.
+
+sub-110_ses-txB_task-rest_bold.niiNaN KB |
+Location:
+/sub-110/ses-txB/func/sub-110_ses-txB_task-rest_bold.nii
+
+Reason:
+This file is missing for subject sub-110, but is present for at least one other subject.
+```
+
+##### Solution
+The BIDS validator will tell you which subjects are missing files, as shown above. Figure out why they are missing files (for me, it was the "`dcm2niibatch` doesn't read compressed DICOMs" issue described above), fix it, and re-run the validator.
+
+
+#### Error: "NOT_INCLUDED"
+
+>Files with such naming scheme are not part of BIDS specification. This error is most commonly caused by typos in file names that make them not BIDS compatible. Please consult the specification and make sure your files are named correctly. If this is not a file naming issue (for example when including files not yet covered by the BIDS specification) you should include a ".bidsignore" file in your dataset (see https://github.com/bids-standard/bids-validator#bidsignore for details). Please note that derived (processed) data should be placed in /derivatives folder and source data (such as DICOMS or behavioural logs in proprietary formats) should be placed in the /sourcedata folder.
+
+Why did this happen? The YAML configuration files that I used for `dcm2niibatch` are in `/data`.
+
+##### Solution
+Added a .bidsignore file containing the following:
+
+```
+/data
+*.yaml
+```
+
+#### Error: "No TaskName"
+Example:
+
+```
+Error: 1 (79 files)
+You have to define 'TaskName' for this file.
+
+sub-101_ses-txA_task-rest_bold.nii 78759.712 KB |
+Location:
+derivatives/sub-101/ses-txA/func/sub-101_ses-txA_task-rest_bold.nii
+
+Reason:
+You have to define 'TaskName' for this file. It can be included one of the following locations: /bold.json, /task-rest_bold.json, /sub-101/sub-101_bold.json, /sub-101/sub-101_task-rest_bold.json, /sub-101/ses-txA/sub-101_ses-txA_bold.json, /sub-101/ses-txA/sub-101_ses-txA_task-rest_bold.json, /sub-101/ses-txA/func/sub-101_ses-txA_task-rest_bold.json
+```
+
+##### Solution 
+That info (`TaskName`) wasn't stored in the image header so `dcm2niix` can't pull it. See Chris G.'s response here:  https://github.com/rordenlab/dcm2niix/issues/148
+
+But you don't need to add a TaskName field individually into each of the .json sidecars for each subject/session. Just stick a `task-rest_bold.json` file containing the task name (as shown below) into the top level of your BIDS directory, and that will apply to all of the `task-rest_bold` files in that location:
+
+The .json file should contain the following (adapted for your task name):
+```
+{
+  "TaskName": "rest"
+}
+```
+
+### fMRIPrep
+
+#### Warning: "<8GB of RAM is available"
+```
+$ fmriprep-docker /Users/sarenseeley/Desktop/test/ /Users/sarenseeley/Desktop/test/derivatives participant
+ Warning: <8GB of RAM is available within your Docker environment.
+ Some parts of fMRIPrep may fail to complete.
+ Continue anyway? [y/N]
+```
+
+2GB is the default RAM available in Docker for Mac, at least for my installation. fMRIPrep needs at least 8GB to run (more is better), even if using the `--low-mem` flag to reduce memory usage.
+
+##### Solution
+* Go to _Docker > Preferences > Advanced_ and increase the memory to >=8GB.
+* Restart Docker.
+* Wait for Docker to finish restarting.
+* Re-run `fmriprep-docker`.
+
+
+#### Warning: "spatial transformations on oblique dataset"
+You might see something like this in the command window as fMRIPrep is running:
+```
+181026-21:01:38,622 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:*+ WARNING:   If you are performing spatial transformations on an oblique dset, 
+181026-21:01:38,623 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:  such as /tmp/work/fmriprep_wf/single_subject_120_wf/func_preproc_ses_txB_task_rest_wf/bold_reference_wf/gen_ref/slice.nii.gz,
+181026-21:01:38,624 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:  or viewing/combining it with volumes of differing obliquity,
+181026-21:01:38,625 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:  you should consider running: 
+181026-21:01:38,625 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:     3dWarp -deoblique 
+181026-21:01:38,626 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:  on this and  other oblique datasets in the same session.
+181026-21:01:38,627 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139: See 3dWarp -help for details.
+181026-21:01:38,628 nipype.interface INFO:
+	 stderr 2018-10-26T21:01:38.622139:++ Oblique dataset:/tmp/work/fmriprep_wf/single_subject_120_wf/func_preproc_ses_txB_task_rest_wf/bold_reference_wf/gen_ref/slice.nii.gz is 13.716262 degrees from plumb.
+```
+
+##### Solution
+It seems that [this warning can be safely ignored.](https://neurostars.org/t/warning-if-you-are-performing-spatial-transformations-on-an-oblique-dset/2065)
+
+
+#### Error: "valid license file is required"
+
+If fmriprep can't find the license file, this error message appears:
+```
+$ RuntimeError: ERROR: a valid license file is required for FreeSurfer to run. FMRIPREP looked for an existing license file at several paths, in this order: 1) command line argument ``--fs-license-file``; 2) ``$FS_LICENSE`` environment variable; and 3) the ``$FREESURFER_HOME/license.txt`` path. Get it (for free) by registering at https://surfer.nmr.mgh.harvard.edu/registration.html
+```
+
+##### Solution
+See the section in [installing fMRIPrep](#freesurf). Note that if you get an error message saying that you need an updated license file, you actually may not (especially if you just downloaded one). I encountered that issue when it was still having trouble finding the license.
+
+
+#### Error: "command not found"
+This means that `pip` installed the Docker wrapper somewhere obscure.  
+
+##### Solution
+Find out where `pip` installed it, and add that path to your global environment as described [here](#cmdnotfound).
+
+# Misc. tidbits
+Random bits and pieces that didn't seem to fit elsewhere. 
+
+### fMRIPrep
+##### Multi-session data, bad T1w at one session
+Example: You want to use the T1w scan from session 2 for both sessions, since there was too much movement in the one from session 1.
+
+See https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851
+
+Another option is to copy the "good" image from session 2 into the session 1 `anat` folder, making sure to rename it as session 1. This isn't optimal IMO because it would be nice to make it obvious that this image is from a different session, but that's how I made it work. You could note that in the metadata associated with the dataset (i.e., the README file)
+
+##### What if I've already run Freesurfer on my data?
+I haven't tried this, but seems like it is possible to use the existing outputs: 
+
+From https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing:
+> Surface processing will be skipped if the outputs already exist.
+In order to bypass reconstruction in fmriprep, place existing reconstructed subjects in <output dir>/freesurfer prior to the run. fmriprep will perform any missing recon-all steps, but will not perform any steps whose outputs already exist.
+
+I'm guessing it's probably imperative to have the subfolders named and organized as they would be if this folder was generated by running fMRIPrep (run on one subject to get an example?)
+
+##### "Artifacts" in T1w-EPI registration visualization?
+See this thread I started on NeuroStars: https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5
+Summary: It's not an artifact in your data, it's an artifact of using a different method of interpolation for how registration between the two images is visualized in the reports. Check the registration in SPM (or other program) and if it looks good there, then it's good.
+
+##### fMRIPrep not updating precomputed outputs after data are changed
+Example: I ran `fmriprep-docker` on sub-138. Reports showed that registration failed (because for some random reason, the files in their T1w folder from one of the sessions was...a scan of a phantom). I swapped out those images for the correct images and re-ran. Even after deleting the local scratch directory that I was using, fMRIPrep was still "collecting precomputed outputs" from the initial run and generating the same results in both the reports and images. I ultimately was successful after I replaced `sub-138` anywhere in the file or folder names with `sub-138b`, reran `fmriprep-docker` and then changed the names back to `sub-138`. Need to ask on NeuroStars if there's a better way to do this. 
+
+
+

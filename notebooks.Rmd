@@ -2,9 +2,18 @@
 title: "Notebooks"
 ---
 
-Various notebooks, resources, and other tidbits for different projects.
+Various notebooks, resources, and other tidbits from some of my projects.
 
-[Tutorial: Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](http://rpubs.com/sarenseeley/463941)
+[Tutorial: Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](/BIDS-fmriprep-MRIQC.nb.html)
 
 [Slides: Intro to using BIDS/dcm2niix and fMRIPrep](https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0) presentation from UA Brain Mapping Workgroup meeting 11/16/18 
+
+<p>&nbsp;<p>
+####Other resources I've found helpful
+
+**Statistics and R**<br>
+[Checking model assumptions without getting paranoid](https://janhove.github.io/analysis/2018/04/25/graphical-model-checking)<br>
+[Common statistical tests are linear models (or: how to teach stats)](https://lindeloev.github.io/tests-as-linear/)<br>
+[R best practices](https://kdestasio.github.io/post/r_best_practices/)<br>
+[Visualizing hierarchical (aka multilevel or mixed) models](http://mfviz.com/hierarchical-models/)<br>
 
