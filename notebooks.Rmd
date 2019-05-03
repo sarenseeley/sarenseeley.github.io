@@ -11,10 +11,6 @@ Various notebooks, resources, and other tidbits from some of my projects.
 <p>&nbsp;<p>
 ####Other resources I've found helpful
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 9b2c09d415b6f2a58948acf058c8205a4fca8954
 _Statistics and R_<br>
 [Checking model assumptions without getting paranoid](https://janhove.github.io/analysis/2018/04/25/graphical-model-checking)<br>(& see also [Checking model assumptions? Look at the residuals, not the raw data](https://datahowler.wordpress.com/2018/08/04/checking-model-assumptions-look-at-the-residuals-not-the-raw-data/))<br>
 [Common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/)<br>
@@ -24,16 +20,4 @@ _Statistics and R_<br>
 [Visualizing hierarchical (aka multilevel or mixed) models](http://mfviz.com/hierarchical-models/)<br>
 
 _Teaching_<br>
-<<<<<<< HEAD
 [Course syllabi for open and reproducible methods](https://osf.io/vkhbt/)
-=======
-[Course syllabi for open and reproducible methods](https://osf.io/vkhbt/)
-=======
-**Statistics and R**<br>
-[Checking model assumptions without getting paranoid](https://janhove.github.io/analysis/2018/04/25/graphical-model-checking)<br>
-[Common statistical tests are linear models (or: how to teach stats)](https://lindeloev.github.io/tests-as-linear/)<br>
-[R best practices](https://kdestasio.github.io/post/r_best_practices/)<br>
-[Visualizing hierarchical (aka multilevel or mixed) models](http://mfviz.com/hierarchical-models/)<br>
-
->>>>>>> 65e426dfd2069c156ab5708ff30e259fbdf58e66
->>>>>>> 9b2c09d415b6f2a58948acf058c8205a4fca8954
