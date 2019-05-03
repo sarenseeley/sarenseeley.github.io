@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Saren Seeley" />
+
+
+<title>CONSORT diagram: OT fMRI study / dissertation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Saren H. Seeley</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="cv.html">CV</a>
+</li>
+<li>
+  <a href="notebooks.html">Notebooks</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">CONSORT diagram: OT fMRI study / dissertation</h1>
+<h4 class="author">Saren Seeley</h4>
+<h4 class="date">02-17-2019</h4>
+
+</div>
+
+
+<div id="making-a-consort-diagram-using-ggplot2" class="section level3">
+<h3>Making a CONSORT diagram using ggplot2</h3>
+<p>Based on this very helpful tutorial: <a href="https://rpubs.com/phiggins/461686" class="uri">https://rpubs.com/phiggins/461686</a></p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
+## ✔ tidyr   0.8.1     ✔ stringr 1.4.0
+## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code># create an empty 100x100 grid
+data &lt;- tibble(x= 0:100, y= 0:100)
+
+data %&gt;% 
+  ggplot(aes(x, y)) +
+  scale_x_continuous(minor_breaks = seq(10, 100, 10)) +
+  scale_y_continuous(minor_breaks = seq(10, 100, 10)) +
+  theme_linedraw() -&gt;
+  p
+p</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code># for everything that follows, you will use x/y, xmin/ymin, and xmax/ymax values to resize and arrange elements as you wish, using the grid coordinates as reference
+# also, because R is weird about how it displays graphics (e.g., making the image bigger does NOT just scale everything up, including enlarging any text), you&#39;ll notice that some of the text overflows its box when displayed in RStudio
+# that&#39;s because I went back and optimized the text size for when I save it out as high-res PNG file at the end
+
+# add the first box and text
+p +
+  geom_rect(xmin = 30, xmax=64, ymin=94, ymax=100, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x=48, y=97,label= &#39;164 Prospective participants&#39;, size=3) -&gt;
+  p
+
+# then add some more boxes and text: those not screened and those excluded
+p +
+  geom_rect(xmin = 30, xmax=64, ymin=73, ymax=80, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x = 48, y=77,label= &#39;143 Screened&#39;, size=3) +
+  geom_rect(xmin = 70, xmax=100, ymin=85, ymax=100, color=&#39;black&#39;,
+            fill = &#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 72, y=93, hjust=0, label= &#39;21 Not screened: \n     16 Unable to reach \n       5 No response after initial contact&#39;, size=3) +
+  geom_rect(xmin = 70, xmax=100, ymin=39, ymax=80, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 72, y=60, hjust=0, label= &#39;98 Did not meet criteria:\n     24 MRI safety \n     11 Not interested \n     11 ICG score \n     11 Loss &lt;6 or &gt;36 months \n     11 Age &lt;55 or &gt;80 years \n       8 Claustrophobia  \n       6 Medications \n       4 Medical condition \n       5 Other (e.g., out of town) \n       7 Unspecified (but did not\n          complete full screen)&#39;, size=3)  -&gt;
+  p2
+p2</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code># add a third box: n participants enrolled
+p2 + geom_rect(xmin = 30, xmax=64, ymin=50, ymax=60, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 48, y=55,label= &#39;45 Enrolled&#39;, size=3) -&gt; p3
+
+p3</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<pre class="r"><code># and some more boxes with n completers/n drops
+p3 +
+  geom_rect(xmin = 30, xmax=64, ymin=20, ymax=30, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 48, y=25,label= &#39;40 Completed study&#39;, size=3) +
+  geom_rect(xmin = 70, xmax=100, ymin=10, ymax=30, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 72, y=20, hjust=0, label= &#39;5 Dropped: \n    2 Undisclosed metal in body \n    1 Incidental finding on MPRAGE \n    1 Back pain in scanner* \n    1 Nausea*&#39;, size=3) -&gt; p4
+
+p4</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-4.png" width="672" /></p>
+<pre class="r"><code># finally, the last boxes: those who completed follow-up and those who did not
+p4 +
+  geom_rect(xmin = 30, xmax=64, ymin=-2, ymax=6, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 48, y=2,label= &#39;33 Completed follow-up&#39;, size=3) +
+  geom_rect(xmin = 70, xmax=100, ymin=-2, ymax=6, color=&#39;black&#39;,
+            fill=&#39;white&#39;, size=0.25) +
+  annotate(&#39;text&#39;, x= 72, y=2, hjust=0, label= &#39;6 Lost to follow up \n1 Not assessed&#39;, size=3) -&gt; p5
+
+p5</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-5.png" width="672" /></p>
+<pre class="r"><code># now time to add the arrows
+# in the following, x and y = the point on the plot where the arrow starts
+# the point where the arrow finishes is defined by xend and yend
+p5+ 
+  geom_segment(
+  # first vertical arrow
+    x=50, xend=50, y=94, yend=80.5, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # first horizonal arrow
+  geom_segment(
+    x=50, xend=69.7, y=89, yend=89, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # second vertical arrow
+  geom_segment(
+    x=50, xend=50, y=73, yend=60.5, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # second horizonal arrow
+ geom_segment(
+    x=50, xend=69.7, y=67, yend=67, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # third vertical arrow
+  geom_segment(
+    x=50, xend=50, y=50, yend=30.5, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # diagonal arrow
+ geom_segment(
+    x=64, xend=69.7, y=40, yend=25, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # short horizonal line, no arrow
+ geom_segment(
+    x=50, xend=64, y=40, yend=40, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;) +
+# fourth vertical arrow
+  geom_segment(
+    x=50, xend=50, y=20, yend=6.5, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # 2nd diagonal arrow
+ geom_segment(
+    x=64, xend=69.7, y=12, yend=1, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;,
+    arrow = arrow(length = unit(1, &quot;mm&quot;), type= &quot;closed&quot;)) +
+  # 2nd short horizonal line, no arrow
+ geom_segment(
+    x=50, xend=64, y=12, yend=12, 
+    size=0.15, linejoin = &quot;mitre&quot;, lineend = &quot;butt&quot;) +
+  # then get rid of the grid...
+  theme_void() +
+  # ...and add a title (centered)
+  ggtitle(&quot;CONSORT Diagram for the OT fMRI Study&quot;) +
+theme(plot.title = element_text(hjust=.5)) -&gt; p6
+p6</code></pre>
+<p><img src="ggplot2-CONSORT_files/figure-html/unnamed-chunk-1-6.png" width="672" /></p>
+<pre class="r"><code># finally...save it as a high-resolution (dpi=600) PNG file
+# width and height are in inches
+# you&#39;ll have to play around with those (as well as the text size, potentially) to see which make your plot look best
+ggsave(&quot;consort.png&quot;, plot = p6, dpi=600, width = 8, height = 6)</code></pre>
+<p>The saved file looks like this: <img src="consort.png" /></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
