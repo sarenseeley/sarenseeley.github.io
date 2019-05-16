@@ -2,9 +2,9 @@
 title: "Notebooks"
 ---
 
-Various notebooks, resources, and other tidbits from some of my projects.
+Various notebooks, resources, and tutorials from some of my projects.
 
-[Tutorial: Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](/BIDS-fmriprep-MRIQC.html)
+[Getting started with the Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](/BIDS-fmriprep-MRIQC.html)
 
 [Slides: Intro to using BIDS/dcm2niix and fMRIPrep](https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0) presentation from UA Brain Mapping Workgroup meeting 11/16/18 
 
