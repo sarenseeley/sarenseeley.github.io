@@ -827,7 +827,7 @@ Making this its own section since I've had lots of questions on this topic.
 
 See also: https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation
 
-&nbsp;<p>
+<p>&nbsp;<p>
 ### What's the deal with aggressive vs. non-aggressive ICA-AROMA?!
 
 As described by Chris Markiewicz [here](https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16), ICA-AROMA has two denoising strategies: aggressive and non-aggressive. 
