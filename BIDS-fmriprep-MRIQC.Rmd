@@ -546,7 +546,7 @@ These are the summary metrics provided by MRIQC [(source)](https://www.slideshar
 
 #### Functional IQMs
 ![](/Users/sarenseeley/Desktop/mriqc_f.png)
-### Using the T1w image classifier
+## Using the T1w image classifier
 
 Read more about the classifier here: https://mriqc.readthedocs.io/en/stable/classifier.html
 
@@ -566,7 +566,7 @@ Explanation from https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU
 
 There is currently no MRIQC classifier for BOLD images that I'm aware of.
 
-### Results template
+## Results template
 
 Here's a template I made for inspecting the MRIQC group reports, listing each metric and its definition:
 https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing
@@ -585,6 +585,8 @@ See https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-cont
 
 See also Chidi's slides from Nov. 16th '18 BMW meeting: https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq
 
+
+&nbsp;<p>
 # Problems & solutions
 <a id="problems"></a>
 Below are some miscellaneous problems we have encountered, and how we solved them.
@@ -738,6 +740,8 @@ The .json file should contain the following (adapted for your task name):
 }
 ```
 
+
+&nbsp;<p>
 ## fMRIPrep
 
 ### Warning: "<8GB of RAM is available"
@@ -815,10 +819,13 @@ The presence of Siemens MOCO (motion-corrected) files prevents fMRIprep from doi
 You either have to say `--ignore slicetiming` (if you really love the scanner motion correction) OR remove those files from the dataset.
 
 
+
+&nbsp;<p>
 # Denoising, confounds, and ICA-AROMA
 Making this its own section since I've had lots of questions on this topic.
 
 See also: https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation
+
 
 ### What's the deal with aggressive vs. non-aggressive ICA-AROMA?!
 
@@ -836,6 +843,7 @@ For more details and a simulation comparing the two strategies, see [Chris's not
 
 Note again that the ICA-AROMA algorithm is trained to pick up motion artifacts specifically, so won't take care of any physio-related denoising that needs to occur. For this, you may want to use the "aCompCor" regressors. Some people suggest that you also use the cosine regressors in the `confounds.csv` file if using "aCompCor" (or even if not - [they perform high-pass filtering](https://neurostars.org/t/fmriprep-which-regressors-for-best-global-signal-regression-comparison/1878)). 
 
+
 ### Are the preprocessed images from fMRIprep motion-corrected?
 
 A: **Yes**, the preprocessed images  (`*_bold_space-MNI152NLin2009cAsym_preproc.nii`) are motion-corrected, based on the following parts of the documentation from https://fmriprep.readthedocs.io/en/stable/workflows.html: 
@@ -844,11 +852,12 @@ A: **Yes**, the preprocessed images  (`*_bold_space-MNI152NLin2009cAsym_preproc.
 
 >Given a motion-corrected fMRI _[my note: so this motion-corrected images must have been generated at some point if they're required as inputs for this step]_, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the --use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy).
 
+
 ### Are confounds in the confounds.TSV file generated after ICA-AROMA or before?
 
 A: If you used the `--use-aroma` flag, confounds are calculated _before_ ICA-AROMA is applied to the preprocessed `*_bold_space-MNI152NLin2009cAsym_preproc.nii` files, as confirmed here: https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077. 
 
-[James Kent's  simulation](https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb) suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions [here](https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137) and [here](https://github.com/poldracklab/fmriprep/issues/817)
+[James Kent's  simulation](https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb) suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions [here](https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137) and [here](https://github.com/poldracklab/fmriprep/issues/817).
 
 
 &nbsp;<p>
@@ -869,6 +878,8 @@ If you're using the non-aggressively denoised AROMA files (`*_bold_space-MNI152N
 [Discussion of best practices for ICA-AROMA and fMRIPrep](https://neurostars.org/t/best-practices-for-aroma-and-fmriprep/1619/6)
 
 
+
+&nbsp;<p>
 ### Which of the fmriprep confounds should I use if I'm NOT using the AROMA files?
 
 It is up to you as the researcher. fMRIPrep gives you lots of options but as part of its "minimal preprocessing" philosophy, does not dictate which you should or shouldn't use.
@@ -881,6 +892,8 @@ See also [Denoiser: A nuisance regression tool for fMRI BOLD data](https://githu
 
 
 
+
+&nbsp;<p>
 
 # Misc. tidbits
 Various things I and/or others using these tools at UA have discovered along the way.

@@ -951,17 +951,17 @@ mriqc v0.14.2</code></pre>
 </div>
 <div id="functional-iqms" class="section level4">
 <h4>Functional IQMs</h4>
-<p><img src="/Users/sarenseeley/Desktop/mriqc_f.png" /> ### Using the T1w image classifier</p>
+<p><img src="/Users/sarenseeley/Desktop/mriqc_f.png" /> ## Using the T1w image classifier</p>
 <p>Read more about the classifier here: <a href="https://mriqc.readthedocs.io/en/stable/classifier.html" class="uri">https://mriqc.readthedocs.io/en/stable/classifier.html</a></p>
 <p>Usage with docker:</p>
 <pre><code>$ docker run -v $PWD:/scratch -w /scratch --entrypoint=mriqc_clf poldracklab/mriqc:latest --load-classifier -X group_T1w.tsv`</code></pre>
 <p>Explanation from <a href="https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU" class="uri">https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU</a> (commands modified to work on my data): <code>docker run</code> - invokes Docker. <code>-v $PWD:/scratch</code> - provides a folder to communicate data into the container and off the container. <code>-w /scratch</code> - changes the working directory to read the input file and write the results. <code>--entrypoint=mriqc_clf</code> - tells Docker to run a different binary (<code>mriqc_clf</code>) rather than the default (<code>mriqc</code>). <code>poldracklab/mriqc:latest</code> - pulls the latest version of MRIQC. You can also have it pull a specific version (e.g., <code>poldracklab/mriqc:0.9.6</code>). <code>--load-classifier -X</code> - loads the classifier trained on the ABIDE dataset (default) or your custom classifier, if you created one. <code>group_T1w.tsv</code> - tells MRIQC to apply the classifier to group T1w report.</p>
 <p>There is currently no MRIQC classifier for BOLD images that I’m aware of.</p>
 </div>
-<div id="results-template" class="section level3">
-<h3>Results template</h3>
-<p>Here’s a template I made for inspecting the MRIQC group reports, listing each metric and its definition: <a href="https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing</a></p>
 </div>
+<div id="results-template" class="section level2">
+<h2>Results template</h2>
+<p>Here’s a template I made for inspecting the MRIQC group reports, listing each metric and its definition: <a href="https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing</a></p>
 </div>
 </div>
 <div id="singularity" class="section level1">
@@ -989,6 +989,8 @@ Any potential identifying elements should also be removed from text files and im
 </ol>
 <p>See <a href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
 <p>See also Chidi’s slides from Nov. 16th ’18 BMW meeting: <a href="https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq" class="uri">https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq</a></p>
+ 
+<p>
 </div>
 <div id="problems-solutions" class="section level1">
 <h1>Problems &amp; solutions</h1>
@@ -1117,6 +1119,8 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 <pre><code>{
   &quot;TaskName&quot;: &quot;rest&quot;
 }</code></pre>
+ 
+<p>
 </div>
 </div>
 </div>
@@ -1197,6 +1201,8 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 <div id="solution-9" class="section level4">
 <h4>Solution</h4>
 <p>You either have to say <code>--ignore slicetiming</code> (if you really love the scanner motion correction) OR remove those files from the dataset.</p>
+ 
+<p>
 </div>
 </div>
 </div>
@@ -1231,7 +1237,7 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 <div id="are-confounds-in-the-confounds.tsv-file-generated-after-ica-aroma-or-before" class="section level3">
 <h3>Are confounds in the confounds.TSV file generated after ICA-AROMA or before?</h3>
 <p>A: If you used the <code>--use-aroma</code> flag, confounds are calculated <em>before</em> ICA-AROMA is applied to the preprocessed <code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code> files, as confirmed here: <a href="https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077" class="uri">https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077</a>.</p>
-<p><a href="https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb">James Kent’s simulation</a> suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions <a href="https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137">here</a> and <a href="https://github.com/poldracklab/fmriprep/issues/817">here</a></p>
+<p><a href="https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb">James Kent’s simulation</a> suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions <a href="https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137">here</a> and <a href="https://github.com/poldracklab/fmriprep/issues/817">here</a>.</p>
  
 <p>
 </div>
@@ -1250,12 +1256,16 @@ The suggested implementation from the <a href="https://www.sciencedirect.com/sci
 <p>
 <p>If you’re using the non-aggressively denoised AROMA files (<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code>), you do NOT need to use the confounds “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ” as you would with the regular preprocessed files.</p>
 <p><a href="https://neurostars.org/t/best-practices-for-aroma-and-fmriprep/1619/6">Discussion of best practices for ICA-AROMA and fMRIPrep</a></p>
+ 
+<p>
 </div>
 <div id="which-of-the-fmriprep-confounds-should-i-use-if-im-not-using-the-aroma-files" class="section level3">
 <h3>Which of the fmriprep confounds should I use if I’m NOT using the AROMA files?</h3>
 <p>It is up to you as the researcher. fMRIPrep gives you lots of options but as part of its “minimal preprocessing” philosophy, does not dictate which you should or shouldn’t use.</p>
 <p>See this discussion: <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326" class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326</a> (the six motion parameters are “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ”).</p>
 <p>See also <a href="https://github.com/arielletambini/denoiser">Denoiser: A nuisance regression tool for fMRI BOLD data</a> This tool works with the confounds generated by fmriprep (though you still have to pick the ones you want to regress out of your data).</p>
+ 
+<p>
 </div>
 </div>
 <div id="misc.-tidbits" class="section level1">
