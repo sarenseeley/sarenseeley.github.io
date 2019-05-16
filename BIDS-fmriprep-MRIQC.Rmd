@@ -1,5 +1,5 @@
 ---
-title: "Tutorial: BIDS, fMRIPrep, MRIQC"
+title: "Getting started with BIDS, fMRIPrep, MRIQC"
 author: "Saren Seeley"
 date: "Last updated 05-16-2019"
 output: 
