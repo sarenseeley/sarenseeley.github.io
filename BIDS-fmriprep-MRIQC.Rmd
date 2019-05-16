@@ -820,7 +820,7 @@ You either have to say `--ignore slicetiming` (if you really love the scanner mo
 
 
 
-&nbsp;<p>
+&nbsp;<p></p>
 <a id="aroma"></a>
 
 # Denoising, confounds, and ICA-AROMA
