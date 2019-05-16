@@ -1203,8 +1203,8 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 </div>
 <div id="denoising-confounds-and-ica-aroma" class="section level1">
 <h1>Denoising, confounds, and ICA-AROMA</h1>
-<p>Making this its own section since I’ve had lots of FAQs on this topic.</p>
-<p>See also For more details: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a></p>
+<p>Making this its own section since I’ve had lots of questions on this topic.</p>
+<p>See also: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a></p>
 <div id="whats-the-deal-with-aggressive-vs.non-aggressive-ica-aroma" class="section level3">
 <h3>What’s the deal with aggressive vs. non-aggressive ICA-AROMA?!</h3>
 <p>As described by Chris Markiewicz <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16">here</a>, ICA-AROMA has two denoising strategies: aggressive and non-aggressive.</p>
@@ -1214,21 +1214,9 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 <li>Non-aggressive denoising removes a lot less signal-related variance than aggressive denoising, so non-aggressive is usually what you want to do.</li>
 <li>fMRIprep only ever performs non-aggressive denoising.</li>
 </ul>
-<p>For more details and a simulation comparing the two strategies, see <a href="https://github.com/oesteban/aroma-chris-notebook/blob/master/Denoising%2Bthe%2Bdenoising.ipynb">Chris’s notebook here</a>. This is a really helpful resource for understanding what they do and how they differ.</p>
-<p>Note again that the ICA-AROMA algorithm is trained to pick up motion artifacts specifically, so won’t take care of any physio-related denoising that needs to occur. For this, you may want to use the aCompCor components (along with the “Cosine” columns in the <code>confounds.csv</code> file)</p>
-<p><em><strong>When does the removal of components happen? Is it part of the processing the fmriprep does when you call –use-aroma?</strong></em></p>
 <p>When you pass the <code>--use-aroma</code> flag, fmriprep performs non-aggressive denoising on the preprocessed data as a last step, and generates those non-aggressively denoised images. Even using the flag, fmriprep will still produce the non-denoised regular preprocessed files (<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) in addition to the denoised ones (<code>*smoothAROMAnonaggr_preproc.nii.gz</code>).</p>
-<p><code>fmriprep</code> only ever performs non-aggressive denoising (never aggressive).</p>
-<p><em><strong>If so, is it aggressive on non-aggressive at that point. Or is this a separate process you do later?</strong></em></p>
-<ul>
-<li>there are a bunch of reasons you don’t want to do that apparently. You’d probably understand them better than I, but my general impression is that aggressive denoising means you’re removing an undesirably large amount of variance from your signal).</li>
-</ul>
-<p>Note that the ICA-AROMA algorithm is designed to specifically pick up motion artifacts and not physiological ones, and non-aggressive denoising will accordingly not do too much for stuff like CSF or arterial/venous flow. I’ve definitely seen this in GIFT when I used the denoised images - few if any motion components, but doesn’t make a difference for the physio ones that I can tell. Not sure how it handles MR artifacts like Gibbs’ ringing. I’ve seen AROMA components on the fmriprep reportlets that are clearly MR-related, just not sure if it adds those back or not.</p>
-<p>] Hi Mike,</p>
-<p>That’s correct. ICA-AROMA has two denoising strategies: aggressive and non-aggressive. Aggressive is the normal approach of detrending based on the regressors marked as “noise”. Non-aggressive fits all regressors, and then re-adds the components attributed to the “signal” regressors. This isn’t a standard GLM, so we save the ICA-AROMA output as a convenience.</p>
-<p>For more details: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a> 27</p>
-<p>Chris</p>
-<p>Good question, Jess’s lab just had some similar ones. I’ve been meaning to put something together on the topic based on my limited understanding since a lot of info seems to be scattered across GitHub and Neurostars forum posts, but haven’t gotten around to it yet.</p>
+<p>For more details and a simulation comparing the two strategies, see <a href="https://github.com/oesteban/aroma-chris-notebook/blob/master/Denoising%2Bthe%2Bdenoising.ipynb">Chris’s notebook here</a>. This is a really helpful resource for understanding what the strategies do and how they differ.</p>
+<p>Note again that the ICA-AROMA algorithm is trained to pick up motion artifacts specifically, so won’t take care of any physio-related denoising that needs to occur. For this, you may want to use the “aCompCor” regressors. Some people suggest that you also use the cosine regressors in the <code>confounds.csv</code> file if using “aCompCor” (or even if not - <a href="https://neurostars.org/t/fmriprep-which-regressors-for-best-global-signal-regression-comparison/1878">they perform high-pass filtering</a>).</p>
 </div>
 <div id="are-the-preprocessed-images-from-fmriprep-motion-corrected" class="section level3">
 <h3>Are the preprocessed images from fMRIprep motion-corrected?</h3>
