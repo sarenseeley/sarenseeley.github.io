@@ -410,7 +410,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Tutorial: BIDS, fMRIPrep, MRIQC</h1>
 <h4 class="author">Saren Seeley</h4>
-<h4 class="date">Last updated 03-20-2019</h4>
+<h4 class="date">Last updated 05-16-2019</h4>
 
 </div>
 
@@ -600,12 +600,13 @@ $ dcm2niibatch batch_config_rest.yaml</code></pre>
 </ol>
 <div id="errors-and-warnings" class="section level3">
 <h3>Errors and warnings</h3>
-<p><em>Section IN PROGRESS. For now, some of the errors I ran into (and their solutions) are listed in the BIDS-conversion notebook on <a href="https://github.com/sarenseeley/seeley-dissertation">my Github</a>.</em></p>
+<p>See section <a href="#problems">Problems and Solutions</a> below.</p>
 </div>
 </div>
 </div>
 <div id="fmriprep" class="section level1">
 <h1>fMRIPrep</h1>
+<p><strong>NOTE: This documentation is based on my experience with fmriprep version 1.1.8. As of 05/16/2019, the current version is 1.4.0</strong> (see <a href="https://neurostars.org/t/fmriprep-1-4-0-just-released/4265" class="uri">https://neurostars.org/t/fmriprep-1-4-0-just-released/4265</a>)</p>
 <div id="bids-apps" class="section level2">
 <h2>BIDS apps</h2>
 <p>Generally, a BIDS app is “<em>a container image capturing a neuroimaging pipeline that takes a BIDS-formatted dataset as input. Since the input is a whole dataset, apps are able to combine multiple modalities, sessions, and/or subjects, but at the same time need to implement ways to query input datasets. Each BIDS App has the same core set of command-line arguments, making them easy to run and integrate into automated platforms.</em>” (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005209">Gorgolweski et al., 2017</a>)</p>
@@ -876,7 +877,7 @@ So far, this seems to be helping.
 <p><code>--longitudinal</code>: “In the case of multiple T1w images (across sessions and/or runs), T1w images are merged into a single template image using FreeSurfer’s mri_robust_template. This template may be unbiased, or equidistant from all source images, or aligned to the first image (determined lexicographically by session label). For two images, the additional cost of estimating an unbiased template is trivial and is the default behavior, but, for greater than two images, the cost can be a slowdown of an order of magnitude. Therefore, in the case of three or more images, fmriprep constructs templates aligned to the first image, unless passed the –longitudinal flag, which forces the estimation of an unbiased template.” <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html#longitudinal-processing">(source)</a></p>
 <p><code>--low-mem</code>: Option to reduce memory usage for large BOLD series (will increase disk usage in working directory). “This will wait until the end of the pipeline to compress the resampled BOLD series, which allows tasks that need to read these files to read only the necessary parts of the file into memory.” (<a href="https://neurostars.org/t/memory-usage-of-fmriprep/1552/3" class="uri">https://neurostars.org/t/memory-usage-of-fmriprep/1552/3</a>)</p>
 <p><code>--fs-no-reconall</code>: Disables surface preprocessing, which saves a ton of time. If your registration looks okay without it, then great! If you’re seeing issues with the registration, like “brain” is identified outside of the brain, then give it a try using Freesurfer’s <code>bbregister</code> instead (this is the default, so don’t need to specify, just remove <code>--fs-no-reconall</code>).</p>
-<p><code>-w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch</code>: Specifies your own local scratch directory (vs. having interim files written somewhere in the Docker container). This is really helpful because if fMRIPrep crashes, it can use the previously computed outputs to pick up where it left off, saving you from having to wait for it to rerun the whole thing.</p>
+<p><code>-w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch</code>: Specifies your own local scratch directory (vs. having interim files written somewhere in the Docker container). <strong>This is really helpful because if fMRIPrep crashes, it can use the previously computed outputs to pick up where it left off, saving you from having to wait for it to rerun the whole thing.</strong></p>
 </div>
 </div>
 <div id="reports" class="section level2">
@@ -989,25 +990,25 @@ Any potential identifying elements should also be removed from text files and im
 <p>See <a href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
 <p>See also Chidi’s slides from Nov. 16th ’18 BMW meeting: <a href="https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq" class="uri">https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq</a></p>
 </div>
-<div id="misc.-problems-solutions" class="section level1">
-<h1>Misc. problems &amp; solutions</h1>
-<p>Below are some miscellaneous problems I encountered, and how I solved them.</p>
-<div id="dcm2niixdcm2niibatch" class="section level3">
-<h3>dcm2niix/dcm2niibatch</h3>
-<div id="warning-slices-stacked-despite-varying-acquisition-numbers" class="section level4">
-<h4>Warning: “slices stacked despite varying acquisition numbers”</h4>
+<div id="problems-solutions" class="section level1">
+<h1>Problems &amp; solutions</h1>
+<p><a id="problems"></a> Below are some miscellaneous problems we have encountered, and how we solved them.</p>
+<div id="dcm2niixdcm2niibatch" class="section level2">
+<h2>dcm2niix/dcm2niibatch</h2>
+<div id="warning-slices-stacked-despite-varying-acquisition-numbers" class="section level3">
+<h3>Warning: “slices stacked despite varying acquisition numbers”</h3>
 <p>What does dcm2niix’s message <em>“slices stacked despite varying acquisition numbers (if this is not desired please recompile)”</em> mean?</p>
-<div id="solution" class="section level5">
-<h5>Solution</h5>
+<div id="solution" class="section level4">
+<h4>Solution</h4>
 <p>Look at your data to know whether this is okay or not. You can look at the DICOMs (converted to .nii) in your image viewer of choice (SPM, Mango, FSLview…) against the .nii files generated by <code>dcm2niix</code> to check that they look the same.</p>
 <p>From Dianne Patterson:<br> <i>There are different ways to order the data, especially 4d data like fmri… slice 1 vol1, slice 1 vol2, slice 1 vol3… vs vol1, slice1, slice 2, slice3 etc….vol2 slice1, slice2, slice 3 etc….<br> I think there can be a difference between the way the scanner exports them and the program stacks them, though I generally don’t learn these gory details unless something breaks. Did you look at the fmris to make sure the volumes display all their slices in order (I suspect it’ll seem okay or look like a total hot mess)?</i></p>
 </div>
 </div>
-<div id="error-no-valid-dicoms-found" class="section level4">
-<h4>Error: “No valid DICOMs found”</h4>
+<div id="error-no-valid-dicoms-found" class="section level3">
+<h3>Error: “No valid DICOMs found”</h3>
 <p>This means exactly what it says.</p>
-<div id="solution-1" class="section level5">
-<h5>Solution</h5>
+<div id="solution-1" class="section level4">
+<h4>Solution</h4>
 <p>When running <code>dcm2niibatch</code>, I specified <code>isVerbose: true</code> and copied the command line output into a .txt file to inspect for any issues with files that <code>dcm2niix</code> was unable to covert. For D110B, there was the following error:</p>
 <pre><code>Found 192 DICOM file(s) #repeated 192x
 Unsupported transfer syntax &#39;1.2.840.10008.1.2.4.90&#39; (see www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage)
@@ -1042,11 +1043,11 @@ $ dcm2niibatch /Users/sarenseeley/Desktop/restingstate/data/batch_config_rest-D1
 </div>
 </div>
 </div>
-<div id="bids-validator" class="section level3">
-<h3>BIDS validator</h3>
+<div id="bids-validator" class="section level2">
+<h2>BIDS validator</h2>
 <p>Below are some errors and warnings that the validator gave me. Warnings can be ignored (at your own peril), but errors mean that your dataset is not BIDS-compliant.</p>
-<div id="warning-not-all-subjects-contain-the-same-files" class="section level4">
-<h4>Warning: “Not all subjects contain the same files”</h4>
+<div id="warning-not-all-subjects-contain-the-same-files" class="section level3">
+<h3>Warning: “Not all subjects contain the same files”</h3>
 <p>This means you’re probably missing some files for certain participants in your BIDS dataset. Example:</p>
 <pre><code>Warning: 1 (4 files)
 Not all subjects contain the same files. Each subject should contain the same number of files with the same naming unless some files are known to be missing.
@@ -1078,26 +1079,26 @@ Location:
 
 Reason:
 This file is missing for subject sub-110, but is present for at least one other subject.</code></pre>
-<div id="solution-2" class="section level5">
-<h5>Solution</h5>
+<div id="solution-2" class="section level4">
+<h4>Solution</h4>
 <p>The BIDS validator will tell you which subjects are missing files, as shown above. Figure out why they are missing files (for me, it was the “<code>dcm2niibatch</code> doesn’t read compressed DICOMs” issue described above), fix it, and re-run the validator.</p>
 </div>
 </div>
-<div id="error-not_included" class="section level4">
-<h4>Error: “NOT_INCLUDED”</h4>
+<div id="error-not_included" class="section level3">
+<h3>Error: “NOT_INCLUDED”</h3>
 <blockquote>
 <p>Files with such naming scheme are not part of BIDS specification. This error is most commonly caused by typos in file names that make them not BIDS compatible. Please consult the specification and make sure your files are named correctly. If this is not a file naming issue (for example when including files not yet covered by the BIDS specification) you should include a “.bidsignore” file in your dataset (see <a href="https://github.com/bids-standard/bids-validator#bidsignore" class="uri">https://github.com/bids-standard/bids-validator#bidsignore</a> for details). Please note that derived (processed) data should be placed in /derivatives folder and source data (such as DICOMS or behavioural logs in proprietary formats) should be placed in the /sourcedata folder.</p>
 </blockquote>
 <p>Why did this happen? The YAML configuration files that I used for <code>dcm2niibatch</code> are in <code>/data</code>.</p>
-<div id="solution-3" class="section level5">
-<h5>Solution</h5>
+<div id="solution-3" class="section level4">
+<h4>Solution</h4>
 <p>Added a .bidsignore file containing the following:</p>
 <pre><code>/data
 *.yaml</code></pre>
 </div>
 </div>
-<div id="error-no-taskname" class="section level4">
-<h4>Error: “No TaskName”</h4>
+<div id="error-no-taskname" class="section level3">
+<h3>Error: “No TaskName”</h3>
 <p>Example:</p>
 <pre><code>Error: 1 (79 files)
 You have to define &#39;TaskName&#39; for this file.
@@ -1108,8 +1109,8 @@ derivatives/sub-101/ses-txA/func/sub-101_ses-txA_task-rest_bold.nii
 
 Reason:
 You have to define &#39;TaskName&#39; for this file. It can be included one of the following locations: /bold.json, /task-rest_bold.json, /sub-101/sub-101_bold.json, /sub-101/sub-101_task-rest_bold.json, /sub-101/ses-txA/sub-101_ses-txA_bold.json, /sub-101/ses-txA/sub-101_ses-txA_task-rest_bold.json, /sub-101/ses-txA/func/sub-101_ses-txA_task-rest_bold.json</code></pre>
-<div id="solution-4" class="section level5">
-<h5>Solution</h5>
+<div id="solution-4" class="section level4">
+<h4>Solution</h4>
 <p>That info (<code>TaskName</code>) wasn’t stored in the image header so <code>dcm2niix</code> can’t pull it. See Chris G.’s response here: <a href="https://github.com/rordenlab/dcm2niix/issues/148" class="uri">https://github.com/rordenlab/dcm2niix/issues/148</a></p>
 <p>But you don’t need to add a TaskName field individually into each of the .json sidecars for each subject/session. Just stick a <code>task-rest_bold.json</code> file containing the task name (as shown below) into the top level of your BIDS directory, and that will apply to all of the <code>task-rest_bold</code> files in that location:</p>
 <p>The .json file should contain the following (adapted for your task name):</p>
@@ -1119,17 +1120,17 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 </div>
 </div>
 </div>
-<div id="fmriprep-1" class="section level3">
-<h3>fMRIPrep</h3>
-<div id="warning-8gb-of-ram-is-available" class="section level4">
-<h4>Warning: “&lt;8GB of RAM is available”</h4>
+<div id="fmriprep-1" class="section level2">
+<h2>fMRIPrep</h2>
+<div id="warning-8gb-of-ram-is-available" class="section level3">
+<h3>Warning: “&lt;8GB of RAM is available”</h3>
 <pre><code>$ fmriprep-docker /Users/sarenseeley/Desktop/test/ /Users/sarenseeley/Desktop/test/derivatives participant
  Warning: &lt;8GB of RAM is available within your Docker environment.
  Some parts of fMRIPrep may fail to complete.
  Continue anyway? [y/N]</code></pre>
 <p>2GB is the default RAM available in Docker for Mac, at least for my installation. fMRIPrep needs at least 8GB to run (more is better), even if using the <code>--low-mem</code> flag to reduce memory usage.</p>
-<div id="solution-5" class="section level5">
-<h5>Solution</h5>
+<div id="solution-5" class="section level4">
+<h4>Solution</h4>
 <ul>
 <li>Go to <em>Docker &gt; Preferences &gt; Advanced</em> and increase the memory to &gt;=8GB.</li>
 <li>Restart Docker.</li>
@@ -1138,8 +1139,8 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 </ul>
 </div>
 </div>
-<div id="warning-spatial-transformations-on-oblique-dataset" class="section level4">
-<h4>Warning: “spatial transformations on oblique dataset”</h4>
+<div id="warning-spatial-transformations-on-oblique-dataset" class="section level3">
+<h3>Warning: “spatial transformations on oblique dataset”</h3>
 <p>You might see something like this in the command window as fMRIPrep is running:</p>
 <pre><code>181026-21:01:38,622 nipype.interface INFO:
      stderr 2018-10-26T21:01:38.622139:*+ WARNING:   If you are performing spatial transformations on an oblique dset, 
@@ -1157,58 +1158,170 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
      stderr 2018-10-26T21:01:38.622139: See 3dWarp -help for details.
 181026-21:01:38,628 nipype.interface INFO:
      stderr 2018-10-26T21:01:38.622139:++ Oblique dataset:/tmp/work/fmriprep_wf/single_subject_120_wf/func_preproc_ses_txB_task_rest_wf/bold_reference_wf/gen_ref/slice.nii.gz is 13.716262 degrees from plumb.</code></pre>
-<div id="solution-6" class="section level5">
-<h5>Solution</h5>
+<div id="solution-6" class="section level4">
+<h4>Solution</h4>
 <p>It seems that <a href="https://neurostars.org/t/warning-if-you-are-performing-spatial-transformations-on-an-oblique-dset/2065">this warning can be safely ignored.</a></p>
 </div>
 </div>
-<div id="error-valid-license-file-is-required" class="section level4">
-<h4>Error: “valid license file is required”</h4>
+<div id="error-valid-license-file-is-required" class="section level3">
+<h3>Error: “valid license file is required”</h3>
 <p>If fmriprep can’t find the license file, this error message appears:</p>
 <pre><code>$ RuntimeError: ERROR: a valid license file is required for FreeSurfer to run. FMRIPREP looked for an existing license file at several paths, in this order: 1) command line argument ``--fs-license-file``; 2) ``$FS_LICENSE`` environment variable; and 3) the ``$FREESURFER_HOME/license.txt`` path. Get it (for free) by registering at https://surfer.nmr.mgh.harvard.edu/registration.html</code></pre>
-<div id="solution-7" class="section level5">
-<h5>Solution</h5>
+<div id="solution-7" class="section level4">
+<h4>Solution</h4>
 <p>See the section in <a href="#freesurf">installing fMRIPrep</a>. Note that if you get an error message saying that you need an updated license file, you actually may not (especially if you just downloaded one). I encountered that issue when it was still having trouble finding the license.</p>
 </div>
 </div>
-<div id="error-command-not-found" class="section level4">
-<h4>Error: “command not found”</h4>
+<div id="error-command-not-found" class="section level3">
+<h3>Error: “command not found”</h3>
 <p>This means that <code>pip</code> installed the Docker wrapper somewhere obscure.</p>
-<div id="solution-8" class="section level5">
-<h5>Solution</h5>
+<div id="solution-8" class="section level4">
+<h4>Solution</h4>
 <p>Find out where <code>pip</code> installed it, and add that path to your global environment as described <a href="#cmdnotfound">here</a>.</p>
 </div>
 </div>
+<div id="error-brokenprocesspool-or-fmriprep-is-hanging" class="section level3">
+<h3>Error: “BrokenProcessPool”, or fMRIPrep is hanging</h3>
+<p>This is a memory allocation issue.</p>
+<p>From the <a href="https://fmriprep.readthedocs.io/en/stable/faq_tips_tricks.html">fMRIPrep documentation:</a></p>
+<blockquote>
+<p>When running on Linux platforms (or containerized environments, because they are built around Ubuntu), there is a Python bug that affects fMRIPrep that drives the Linux kernel to kill processes as a response to running out of memory. Depending on the process killed by the kernel, fMRIPrep may crash with a BrokenProcessPool error or hang indefinitely, depending on settings. While we are working on finding a solution that does not run up against this bug, this may take some time. This can be most easily resolved by allocating more memory to the process, if possible.</p>
+</blockquote>
+<blockquote>
+<p>Additionally, consider using the –low-mem flag, which will make some memory optimizations at the cost of disk space in the working directory.</p>
+</blockquote>
+</div>
+<div id="error-slice-timing-fails-for-siemens-moco-data" class="section level3">
+<h3>Error: Slice timing fails for Siemens MOCO data</h3>
+<p>The presence of Siemens MOCO (motion-corrected) files prevents fMRIprep from doing slice timing.</p>
+<div id="solution-9" class="section level4">
+<h4>Solution</h4>
+<p>You either have to say <code>--ignore slicetiming</code> (if you really love the scanner motion correction) OR remove those files from the dataset.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="denoising-confounds-and-ica-aroma" class="section level1">
+<h1>Denoising, confounds, and ICA-AROMA</h1>
+<p>Making this its own section since I’ve had lots of FAQs on this topic.</p>
+<p>See also For more details: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a></p>
+<div id="whats-the-deal-with-aggressive-vs.non-aggressive-ica-aroma" class="section level3">
+<h3>What’s the deal with aggressive vs. non-aggressive ICA-AROMA?!</h3>
+<p>As described by Chris Markiewicz <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16">here</a>, ICA-AROMA has two denoising strategies: aggressive and non-aggressive.</p>
+<ul>
+<li>Aggressive is the normal approach of detrending based on the regressors marked as “noise”.</li>
+<li>Non-aggressive fits all regressors, and then re-adds the components attributed to the “signal” regressors.</li>
+<li>Non-aggressive denoising removes a lot less signal-related variance than aggressive denoising, so non-aggressive is usually what you want to do.</li>
+<li>fMRIprep only ever performs non-aggressive denoising.</li>
+</ul>
+<p>For more details and a simulation comparing the two strategies, see <a href="https://github.com/oesteban/aroma-chris-notebook/blob/master/Denoising%2Bthe%2Bdenoising.ipynb">Chris’s notebook here</a>. This is a really helpful resource for understanding what they do and how they differ.</p>
+<p>Note again that the ICA-AROMA algorithm is trained to pick up motion artifacts specifically, so won’t take care of any physio-related denoising that needs to occur. For this, you may want to use the aCompCor components (along with the “Cosine” columns in the <code>confounds.csv</code> file)</p>
+<p><em><strong>When does the removal of components happen? Is it part of the processing the fmriprep does when you call –use-aroma?</strong></em></p>
+<p>When you pass the <code>--use-aroma</code> flag, fmriprep performs non-aggressive denoising on the preprocessed data as a last step, and generates those non-aggressively denoised images. Even using the flag, fmriprep will still produce the non-denoised regular preprocessed files (<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) in addition to the denoised ones (<code>*smoothAROMAnonaggr_preproc.nii.gz</code>).</p>
+<p><code>fmriprep</code> only ever performs non-aggressive denoising (never aggressive).</p>
+<p><em><strong>If so, is it aggressive on non-aggressive at that point. Or is this a separate process you do later?</strong></em></p>
+<ul>
+<li>there are a bunch of reasons you don’t want to do that apparently. You’d probably understand them better than I, but my general impression is that aggressive denoising means you’re removing an undesirably large amount of variance from your signal).</li>
+</ul>
+<p>Note that the ICA-AROMA algorithm is designed to specifically pick up motion artifacts and not physiological ones, and non-aggressive denoising will accordingly not do too much for stuff like CSF or arterial/venous flow. I’ve definitely seen this in GIFT when I used the denoised images - few if any motion components, but doesn’t make a difference for the physio ones that I can tell. Not sure how it handles MR artifacts like Gibbs’ ringing. I’ve seen AROMA components on the fmriprep reportlets that are clearly MR-related, just not sure if it adds those back or not.</p>
+<p>] Hi Mike,</p>
+<p>That’s correct. ICA-AROMA has two denoising strategies: aggressive and non-aggressive. Aggressive is the normal approach of detrending based on the regressors marked as “noise”. Non-aggressive fits all regressors, and then re-adds the components attributed to the “signal” regressors. This isn’t a standard GLM, so we save the ICA-AROMA output as a convenience.</p>
+<p>For more details: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a> 27</p>
+<p>Chris</p>
+<p>Good question, Jess’s lab just had some similar ones. I’ve been meaning to put something together on the topic based on my limited understanding since a lot of info seems to be scattered across GitHub and Neurostars forum posts, but haven’t gotten around to it yet.</p>
+</div>
+<div id="are-the-preprocessed-images-from-fmriprep-motion-corrected" class="section level3">
+<h3>Are the preprocessed images from fMRIprep motion-corrected?</h3>
+<p>A: <strong>Yes</strong>, the preprocessed images (<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) are motion-corrected, based on the following parts of the documentation from <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html" class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html</a>:</p>
+<blockquote>
+<p>Using the previously estimated reference scan, FSL mcflirt is used to estimate head-motion. As a result, one rigid-body transform with respect to the reference image is written for each BOLD time-step. Additionally, a list of 6-parameters (three rotations, three translations) per time-step is written and fed to the confounds workflow. For a more accurate estimation of head-motion, we calculate its parameters before any time-domain filtering (i.e. slice-timing correction), as recommended in [Power2017].</p>
+</blockquote>
+<blockquote>
+<p>Given a motion-corrected fMRI <em>[my note: so this motion-corrected images must have been generated at some point if they’re required as inputs for this step]</em>, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy).</p>
+</blockquote>
+</div>
+<div id="are-confounds-in-the-confounds.tsv-file-generated-after-ica-aroma-or-before" class="section level3">
+<h3>Are confounds in the confounds.TSV file generated after ICA-AROMA or before?</h3>
+<p>A: If you used the <code>--use-aroma</code> flag, confounds are calculated <em>before</em> ICA-AROMA is applied to the preprocessed <code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code> files, as confirmed here: <a href="https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077" class="uri">https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077</a>.</p>
+<p><a href="https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb">James Kent’s simulation</a> suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions <a href="https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137">here</a> and <a href="https://github.com/poldracklab/fmriprep/issues/817">here</a></p>
+ 
+<p>
+</div>
+<div id="which-of-the-fmriprep-confounds-should-i-use-with-ica-aroma-files" class="section level3">
+<h3>Which of the fmriprep confounds should I use with ICA-AROMA files?</h3>
+<p>When using AROMA-denoised data (<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code> files), you would likely NOT want to regress out motion-related variables from <code>confounds.tsv</code> as this may reintroduce motion. However, the ICA-AROMA algorithm is fairly specific to motion-related artifacts and will not address physiological artifacts such as those from CSF and blood flow. (For what it’s worth, I’ve seen this in my data when using the <a href="http://mialab.mrn.org/software/gift/index.html">GIFT toolbox</a> to run a subsequent ICA on both the non-AROMA and AROMA-denoised data from <code>fmriprep</code>. ICA-AROMA handles motion beautifully, as evidenced by the number of motion-related components being vastly reduced. However, I see basically the same physiological components either way.)</p>
+The suggested implementation from the <a href="https://www.sciencedirect.com/science/article/pii/S1053811915001822?via%3Dihub#s0010">ICA-AROMA article</a> is to perform nuisance regression for WM, CSF, and linear trend:  
+<p>
+<p>
+<div class="figure">
+<img src="https://ars.els-cdn.com/content/image/1-s2.0-S1053811915001822-gr1.jpg" />
+
+</div>
+<p>CSF and WM are the “CSF” and “WhiteMatter” columns in <code>confounds.tsv</code>.</p>
+ 
+<p>
+<p>If you’re using the non-aggressively denoised AROMA files (<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code>), you do NOT need to use the confounds “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ” as you would with the regular preprocessed files.</p>
+<p><a href="https://neurostars.org/t/best-practices-for-aroma-and-fmriprep/1619/6">Discussion of best practices for ICA-AROMA and fMRIPrep</a></p>
+</div>
+<div id="which-of-the-fmriprep-confounds-should-i-use-if-im-not-using-the-aroma-files" class="section level3">
+<h3>Which of the fmriprep confounds should I use if I’m NOT using the AROMA files?</h3>
+<p>It is up to you as the researcher. fMRIPrep gives you lots of options but as part of its “minimal preprocessing” philosophy, does not dictate which you should or shouldn’t use.</p>
+<p>See this discussion: <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326" class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326</a> (the six motion parameters are “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ”).</p>
+<p>See also <a href="https://github.com/arielletambini/denoiser">Denoiser: A nuisance regression tool for fMRI BOLD data</a> This tool works with the confounds generated by fmriprep (though you still have to pick the ones you want to regress out of your data).</p>
 </div>
 </div>
 <div id="misc.-tidbits" class="section level1">
 <h1>Misc. tidbits</h1>
-<p>Random bits and pieces that didn’t seem to fit elsewhere.</p>
-<div id="fmriprep-2" class="section level3">
-<h3>fMRIPrep</h3>
-<div id="multi-session-data-bad-t1w-at-one-session" class="section level5">
-<h5>Multi-session data, bad T1w at one session</h5>
+<p>Various things I and/or others using these tools at UA have discovered along the way.</p>
+<div id="fmriprep-2" class="section level2">
+<h2>fMRIPrep</h2>
+<div id="reverting-to-an-earlier-version" class="section level3">
+<h3>Reverting to an earlier version</h3>
+<p>In some cases, you may want to go back to using a previous version of fmriprep (for example, you upgrade, then realize you need to go back and reprocess some participants you did earlier). In this case, you can run from Terminal:</p>
+<pre><code>$ pip install fmriprep-docker==&lt;version number, e.g. 1.1.8&gt;</code></pre>
+<p>I initially got error: <code>[Errno 13] Permission denied: '/Library/Python/2.7/site-packages/fmriprep_docker.py'</code> As it says on the label, this is a permissions issue. Use <code>$ login &lt;yourusername&gt;</code> to switch users to one with admin privileges, then <code>sudo pip install fmriprep-docker==1.1.8</code></p>
+<p>Alternatively, if you don’t have root access on the server you can try appending the <code>--user</code> flag to the <code>pip</code> command to install the package in your local home directory:</p>
+<pre><code>$ pip install fmriprep-docker==1.1.8 --user</code></pre>
+<p>You might get the following warning:</p>
+<pre><code>The script fmriprep-docker is installed in ‘/Users/rblair/.local/bin’ which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+If this doesn’t work you may need to setup a virtual environment using a program like conda or virtualenv</code></pre>
+<p>If you get this error you could try adding <code>$HOME/.local/bin</code> to your path variable, or call it directly with <code>$ $HOME/.local/bin/fmriprep-docker</code></p>
+<p>See <a href="https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645" class="uri">https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645</a></p>
+<div id="ica-aroma-for-multiband-data" class="section level4">
+<h4>ICA-AROMA for multiband data?</h4>
+<p>See this article comparing denoising approaches for multi-echo data: <a href="https://doi.org/10.1371/journal.pone.0173289" class="uri">https://doi.org/10.1371/journal.pone.0173289</a></p>
+</div>
+<div id="multi-session-data-bad-t1w-at-one-session" class="section level4">
+<h4>Multi-session data, bad T1w at one session</h4>
 <p>Example: You want to use the T1w scan from session 2 for both sessions, since there was too much movement in the one from session 1.</p>
 <p>See <a href="https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851" class="uri">https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851</a></p>
 <p>Another option is to copy the “good” image from session 2 into the session 1 <code>anat</code> folder, making sure to rename it as session 1. This isn’t optimal IMO because it would be nice to make it obvious that this image is from a different session, but that’s how I made it work. You could note that in the metadata associated with the dataset (i.e., the README file)</p>
 </div>
-<div id="what-if-ive-already-run-freesurfer-on-my-data" class="section level5">
-<h5>What if I’ve already run Freesurfer on my data?</h5>
+<div id="what-if-ive-already-run-freesurfer-on-my-data" class="section level4">
+<h4>What if I’ve already run Freesurfer on my data?</h4>
 <p>I haven’t tried this, but seems like it is possible to use the existing outputs:</p>
-From <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing" class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing</a>: &gt; Surface processing will be skipped if the outputs already exist. In order to bypass reconstruction in fmriprep, place existing reconstructed subjects in
-<output dir>
-<p>/freesurfer prior to the run. fmriprep will perform any missing recon-all steps, but will not perform any steps whose outputs already exist.</p>
+<p>From <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing" class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing</a>:</p>
+<blockquote>
+<p>Surface processing will be skipped if the outputs already exist. In order to bypass reconstruction in fmriprep, place existing reconstructed subjects in &lt; output dir &gt;/freesurfer prior to the run. fmriprep will perform any missing recon-all steps, but will not perform any steps whose outputs already exist.</p>
+</blockquote>
 <p>I’m guessing it’s probably imperative to have the subfolders named and organized as they would be if this folder was generated by running fMRIPrep (run on one subject to get an example?)</p>
 </div>
-<div id="artifacts-in-t1w-epi-registration-visualization" class="section level5">
-<h5>“Artifacts” in T1w-EPI registration visualization?</h5>
+<div id="artifacts-in-t1w-epi-registration-visualization" class="section level4">
+<h4>“Artifacts” in T1w-EPI registration visualization?</h4>
 <p>See this thread I started on NeuroStars: <a href="https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5" class="uri">https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5</a> Summary: It’s not an artifact in your data, it’s an artifact of using a different method of interpolation for how registration between the two images is visualized in the reports. Check the registration in SPM (or other program) and if it looks good there, then it’s good.</p>
 </div>
-<div id="fmriprep-not-updating-precomputed-outputs-after-data-are-changed" class="section level5">
-<h5>fMRIPrep not updating precomputed outputs after data are changed</h5>
+<div id="fmriprep-not-updating-precomputed-outputs-after-data-are-changed" class="section level4">
+<h4>fMRIPrep not updating precomputed outputs after data are changed</h4>
 <p>Example: I ran <code>fmriprep-docker</code> on sub-138. Reports showed that registration failed (because for some random reason, the files in their T1w folder from one of the sessions was…a scan of a phantom). I swapped out those images for the correct images and re-ran. Even after deleting the local scratch directory that I was using, fMRIPrep was still “collecting precomputed outputs” from the initial run and generating the same results in both the reports and images. I ultimately was successful after I replaced <code>sub-138</code> anywhere in the file or folder names with <code>sub-138b</code>, reran <code>fmriprep-docker</code> and then changed the names back to <code>sub-138</code>. Need to ask on NeuroStars if there’s a better way to do this.</p>
 </div>
 </div>
+</div>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
+<p>Thanks to Dianne Patterson, Ramsey Wilcox, Jessica Andrews-Hanna, Aneta Kielar, others in the <a href="https://sites.google.com/a/email.arizona.edu/bmw/">UA Brain Mapping Workgroup</a>, and the <a href="https://neurostars.org">Neurostars community</a> for contributing questions and answers to this document.</p>
+<p>Major thanks also to the teams behind the BIDS initiative, fMRIPrep, and MRIQC.</p>
 </div>
 
 
