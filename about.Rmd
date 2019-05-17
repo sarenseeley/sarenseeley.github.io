@@ -1,12 +1,19 @@
 ---
 title: "About"
 ---
+
+### Contact
+sarenseeley@email.arizona.edu
+
+
 ### Research interests
 Transdiagnostic mechanisms in psychopathology such as repetitive negative thought and maladaptive emotion regulation, grief and bereavement, oxytocin, neuroimaging (fMRI, static and dynamic functional connectivity) and reproducible practices for neuroimaging data, psychophysiological methods. 
 
 
+
 ### Dissertation
 _"Dynamic functional connectivity as a neurobiological mechanism of adaptation in widowed older adults"_
+
 
 
 ### Education
@@ -23,3 +30,8 @@ University of Arizona, Tucson, Arizona
 Bachelor of Arts, Psychology<br>
 City University of New York Hunter College, New York, NY
 
+
+
+### Publications
+[Google Scholar profile](https://scholar.google.com/citations?user=sgm7c2UAAAAJ&hl=en)<br>
+[NIH NCBI MyBibliography link](https://www.ncbi.nlm.nih.gov/myncbi/saren.seeley.1/bibliography/public/)
