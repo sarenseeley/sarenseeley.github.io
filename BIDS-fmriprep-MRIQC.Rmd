@@ -8,6 +8,12 @@ output:
     number_sections: no
     toc_float: yes
 ---
+#### Planned future updates:
+* Add to section on `fmriprep` reports and interpretation (e.g., slice timing-related artifacts, poor segmentation in MTL) (update for [v`1.4.0`](https://neurostars.org/t/fmriprep-1-4-0-just-released/4265/2))?
+* Add to section on `MRIQC` reports and interpretation.
+* Add resources to section on using BIDS apps via HPC.
+* Anything else you'd like to see? [Email me.](<mailto:sarenseeley@email.arizona.edu?subject=Suggestions for BIDS/fMRIPrep/MRIQC documentation>)
+
 # BIDS
 The Brain Imaging Data Structure (BIDS) is a standardized format for organizing and describing neuroimaging data and study outputs ([Gorgolewski et al., 2016](https://www.nature.com/articles/sdata201644)). 
 
