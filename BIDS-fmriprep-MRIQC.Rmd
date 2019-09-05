@@ -10,7 +10,6 @@ output:
 ---
 #### Planned future updates:
 * Add to section on `fmriprep` reports and interpretation (e.g., slice timing-related artifacts, poor segmentation in MTL) (update for [v`1.4.0`](https://neurostars.org/t/fmriprep-1-4-0-just-released/4265/2))?
-* Add to section on `MRIQC` reports and interpretation.
 * Add resources to section on using BIDS apps via HPC.
 * Anything else you'd like to see? [Email me.](<mailto:sarenseeley@email.arizona.edu?subject=Suggestions for BIDS/fMRIPrep/MRIQC documentation>)
 
@@ -493,20 +492,6 @@ c83208261473: Already exists
 f1320ef45e20: Already exists 
 5a6ab6e6fbf6: Already exists 
 6fd240c27767: Already exists 
-1828068ad6eb: Pull complete 
-528745c08a55: Pull complete 
-530dab2d8e28: Pull complete 
-e9891514a831: Pull complete 
-b8ad75f9d970: Pull complete 
-eab4cecd4547: Pull complete 
-1d3085e349cc: Pull complete 
-9988cf33f2a0: Pull complete 
-280fa0d97559: Pull complete 
-1a24ef3ab05e: Pull complete 
-73df75811875: Pull complete 
-d72de75b4797: Pull complete 
-b56f3fdfbf2d: Pull complete 
-ce152749c1db: Pull complete 
 58a3bd8fa030: Pull complete 
 f3e3661defbc: Pull complete 
 47da0cb1bc78: Pull complete 
@@ -544,14 +529,180 @@ Example  (MRIQC on the ABIDE dataset - this is a clinical population so more qua
 * [T1w group report](https://mriqc.s3.amazonaws.com/abide/bold_group.html)
 * [BOLD group report](https://mriqc.s3.amazonaws.com/abide/T1w_group.html)
 
-These are the summary metrics provided by MRIQC [(source)](https://www.slideshare.net/OscarEsteban5/fmriprep-mriqc-focus-mriqc):
+### IQMs
+These are the summary metrics currently provided by MRIQC _(with thanks to my <a href="https://github.com/elizabethbeard/mriqception/">MRIQCEPTION team</a> members at Neurohackademy 2019 for their help creating more user-friendly definitions)_:
 
-#### Structural IQMs
-![](/Users/sarenseeley/Desktop/mriqc_s.png)
+[MRIQC documentation](https://mriqc.readthedocs.io/en/stable/measures.html)
+
+<table dir="ltr" border="1" cellspacing="0" cellpadding="0">
+<colgroup><col width="100"></col><col width="100"></col><col width="100"></col><col width="622"></col></colgroup> 
+<tbody>
+<tr>
+<td style="border-color: #000000; background-color: #efefef;">TYPE OF SCAN METRIC APPLIES TO</td>
+<td style="border-color: #000000 #000000 #000000 #cccccc; background-color: #efefef;">ABBREVIATION&nbsp;</td>
+<td style="border-color: #000000 #000000 #000000 #cccccc; background-color: #efefef;">NAME</td>
+<td style="border-color: #000000 #000000 #000000 #cccccc; background-color: #efefef;">DESCRIPTION</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">cjv</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Coefficient of joint variation</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Coefficient of joint variation between white matter and gray matter.<br />Higher values indicate more head motion and/or intensity non-uniformity artifacts.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">cnr</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Contrast-to-noise ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Contrast-to-noise ratio, reflecting separation between GM &amp; WM.<br />Higher values indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">snr_dietrich</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Dietrich's SNR</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Dietrich et al. (2007)'s signal-to-noise ratio.<br />Higher values indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">art_qi2</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Mortamet's quality index 2</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">A quality index accounting for effects of both clustered and subtle artifacts in the air background.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">art_qi1</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Mortamet's quality index 1</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">The proportion of voxels outside the brain with artifacts to the total number of voxels outside the brain.<br />Higher values indicate lower quality</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">wm2max</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">White matter-to-maximum intensity ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Captures skewed distributions within the WM mask, caused by fat and vascular-related hyperintensities.<br />Ideal values fall within the interval [0.6, 0.8]</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">fwhm_</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Full-width half-maximum smoothness</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Image blurriness (full-width half-maximum).<br />Higher values indicate a blurrier image.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">volume_fraction</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Volume fraction</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Summary statistics for the intra-cranial volume fractions of CSF, GM, and WM.<br />Be aware of potential outliers.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">rpve</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Residual partial voluming error</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Residual partial volume error.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">overlap_</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Overlap of tissue probabilities</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">How well the image tissue probability maps overlap with those from the MNI ICBM 2009 template.<br />Higher values indicate better spatial normalization.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural, Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">efc</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Entropy-focus criterion</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Shannon entropy criterion.&nbsp;<br />Higher values indicate more ghosting and/or head motion blurring.&nbsp;</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural, Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">fber</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Foreground-background energy ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">The variance of voxels inside the brain divided by the variance of voxels outside the brain.<br />Higher values indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural, Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">inu_</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Intensity non-uniformity</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Intensity non-uniformity (bias field) summary statistics.<br />Values closer to 1 indicate higher quality; further from zero indicate greater RF field inhomogeneity.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural, Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">snr</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Signal-to-noise ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Signal-to-noise ratio within the tissue mask.<br />Higher values indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Structural, Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">summary_stats</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Summary stats</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Summary statistics for average intensities in CSF, GM, and WM.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">dvars</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Derivatives of variance</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">The average change in mean intensity between each pair of fMRI volumes in a series.<br />Higher values indicate more dramatic changes (e.g., due to motion or spiking).</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">gcor</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Global correlation</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Average correlation of all pairs of voxel time series inside of the brain. Illustrates differences between data due to motion/physiological noise/imaging artifacts.<br />Values closer to zero are better.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">tsnr</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Temporal signal-to-noise ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Temporal signal-to-noise ratio taking into account mean signal over time.<br />Higher values indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">fd_mean</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Framewise displacement - mean</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">A measure of subject head motion, which compares the motion between the current and previous volumes.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">fd_num</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Framewise displacement - number</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Number of timepoints with framewise displacement &gt;0.2mm.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">fd_perc</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Framewise displacement - percent</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Percent of timepoints with framewise displacement &gt;0.2mm.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">gsr</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Ghost-to-signal ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Ghost-to-signal ratio along the x or y encoding axes.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">aor</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">AFNI'S outlier ratio</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Mean fraction of outliers per fMRI volume, from AFNI's 3dToutcount.<br />Higher values indicate lower quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">aqi</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">AFNI's quality index</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Mean quality index, from AFNI's 3dTqual.<br />Values close to 0 indicate higher quality.</td>
+</tr>
+<tr>
+<td style="border-color: #cccccc #000000 #000000;">Functional</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">dummy</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Dummy scans</td>
+<td style="border-color: #cccccc #000000 #000000 #cccccc;">Number of volumes in the beginning of the fMRI timeseries identified as non-steady state.</td>
+</tr>
+</tbody>
+</table>
+<p>
+Note that many of the IQMs calculated are "no-reference" metrics: _"A no-reference IQM is a measurement of some aspect of the actual image which cannot be compared to a reference value for the metric since there is no ground-truth about what this number should be."_ [source](https://mriqc.readthedocs.io/en/stable/measures.html)
+
+We're working on [a project](https://github.com/elizabethbeard/mriqception/) to help you interpret your MRIQC results...stay tuned :)
+<p>&nbsp;</p>
 
 
-#### Functional IQMs
-![](/Users/sarenseeley/Desktop/mriqc_f.png)
+
 ## Using the T1w image classifier
 
 Read more about the classifier here: https://mriqc.readthedocs.io/en/stable/classifier.html
@@ -570,7 +721,7 @@ Explanation from https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU
 `--load-classifier -X` - loads the classifier trained on the ABIDE dataset (default) or your custom classifier, if you created one.
 `group_T1w.tsv` - tells MRIQC to apply the classifier to group T1w report.
 
-There is currently no MRIQC classifier for BOLD images that I'm aware of.
+There is currently no MRIQC classifier for BOLD or T2 images.
 
 ## Results template
 
@@ -892,12 +1043,11 @@ If you're using the non-aggressively denoised AROMA files (`*_bold_space-MNI152N
 
 It is up to you as the researcher. fMRIPrep gives you lots of options but as part of its "minimal preprocessing" philosophy, does not dictate which you should or shouldn't use.
 
-See this discussion: https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326 (the six motion parameters are "X", "Y", "Z", "RotX", "RotY", "RotZ").
+See this lengthy discussion: https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326 (the six motion parameters in the confounds file are "X", "Y", "Z", "RotX", "RotY", "RotZ").
 
-See also [Denoiser: A nuisance regression tool for fMRI BOLD data](https://github.com/arielletambini/denoiser) This tool works with the confounds generated by fmriprep (though you still have to pick the ones you want to regress out of your data). 
+Suggestions for how to select number of aCompCor components: https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/35
 
-
-
+See also the new tools [fMRIdenoise](https://github.com/nbraingroup/fmridenoise) and [Denoiser: A nuisance regression tool for fMRI BOLD data](https://github.com/arielletambini/denoiser). 
 
 
 &nbsp;<p>
@@ -947,14 +1097,13 @@ See https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851
 Another option is to copy the "good" image from session 2 into the session 1 `anat` folder, making sure to rename it as session 1. This isn't optimal IMO because it would be nice to make it obvious that this image is from a different session, but that's how I made it work. You could note that in the metadata associated with the dataset (i.e., the README file)
 
 ### What if I've already run Freesurfer on my data?
-I haven't tried this, but seems like it is possible to use the existing outputs: 
 
 From https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing:
 
 > Surface processing will be skipped if the outputs already exist.
 In order to bypass reconstruction in fmriprep, place existing reconstructed subjects in < output dir >/freesurfer prior to the run. fmriprep will perform any missing recon-all steps, but will not perform any steps whose outputs already exist.
 
-I'm guessing it's probably imperative to have the subfolders named and organized as they would be if this folder was generated by running fMRIPrep (run on one subject to get an example?)
+Indeed, this works well (when data in the Freesurfer folder are organized in a BIDS-compliant manner).
 
 ### "Artifacts" in T1w-EPI registration visualization?
 See this thread I started on NeuroStars: https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5
