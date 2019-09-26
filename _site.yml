@@ -10,7 +10,7 @@ navbar:
       href: about.html
     - text: "CV"
       href: cv.html
-    - text: "Notebooks"
+    - text: "Resources"
       href: notebooks.html
 output:
   html_document:

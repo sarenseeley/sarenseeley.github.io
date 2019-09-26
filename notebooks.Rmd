@@ -1,14 +1,20 @@
 ---
-title: "Notebooks"
+title: "Resources"
 ---
 
-Various notebooks, resources, and tutorials from some of my projects.
+
+Various notebooks, resources, and tutorials from some of my projects:
 
 [Getting started with the Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](/BIDS-fmriprep-MRIQC.html)
 
 [Slides: Intro to using BIDS/dcm2niix and fMRIPrep](https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0) presentation from UA Brain Mapping Workgroup meeting 11/16/18 
 
 [Drawing a CONSORT diagram with ggplot2](/ggplot2-CONSORT.html) (based on [this tutorial](https://rpubs.com/phiggins/461686))
+
+<p>&nbsp;<p>
+####Reprints
+
+[Poster: Society for Psychophysiological Research 2019](/SPR-2019-poster_Seeley.pdf)
 
 <p>&nbsp;<p>
 ####Other resources I've found helpful
