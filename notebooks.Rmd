@@ -14,7 +14,7 @@ Various notebooks, resources, and tutorials from some of my projects:
 <p>&nbsp;<p>
 ####Reprints
 
-[Poster: Society for Psychophysiological Research 2019](/SPR-2019-poster_Seeley.pdf)
+["Effects of complicated grief and intranasal oxytocin on resting state networks in widowed older adults"](/SPR-2019-poster_Seeley.pdf) (poster presented at SPR 2019)
 
 <p>&nbsp;<p>
 ####Other resources I've found helpful
