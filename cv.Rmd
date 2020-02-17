@@ -2,4 +2,5 @@
 title: "CV"
 ---
 
+
 [Link to PDF](http://sarenseeley.github.io/seeley-cv.pdf) (updated February 2020)
