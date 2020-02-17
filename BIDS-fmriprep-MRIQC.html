@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Saren Seeley" />
@@ -88,7 +88,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -237,6 +236,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -249,48 +249,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -304,6 +265,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -339,8 +306,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -418,7 +383,7 @@ div.tocify {
 <div id="planned-future-updates" class="section level4">
 <h4>Planned future updates:</h4>
 <ul>
-<li>Add to section on <code>fmriprep</code> reports and interpretation (e.g., slice timing-related artifacts, poor segmentation in MTL) (update for <a href="https://neurostars.org/t/fmriprep-1-4-0-just-released/4265/2">v<code>1.4.0</code></a>)?</li>
+<li>Add to section on <code>fmriprep</code> reports and interpretation: <strong><em>in progress, draft guidelines <a href="https://docs.google.com/document/d/1TE6ZWzNg8cDpvL4Vu0VGOZQLXkQ88Fa59AORzN01Avk/edit?usp=sharing">here</a></em></strong></li>
 <li>Add resources to section on using BIDS apps via HPC.</li>
 <li>Anything else you’d like to see? <a href="mailto:sarenseeley@email.arizona.edu?subject=Suggestions%20for%20BIDS/fMRIPrep/MRIQC%20documentation">Email me.</a></li>
 </ul>
@@ -1362,7 +1327,7 @@ Any potential identifying elements should also be removed from text files and im
 </ul></li>
 </ol>
 <p>See <a href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
-<p>See also Chidi’s slides from Nov. 16th ’18 BMW meeting: <a href="https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq" class="uri">https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq</a></p>
+<p>See also <a href="https://osf.io/7m25y/">Chidi’s slides</a> from Nov. 16th ’18 BMW meeting:.</p>
  
 <p>
 </div>
@@ -1721,6 +1686,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

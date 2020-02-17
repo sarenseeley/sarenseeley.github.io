@@ -9,7 +9,7 @@ output:
     toc_float: yes
 ---
 #### Planned future updates:
-* Add to section on `fmriprep` reports and interpretation (e.g., slice timing-related artifacts, poor segmentation in MTL) (update for [v`1.4.0`](https://neurostars.org/t/fmriprep-1-4-0-just-released/4265/2))?
+* Add to section on `fmriprep` reports and interpretation: **_in progress, draft guidelines [here](https://docs.google.com/document/d/1TE6ZWzNg8cDpvL4Vu0VGOZQLXkQ88Fa59AORzN01Avk/edit?usp=sharing)_**
 * Add resources to section on using BIDS apps via HPC.
 * Anything else you'd like to see? [Email me.](<mailto:sarenseeley@email.arizona.edu?subject=Suggestions for BIDS/fMRIPrep/MRIQC documentation>)
 
@@ -740,7 +740,7 @@ Broadly, in order to run fMRIPrep or MRIQC on the HPC, several things need to ha
 
 See https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container
 
-See also Chidi's slides from Nov. 16th '18 BMW meeting: https://arizona.app.box.com/s/iwcmxzkc3w2y2rfpdk48ky77dler23pq
+See also [Chidi's slides](https://osf.io/7m25y/) from Nov. 16th '18 BMW meeting:.
 
 
 &nbsp;<p>
