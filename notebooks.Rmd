@@ -6,7 +6,7 @@ Various notebooks, slides, resources, and tutorials from some of my projects.
 
 [Getting started with the Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC](/BIDS-fmriprep-MRIQC.html)
 
-[Slides: The Brain Imaging Data Structure (BIDS) Ecosystem and fMRIPrep](/BMW_meeting_021720.pdf) presentation from UA Brain Mapping Workgroup meeting 02/17/2020 
+[Slides: The Brain Imaging Data Structure (BIDS) Ecosystem and fMRIPrep](/fmriprep_BMW_meeting_021720.pdf) presentation from UA Brain Mapping Workgroup meeting 02/17/2020 
 
 [Slides: Intro to using BIDS/dcm2niix and fMRIPrep](https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0) presentation from UA Brain Mapping Workgroup meeting 11/16/2018 
 

@@ -1,6 +1,6 @@
 name: "my-website"
 output_dir: "."
-exclude: ["*.Rproj", "*.css", "mcconnell*"]
+exclude: ["*.Rproj", "*.css", "mcconnell.Rmd"]
 navbar:
   title: "Saren H. Seeley"
   left:
