@@ -1,10 +1,13 @@
 ---
 title: "Mairead H. McConnell"
 ---
-|                     &nbsp;       |      &nbsp;         |                    &nbsp;                     |
-|--------------------------------------------------------------------|-------------------------------------------------------------------------|
-| _Clinical Psychology Doctoral Candidate_ <br> _The University of Arizona_   <br><br><br> For additional questions, inquiries or collaborations, please contact:  mhmcconnell@email.arizona.edu | &nbsp; |  ![](/MaireadMcConnell_headshot.jpg){width=200px} |
-|   |  |  |
+
+
+|  &nbsp; 	|   &nbsp;	|
+|---	|---	|
+| _Clinical Psychology Doctoral Candidate_ <br> _The University of Arizona_   <br><br><br> For additional questions, inquiries or collaborations, please contact:  mhmcconnell@email.arizona.edu  	| ![](/MaireadMcConnell_headshot.jpg){} 	|
+|   &nbsp; 	|   &nbsp; 	|
+
 
 ### Poster
 Link to PDF: ["Living Meaningfully and Facing Mortality: Developing a Measure of 'Double Awareness'"](/APS-2020-poster_McConnell.pdf)<br> 
