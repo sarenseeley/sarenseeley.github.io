@@ -3,7 +3,7 @@ title: "Mairead H. McConnell"
 ---
 |                     &nbsp;       |                              &nbsp;                     |
 |--------------------------------------------------------------------|-------------------------------------------------------------------------|
-| _Clinical Psychology Doctoral Candidate_ <br> _The University of Arizona_   <br><br><br> For additional questions, inquiries or collaborations, please contact:  mhmcconnell@email.arizona.edu | ![](/MaireadMcConnell_headshot.jpg) |
+| _Clinical Psychology Doctoral Candidate_ <br> _The University of Arizona_   <br><br><br> For additional questions, inquiries or collaborations, please contact:  mhmcconnell@email.arizona.edu | ![](/MaireadMcConnell_headshot.jpg){width=200px} |
 |   |  |
 
 ### Poster
