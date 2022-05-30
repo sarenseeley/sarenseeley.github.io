@@ -1,25 +1,21 @@
 ---
 title: "About"
 ---
+<p>
 
 ### Current position
+
 T32 Postdoctoral Research Fellow in Psychiatry, Icahn School of Medicine at Mount Sinai<br>
 (Mentors: Daniela Schiller, Adriana Feder, Mercedes Perez-Rodriguez)
-
-
-### Contact
-sarenseeley @ gmail.com
-
+<p><br>
 
 ### Research interests
-Transdiagnostic mechanisms in psychopathology such as repetitive negative thought and maladaptive emotion regulation, grief and bereavement, oxytocin, neuroimaging (fMRI, static and dynamic functional connectivity) and reproducible practices for neuroimaging data, psychophysiological methods. 
 
-
-
-### Dissertation
-_"Dynamic functional connectivity as a neurobiological mechanism of adaptation in widowed older adults"_ ([PsyArXivt](https://psyarxiv.com/qm5se/))
-
-
+* Using a computational psychiatry framework to develop & test theoretical models of mechanisms of psychopathology (focusing on prolonged grief disorder) 
+* Using fMRI to identify resting state and other correlates of prolonged grief disorder symptoms--particularly repetitive negative thinking.
+* Identifying neural & behavioral mechanisms involved in adaptation after trauma (resting state, social cognition, emotion regulation, decision-making)
+* Neuroimaging: improving uptake of reproducible fMRI practices among researchers
+<p><br>
 
 ### Education
 
@@ -29,7 +25,9 @@ VA Pittsburgh Healthcare System, Pittsburgh, PA
 
 2017 - 2021:<br>
 Doctor of Philosophy, Clinical Psychology<br>
-University of Arizona, Tucson, AZ
+University of Arizona, Tucson, AZ<br>
+Dissertation:
+_"Dynamic functional connectivity as a neurobiological mechanism of adaptation in widowed older adults"_ ([PsyArXiv](https://psyarxiv.com/qm5se/))
 
 2015 - 2016:<br>
 Master of Arts, Clinical Psychology<br>
@@ -40,9 +38,20 @@ Bachelor of Arts, Psychology<br>
 City University of New York Hunter College, New York, NY
 
 
+<p><br>
 
 ### Publications
+
 [Google Scholar profile](https://scholar.google.com/citations?user=sgm7c2UAAAAJ&hl=en)<br>
 [NIH NCBI MyBibliography link](https://www.ncbi.nlm.nih.gov/myncbi/saren.seeley.1/bibliography/public/)
 
 See [Writing](/sciwriting.html) for my recent science writing publications.
+
+<p><br>
+
+### Contact & social media
+
+sarenseeley @ gmail.com<br>
+[Twitter](https://twitter.com/sarenseeley)<br>
+[ResearchGate](https://www.researchgate.net/profile/Saren-Seeley)<br>
+[LinkedIn](https://www.linkedin.com/in/saren-h-seeley-77a1b858/)

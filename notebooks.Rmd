@@ -13,12 +13,14 @@ Various notebooks, slides, resources, and tutorials from some of my projects.
 [Drawing a CONSORT diagram with ggplot2](/ggplot2-CONSORT.html) (based on [this tutorial](https://rpubs.com/phiggins/461686))
 
 <p>&nbsp;<p>
-####Reprints
+
+#### Reprints
 
 Poster: ["Effects of complicated grief and intranasal oxytocin on resting state networks in widowed older adults" (SPR 2019)](/SPR-2019-poster_Seeley.pdf) 
 
 <p>&nbsp;<p>
-####Other resources I've found helpful
+
+#### Other resources I've found helpful
 
 _Statistics and R_<br>
 [Checking model assumptions without getting paranoid](https://janhove.github.io/analysis/2018/04/25/graphical-model-checking)<br>(& see also [Checking model assumptions? Look at the residuals, not the raw data](https://datahowler.wordpress.com/2018/08/04/checking-model-assumptions-look-at-the-residuals-not-the-raw-data/))<br>
