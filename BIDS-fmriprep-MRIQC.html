@@ -14,12 +14,22 @@
 
 <title>Getting started with BIDS, fMRIPrep, MRIQC</title>
 
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -27,12 +37,16 @@
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
-<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -45,32 +59,7 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
+
 
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
@@ -81,10 +70,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -101,40 +86,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 51px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h2 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h3 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h4 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h5 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
-.section h6 {
-  padding-top: 56px;
-  margin-top: -56px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -162,7 +120,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -174,7 +132,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -185,10 +143,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -200,7 +171,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -326,7 +296,7 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
+<div class="row">
 <div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
@@ -359,6 +329,9 @@ div.tocify {
   <a href="cv.html">CV</a>
 </li>
 <li>
+  <a href="sciwriting.html">Writing</a>
+</li>
+<li>
   <a href="notebooks.html">Resources</a>
 </li>
       </ul>
@@ -369,7 +342,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -824,7 +797,7 @@ bids_dir output_dir {participant}</code></pre>
 <pre><code>fmriprep-docker --low-mem --resource-monitor --stop-on-first-crash --longitudinal --use-syn-sdc --use-aroma  /Users/sarenseeley/Desktop/restingstate/ /Users/sarenseeley/Desktop/restingstate/derivatives -w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch --participant_label sub-110 sub-113 sub-114 sub-115 sub-117</code></pre>
 <p>(I am only running a few participants at a time because I’m not yet sure how many I can run together before it crashes.)</p>
 <p>These are some of the ones I am using:</p>
-<code>--use-aroma</code>: “Given a motion-corrected fMRI, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy)” &amp; see section on ICA-AROMA <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html?highlight=--use_aroma#confounds-estimation">(source)</a>
+<code>--use-aroma</code>: “Given a motion-corrected fMRI, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy)" &amp; see section on ICA-AROMA <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html?highlight=--use_aroma#confounds-estimation">(source)</a>
 <ul>
 <li>
 <em><strong>Notes on aggressive vs non-aggressive ICA AROMA from 2017 UNC workshop:</strong></em>
@@ -891,7 +864,7 @@ mriqc v0.14.2</code></pre>
 <p><code>-m T1w bold</code> indicates that the dataset contains images in T1w and BOLD modalities.</p>
 <p>To run a single subject (or set of subjects):</p>
 <pre><code>$ docker run -it --rm -v /Users/sarenseeley/Desktop/restingstate:/data:ro -v /Users/sarenseeley/Desktop/restingstate/derivatives/mriqc:/out poldracklab/mriqc:latest /data /out participant --participant_label 138 -m T1w bold</code></pre>
-<p>Note that you only have to put the number, and not the <code>sub-</code> prefix (i.e., <code>--participant_label 138</code> vs. <code>--participant_label sub-138</code> - the latter will not run.)</p>
+<p>Note that you only have to put the number, and not the <code>sub-</code> prefix (i.e., <code>--participant_label 138</code> vs. <code>--participant_label sub-138</code> - the latter will not run.)</p>
 </div>
 <div id="reports-1" class="section level2">
 <h2>Reports</h2>
@@ -969,7 +942,7 @@ snr_dietrich
 Dietrich’s SNR
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Dietrich et al. (2007)’s signal-to-noise ratio.<br />Higher values indicate higher quality.
+Dietrich et al. (2007)’s signal-to-noise ratio.<br />Higher values indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -1327,7 +1300,7 @@ Any potential identifying elements should also be removed from text files and im
 </ul></li>
 </ol>
 <p>See <a href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
-<p>See also <a href="https://osf.io/7m25y/">Chidi’s slides</a> from Nov. 16th ’18 BMW meeting:.</p>
+<p>See also <a href="https://osf.io/7m25y/">Chidi’s slides</a> from Nov. 16th ’18 BMW meeting:.</p>
  
 <p>
 </div>
@@ -1555,7 +1528,7 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 <p>
  
 <p>
-<div id="whats-the-deal-with-aggressive-vs.non-aggressive-ica-aroma" class="section level3">
+<div id="whats-the-deal-with-aggressive-vs.-non-aggressive-ica-aroma" class="section level3">
 <h3>What’s the deal with aggressive vs. non-aggressive ICA-AROMA?!</h3>
 <p>As described by Chris Markiewicz <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16">here</a>, ICA-AROMA has two denoising strategies: aggressive and non-aggressive.</p>
 <ul>
@@ -1591,10 +1564,7 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 The suggested implementation from the <a href="https://www.sciencedirect.com/science/article/pii/S1053811915001822?via%3Dihub#s0010">ICA-AROMA article</a> is to perform nuisance regression for WM, CSF, and linear trend:  
 <p>
 <p>
-<div class="figure">
-<img src="https://ars.els-cdn.com/content/image/1-s2.0-S1053811915001822-gr1.jpg" />
-
-</div>
+<p><img src="https://ars.els-cdn.com/content/image/1-s2.0-S1053811915001822-gr1.jpg" /></p>
 <p>CSF and WM are the “CSF” and “WhiteMatter” columns in <code>confounds.tsv</code>.</p>
  
 <p>
@@ -1679,7 +1649,7 @@ If this doesn’t work you may need to setup a virtual environment using a progr
 
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
-  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
 }
 $(document).ready(function () {
   bootstrapStylePandocTables();
@@ -1697,7 +1667,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
@@ -1706,6 +1676,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
@@ -1718,7 +1691,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

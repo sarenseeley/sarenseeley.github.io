@@ -10,6 +10,8 @@ navbar:
       href: about.html
     - text: "CV"
       href: cv.html
+    - text: "Writing"
+      href: sciwriting.html
     - text: "Resources"
       href: notebooks.html
 output:

@@ -4,7 +4,7 @@ title: "About"
 
 ### Current position
 T32 Postdoctoral Research Fellow in Psychiatry, Icahn School of Medicine at Mount Sinai<br>
-(Mentors: Daniela Schiller, Adriana Feder and Mercedes Perez-Rodriguez)
+(Mentors: Daniela Schiller, Adriana Feder, Mercedes Perez-Rodriguez)
 
 
 ### Contact
@@ -17,7 +17,7 @@ Transdiagnostic mechanisms in psychopathology such as repetitive negative though
 
 
 ### Dissertation
-_"Dynamic functional connectivity as a neurobiological mechanism of adaptation in widowed older adults"_ ([PDF](https://sarenseeley.github.io/Seeley_Dissertation_FINAL v2.pdf))
+_"Dynamic functional connectivity as a neurobiological mechanism of adaptation in widowed older adults"_ ([PsyArXivt](https://psyarxiv.com/qm5se/))
 
 
 
@@ -44,3 +44,5 @@ City University of New York Hunter College, New York, NY
 ### Publications
 [Google Scholar profile](https://scholar.google.com/citations?user=sgm7c2UAAAAJ&hl=en)<br>
 [NIH NCBI MyBibliography link](https://www.ncbi.nlm.nih.gov/myncbi/saren.seeley.1/bibliography/public/)
+
+See [Writing](/sciwriting.html) for my recent science writing publications.
