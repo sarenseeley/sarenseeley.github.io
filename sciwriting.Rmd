@@ -5,14 +5,14 @@ title: "Science Writing"
 <p></p>
 #### [Seeing grieving as learning explains why the process takes time](https://psyche.co/ideas/seeing-grieving-as-learning-explains-why-the-process-takes-time) (Aeon+Psyche Magazine)
 
-><iframe src="https://psyche.co/ideas/seeing-grieving-as-learning-explains-why-the-process-takes-time" width="80%" height="250px" frameBorder="0" style="border: 0;"></iframe>
+><iframe src="https://psyche.co/ideas/seeing-grieving-as-learning-explains-why-the-process-takes-time" width="90%" height="250px" frameBorder="0" style="border: 0;"></iframe>
 
 <p></p>&nbsp;
 <p></p>
 
 #### [The indifference point](https://www.thexylom.com/post/the-indifference-point) (The Xylom)
 
-><iframe src="https://www.thexylom.com/post/the-indifference-point" width="80%" height="250px" frameBorder="0" style="border: 0;"></iframe>
+><iframe src="https://www.thexylom.com/post/the-indifference-point" width="90%" height="250px" frameBorder="0" style="border: 0;"></iframe>
 
 <p></p>&nbsp;
 <p></p>
@@ -20,7 +20,7 @@ title: "Science Writing"
 
 #### [How to read a brain...or not](https://www.comebebrainy.com/blog/2022/3/23/how-to-read-a-brain-or-not) (BraiNY Brain Awareness Week Blog)
 
-><iframe width="80%" height="250" src="https://www.comebebrainy.com/blog/2022/3/23/how-to-read-a-brain-or-not" frameborder="0"></iframe>
+><iframe width="90%" height="250" src="https://www.comebebrainy.com/blog/2022/3/23/how-to-read-a-brain-or-not" frameborder="0"></iframe>
 
 
 <p></p>&nbsp;
