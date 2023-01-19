@@ -283,15 +283,20 @@ $(document).ready(function () {
 <h3>Making a CONSORT diagram using ggplot2</h3>
 <p>Based on this very helpful tutorial: <a href="https://rpubs.com/phiggins/461686" class="uri">https://rpubs.com/phiggins/461686</a></p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
-## ✓ tidyr   1.1.4     ✓ stringr 1.4.0
-## ✓ readr   2.0.1     ✓ forcats 0.5.1</code></pre>
+<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0     ✔ purrr   0.3.4
+## ✔ tibble  3.1.8     ✔ dplyr   1.0.8
+## ✔ tidyr   1.1.4     ✔ stringr 1.4.0
+## ✔ readr   2.1.2     ✔ forcats 0.5.1</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;readr&#39; was built under R version 4.1.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 4.1.2</code></pre>
 <pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.1.2</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code># create an empty 100x100 grid
 data &lt;- tibble(x= 0:100, y= 0:100)
 
@@ -312,9 +317,10 @@ p +
   geom_rect(xmin = 30, xmax=64, ymin=94, ymax=100, color=&#39;black&#39;,
             fill=&#39;white&#39;, size=0.25) +
   annotate(&#39;text&#39;, x=48, y=97,label= &#39;164 Prospective participants&#39;, size=3) -&gt;
-  p
-
-# then add some more boxes and text: those not screened and those excluded
+  p</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.</code></pre>
+<pre class="r"><code># then add some more boxes and text: those not screened and those excluded
 p +
   geom_rect(xmin = 30, xmax=64, ymin=73, ymax=80, color=&#39;black&#39;,
             fill=&#39;white&#39;, size=0.25) +
