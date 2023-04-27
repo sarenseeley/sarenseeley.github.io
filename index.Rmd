@@ -2,7 +2,15 @@
 title: "Saren H. Seeley, Ph.D."
 ---
 
-Hello! I am currently a postdoctoral research fellow in the Icahn School of Medicine at Mount Sinai's Psychiatry Department.</p>
+Hello! I am currently a NIMH T32 postdoctoral research fellow in the Icahn School of Medicine at Mount Sinai's Psychiatry Department.</p>
 
-I completed my PhD in clinical psychology at the University of Arizona and the Pittsburgh VA Medical Center, following undergraduate studies at CUNY Hunter College. My research at ISMMS aims to identify neural mechanisms of adaptation to trauma and loss, with a current focus on (1) PTSD resilience in a cohort of 9/11 WTC responders (in the [World Trade Center Mental Health Program](https://www.mountsinai.org/care/occupational-health/services-programs/wtc)), and (2) developing a computational model of prolonged grief disorder (in the [Affective Neuroscience Lab](https://labs.neuroscience.mssm.edu/project/schiller-lab/)).
+I completed my PhD in clinical psychology at the University of Arizona and the Pittsburgh VA Medical Center, following undergraduate studies at CUNY Hunter College. My research at ISMMS aims to identify neural mechanisms of adaptation to trauma and loss, with a current focus on (1) PTSD resilience in a cohort of 9/11 World Trade Center trauma-exposed responders (in the [Trauma and Resilience Program](https://wwwn.cdc.gov/ResearchGateway/ResearchProjects/Details/132), and (2) developing computational psychiatry models to understand mechanisms of prolonged grief disorder (in the [Affective Neuroscience Lab](https://labs.neuroscience.mssm.edu/project/schiller-lab/)).
+
+<p></p>&nbsp;
+<p></p>
+
+
+#### News
+
+><iframewidth="100%" height="250px" frameBorder="0" style="border: 0;">ifram stuff</iframe>
 
