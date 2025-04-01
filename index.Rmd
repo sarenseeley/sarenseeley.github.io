@@ -2,10 +2,11 @@
 title: "Saren H. Seeley, Ph.D."
 ---
 
-Hello! I am currently a NIMH T32 postdoctoral research fellow in the Icahn School of Medicine at Mount Sinai's Psychiatry Department.</p>
+Hello! 
 
-I completed my PhD in clinical psychology at the University of Arizona and the Pittsburgh VA Medical Center, following undergraduate studies at CUNY Hunter College. <p>My research at ISMMS aims to identify neural mechanisms of adaptation to trauma and loss, with a focus on (1) PTSD resilience in a cohort of 9/11 World Trade Center trauma-exposed responders (in the [Trauma and Resilience Program](https://wwwn.cdc.gov/ResearchGateway/ResearchProjects/Details/132), and (2) developing computational psychiatry models to understand mechanisms of prolonged grief disorder (in the [Affective Neuroscience Lab](https://labs.neuroscience.mssm.edu/project/schiller-lab/)).
+I am a postdoctoral fellow at the Icahn School of Medicine at Mount Sinai, continuing my training in computational psychiatry and neuroimaging in [Dr. Laura Berner's lab](https://labs.icahn.mssm.edu/bernerlab/). As a clinical psychologist, I received my PhD from the University of Arizona, after completing a predoctoral internship at the Pittsburgh VA Medical Center, and undergraduate studies at CUNY Hunter College. Previously at ISMMS (2021-2024), I completed the NIMH T32 postdoctoral fellowship (“Training the Next Generation of Clinical Neuroscientists”; T32MH122394) focused on functional and structural MRI correlates of post-traumatic stress disorder and psychological resilience in World Trade Center responders. I am particularly interested in how neural computations involved in learning and decision-making contribute to thoughts and behaviors that feel difficult to stop or control (e.g., in eating disorders, prolonged grief disorder, or PTSD).
 
+Grief is a natural, healthy response to the death of a loved one, but some bereaved people experience a persistent, severe, and disabling response to loss. My developing program of research is dedicated to investigating the neurobiological and psychosocial mechanisms that may complicate adaptation and recovery after one of life’s top stressors: the death of a close loved one. This work has been funded by the National Institute on Aging and the Brain & Behavioral Research Foundation. My ongoing [Grief-LEARN](MRI Flyer 3 10.09.24 approved.pdf) study applies neuroimaging and computational psychiatry methods to understand learning dysfunction as a hypothesized mechanism driving slower or absent adaptation in prolonged grief disorder (PGD) [(O'Connor & Seeley, 2022)](https://pubmed.ncbi.nlm.nih.gov/34520954).
 <p></p>&nbsp;
 <p></p>
 

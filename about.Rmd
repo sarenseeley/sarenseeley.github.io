@@ -3,21 +3,17 @@ title: "About"
 ---
 <p>
 
-### Current position
+### Education/Training
 
-T32 Postdoctoral Research Fellow in Psychiatry, Icahn School of Medicine at Mount Sinai<br>
-(Mentors: Adriana Feder, M.D.; Daniela Schiller Ph.D.; Mercedes Perez-Rodriguez M.D., Ph.D.)
-<p><br>
+2024 - present:<br>
+Postdoctoral Fellow, Berner Lab, Center for Computational Psychiatry<br>
+Psychiatry Department<br>
+Icahn School of Medicine at Mount Sinai, New York, NY
 
-### Research interests
-
-* Using a computational psychiatry framework to develop & test theoretical models of mechanisms of psychopathology (focusing on prolonged grief disorder) 
-* Using fMRI to identify resting state and other correlates of prolonged grief disorder symptoms--particularly repetitive negative thinking.
-* Identifying neural & behavioral mechanisms involved in adaptation after trauma (resting state, social cognition, emotion regulation, decision-making)
-* Neuroimaging: improving uptake of reproducible fMRI practices among researchers
-<p><br>
-
-### Education
+2021 - 2024:<br>
+T32 Postdoctoral Fellow, Feder/Schiller Labs<br>
+Psychiatry Department<br>
+Icahn School of Medicine at Mount Sinai, New York, NY
 
 2020 - 2021:<br>
 Clinical Internship in Health Service Psychology<br>
@@ -56,6 +52,5 @@ See [Writing](/sciwriting.html) for my recent science writing publications.
 ### Contact & social media
 
 sarenseeley @ gmail.com<br>
-[Twitter](https://twitter.com/sarenseeley)<br>
 [ResearchGate](https://www.researchgate.net/profile/Saren-Seeley)<br>
 [LinkedIn](https://www.linkedin.com/in/saren-h-seeley-77a1b858/)

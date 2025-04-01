@@ -13,7 +13,7 @@
 
 <title>Resources</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -57,6 +57,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
 
@@ -81,6 +82,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -138,11 +142,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -171,8 +179,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -180,16 +188,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -233,7 +234,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -274,25 +275,48 @@ $(document).ready(function () {
 </div>
 
 
-<p>Various notebooks, slides, resources, and tutorials from some of my projects.</p>
-<p><a href="/BIDS-fmriprep-MRIQC.html">Getting started with the Brain Imaging Data Structure (BIDS), fMRIPrep, MRIQC</a></p>
-<p><a href="/fmriprep_BMW_meeting_021720.pdf">Slides: The Brain Imaging Data Structure (BIDS) Ecosystem and fMRIPrep</a> presentation from UA Brain Mapping Workgroup meeting 02/17/2020</p>
-<p><a href="https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0">Slides: Intro to using BIDS/dcm2niix and fMRIPrep</a> presentation from UA Brain Mapping Workgroup meeting 11/16/2018</p>
-<p><a href="/ggplot2-CONSORT.html">Drawing a CONSORT diagram with ggplot2</a> (based on <a href="https://rpubs.com/phiggins/461686">this tutorial</a>)</p>
+<p>Various notebooks, slides, resources, and tutorials from some of my
+projects.</p>
+<p><a href="/BIDS-fmriprep-MRIQC.html">Getting started with the Brain
+Imaging Data Structure (BIDS), fMRIPrep, MRIQC</a></p>
+<p><a href="/fmriprep_BMW_meeting_021720.pdf">Slides: The Brain Imaging
+Data Structure (BIDS) Ecosystem and fMRIPrep</a> presentation from UA
+Brain Mapping Workgroup meeting 02/17/2020</p>
+<p><a
+href="https://docs.google.com/presentation/d/1aktNfhYLQHAY-5WCCxUQh2xHBFT4nkJb7VTzTWqdu5c/edit#slide=id.gc6f73a04f_0_0">Slides:
+Intro to using BIDS/dcm2niix and fMRIPrep</a> presentation from UA Brain
+Mapping Workgroup meeting 11/16/2018</p>
+<p><a href="/ggplot2-CONSORT.html">Drawing a CONSORT diagram with
+ggplot2</a> (based on <a href="https://rpubs.com/phiggins/461686">this
+tutorial</a>)</p>
 <p>
  
 <p>
 <div id="reprints" class="section level4">
 <h4>Reprints</h4>
-<p>Poster: <a href="/SPR-2019-poster_Seeley.pdf">“Effects of complicated grief and intranasal oxytocin on resting state networks in widowed older adults” (SPR 2019)</a></p>
+<p>Poster: <a href="/SPR-2019-poster_Seeley.pdf">“Effects of complicated
+grief and intranasal oxytocin on resting state networks in widowed older
+adults” (SPR 2019)</a></p>
 <p>
  
 <p>
 </div>
 <div id="other-resources-ive-found-helpful" class="section level4">
 <h4>Other resources I’ve found helpful</h4>
-<p><em>Statistics and R</em><br> <a href="https://janhove.github.io/analysis/2018/04/25/graphical-model-checking">Checking model assumptions without getting paranoid</a><br>(&amp; see also <a href="https://datahowler.wordpress.com/2018/08/04/checking-model-assumptions-look-at-the-residuals-not-the-raw-data/">Checking model assumptions? Look at the residuals, not the raw data</a>)<br> <a href="https://lindeloev.github.io/tests-as-linear/">Common statistical tests are linear models</a><br> <a href="https://learningstatisticswithr.com">Learning Statistics with R</a><br> <a href="https://kdestasio.github.io/post/r_best_practices/">R best practices</a><br> <a href="http://mfviz.com/hierarchical-models/">Visualizing hierarchical (aka multilevel or mixed) models</a><br></p>
-<p><em>Teaching</em><br> <a href="https://osf.io/vkhbt/">Course syllabi for open and reproducible methods</a></p>
+<p><em>Statistics and R</em><br> <a
+href="https://janhove.github.io/analysis/2018/04/25/graphical-model-checking">Checking
+model assumptions without getting paranoid</a><br>(&amp; see also <a
+href="https://datahowler.wordpress.com/2018/08/04/checking-model-assumptions-look-at-the-residuals-not-the-raw-data/">Checking
+model assumptions? Look at the residuals, not the raw data</a>)<br> <a
+href="https://lindeloev.github.io/tests-as-linear/">Common statistical
+tests are linear models</a><br> <a
+href="https://learningstatisticswithr.com">Learning Statistics with
+R</a><br> <a href="https://kdestasio.github.io/post/r_best_practices/">R
+best practices</a><br> <a
+href="http://mfviz.com/hierarchical-models/">Visualizing hierarchical
+(aka multilevel or mixed) models</a><br></p>
+<p><em>Teaching</em><br> <a href="https://osf.io/vkhbt/">Course syllabi
+for open and reproducible methods</a></p>
 </div>
 
 

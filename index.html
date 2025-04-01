@@ -13,7 +13,7 @@
 
 <title>Saren H. Seeley, Ph.D.</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -57,6 +57,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
 
@@ -81,6 +82,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -138,11 +142,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -171,8 +179,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -180,16 +188,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -233,7 +234,7 @@ $(document).ready(function () {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -274,11 +275,37 @@ $(document).ready(function () {
 </div>
 
 
-Hello! I am currently a NIMH T32 postdoctoral research fellow in the Icahn School of Medicine at Mount Sinai’s Psychiatry Department.
-</p>
-I completed my PhD in clinical psychology at the University of Arizona and the Pittsburgh VA Medical Center, following undergraduate studies at CUNY Hunter College.
-<p>
-<p>My research at ISMMS aims to identify neural mechanisms of adaptation to trauma and loss, with a focus on (1) PTSD resilience in a cohort of 9/11 World Trade Center trauma-exposed responders (in the <a href="https://wwwn.cdc.gov/ResearchGateway/ResearchProjects/Details/132">Trauma and Resilience Program</a>, and (2) developing computational psychiatry models to understand mechanisms of prolonged grief disorder (in the <a href="https://labs.neuroscience.mssm.edu/project/schiller-lab/">Affective Neuroscience Lab</a>).</p>
+<p>Hello!</p>
+<p>I am a postdoctoral fellow at the Icahn School of Medicine at Mount
+Sinai, continuing my training in computational psychiatry and
+neuroimaging in <a
+href="https://labs.icahn.mssm.edu/bernerlab/">Dr. Laura Berner’s
+lab</a>. As a clinical psychologist, I received my PhD from the
+University of Arizona, after completing a predoctoral internship at the
+Pittsburgh VA Medical Center, and undergraduate studies at CUNY Hunter
+College. Previously at ISMMS (2021-2024), I completed the NIMH T32
+postdoctoral fellowship (“Training the Next Generation of Clinical
+Neuroscientists”; T32MH122394) focused on functional and structural MRI
+correlates of post-traumatic stress disorder and psychological
+resilience in World Trade Center responders. I am particularly
+interested in how neural computations involved in learning and
+decision-making contribute to thoughts and behaviors that feel difficult
+to stop or control (e.g., in eating disorders, prolonged grief disorder,
+or PTSD).</p>
+Grief is a natural, healthy response to the death of a loved one, but
+some bereaved people experience a persistent, severe, and disabling
+response to loss. My developing program of research is dedicated to
+investigating the neurobiological and psychosocial mechanisms that may
+complicate adaptation and recovery after one of life’s top stressors:
+the death of a close loved one. This work has been funded by the
+National Institute on Aging and the Brain &amp; Behavioral Research
+Foundation. My ongoing <a
+href="MRI%20Flyer%203%2010.09.24%20approved.pdf">Grief-LEARN</a> study
+applies neuroimaging and computational psychiatry methods to understand
+learning dysfunction as a hypothesized mechanism driving slower or
+absent adaptation in prolonged grief disorder (PGD) <a
+href="https://pubmed.ncbi.nlm.nih.gov/34520954">(O’Connor &amp; Seeley,
+2022)</a>.
 <p>
 </p>
  

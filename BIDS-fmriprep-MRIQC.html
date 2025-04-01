@@ -14,7 +14,7 @@
 
 <title>Getting started with BIDS, fMRIPrep, MRIQC</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
@@ -30,7 +30,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -61,6 +61,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="styles.css" type="text/css" />
 
 
@@ -85,6 +86,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -142,11 +146,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -175,8 +183,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -184,16 +192,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -310,7 +311,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -346,7 +347,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Getting started with BIDS, fMRIPrep, MRIQC</h1>
+<h1 class="title toc-ignore">Getting started with BIDS, fMRIPrep,
+MRIQC</h1>
 <h4 class="author">Saren Seeley</h4>
 <h4 class="date">Last updated 05-16-2019</h4>
 
@@ -356,34 +358,59 @@ div.tocify {
 <div id="planned-future-updates" class="section level4">
 <h4>Planned future updates:</h4>
 <ul>
-<li>Add to section on <code>fmriprep</code> reports and interpretation: <strong><em>in progress, draft guidelines <a href="https://docs.google.com/document/d/1TE6ZWzNg8cDpvL4Vu0VGOZQLXkQ88Fa59AORzN01Avk/edit?usp=sharing">here</a></em></strong></li>
+<li>Add to section on <code>fmriprep</code> reports and interpretation:
+<strong><em>in progress, draft guidelines <a
+href="https://docs.google.com/document/d/1TE6ZWzNg8cDpvL4Vu0VGOZQLXkQ88Fa59AORzN01Avk/edit?usp=sharing">here</a></em></strong></li>
 <li>Add resources to section on using BIDS apps via HPC.</li>
-<li>Anything else you’d like to see? <a href="mailto:sarenseeley@email.arizona.edu?subject=Suggestions%20for%20BIDS/fMRIPrep/MRIQC%20documentation">Email me.</a></li>
+<li>Anything else you’d like to see? <a
+href="mailto:sarenseeley@email.arizona.edu?subject=Suggestions%20for%20BIDS/fMRIPrep/MRIQC%20documentation">Email
+me.</a></li>
 </ul>
 </div>
 <div id="bids" class="section level1">
 <h1>BIDS</h1>
-<p>The Brain Imaging Data Structure (BIDS) is a standardized format for organizing and describing neuroimaging data and study outputs (<a href="https://www.nature.com/articles/sdata201644">Gorgolewski et al., 2016</a>).</p>
+<p>The Brain Imaging Data Structure (BIDS) is a standardized format for
+organizing and describing neuroimaging data and study outputs (<a
+href="https://www.nature.com/articles/sdata201644">Gorgolewski et al.,
+2016</a>).</p>
 <div id="why-bids" class="section level2">
 <h2>Why BIDS?</h2>
 <p>Having your data in BIDS format is helpful in several ways:</p>
 <ol style="list-style-type: decimal">
-<li>Heterogeneity in how complex data are organized can lead to confusion (including within-lab as well as between-lab), and unnecessary manual metadata input.</li>
-<li>Researchers can take advantage of the numerous and ever-expanding library of “BIDS apps”, or software packages that are written to take valid BIDS datasets as input.</li>
-<li>Avoids the need for highly study- or lab-specific pipelines –&gt; improves reproducibility –&gt; for the field as a whole, we can be more confident in our results.</li>
-<li>The ability to automatically validate a dataset allows you to spot issues (files missing or in the wrong place, inconsistent naming, etc.) and makes curation easier and faster.</li>
-<li>Having a standardized format facilitates data reuse/sharing (benefits for cost-effectiveness of research $).</li>
+<li>Heterogeneity in how complex data are organized can lead to
+confusion (including within-lab as well as between-lab), and unnecessary
+manual metadata input.</li>
+<li>Researchers can take advantage of the numerous and ever-expanding
+library of “BIDS apps”, or software packages that are written to take
+valid BIDS datasets as input.</li>
+<li>Avoids the need for highly study- or lab-specific pipelines –&gt;
+improves reproducibility –&gt; for the field as a whole, we can be more
+confident in our results.</li>
+<li>The ability to automatically validate a dataset allows you to spot
+issues (files missing or in the wrong place, inconsistent naming, etc.)
+and makes curation easier and faster.</li>
+<li>Having a standardized format facilitates data reuse/sharing
+(benefits for cost-effectiveness of research $).</li>
 </ol>
 </div>
 <div id="getting-started-with-bids" class="section level2">
 <h2>Getting started with BIDS</h2>
-<p>The <a href="https://github.com/bids-standard/bids-starter-kit">BIDS Starter Kit</a> is a “community-curated collection of tutorials, wikis, and templates to get you started with creating BIDS compliant datasets.” As the name implies, this is a good place to start.</p>
-<p>Also spend some time checking out the <a href="http://bids.neuroimaging.io">BIDS website</a> and looking over the <a href="https://bids-specification.readthedocs.io/en/latest/">specification</a>.</p>
+<p>The <a href="https://github.com/bids-standard/bids-starter-kit">BIDS
+Starter Kit</a> is a “community-curated collection of tutorials, wikis,
+and templates to get you started with creating BIDS compliant datasets.”
+As the name implies, this is a good place to start.</p>
+<p>Also spend some time checking out the <a
+href="http://bids.neuroimaging.io">BIDS website</a> and looking over the
+<a
+href="https://bids-specification.readthedocs.io/en/latest/">specification</a>.</p>
 </div>
 <div id="the-bids-structure" class="section level2">
 <h2>The BIDS structure</h2>
-<p>Great simple description of the BIDS folder hierarchy here: <a href="https://github.com/bids-standard/bids-starter-kit/wiki/The-BIDS-folder-hierarchy" class="uri">https://github.com/bids-standard/bids-starter-kit/wiki/The-BIDS-folder-hierarchy</a></p>
-<p>As well, there are three main types of files you’ll find in a BIDS dataset:</p>
+<p>Great simple description of the BIDS folder hierarchy here: <a
+href="https://github.com/bids-standard/bids-starter-kit/wiki/The-BIDS-folder-hierarchy"
+class="uri">https://github.com/bids-standard/bids-starter-kit/wiki/The-BIDS-folder-hierarchy</a></p>
+<p>As well, there are three main types of files you’ll find in a BIDS
+dataset:</p>
 <ul>
 <li>.json files that contain metadata as key:value pairs</li>
 <li>.tsv files that contain tables of metadata</li>
@@ -391,7 +418,9 @@ div.tocify {
 </ul>
 <div id="example" class="section level3">
 <h3>Example</h3>
-<p>This is my directory structure from the oxytocin grief study (resting state data only), where we administered two different treatments (“A” and “B”) at two sessions a week apart:</p>
+<p>This is my directory structure from the oxytocin grief study (resting
+state data only), where we administered two different treatments (“A”
+and “B”) at two sessions a week apart:</p>
 <pre><code>restingstate/
 └─ sourcedata
    └── &lt;DICOMS go here&gt;
@@ -420,55 +449,116 @@ dataset_description.json
 participants.tsv</code></pre>
 <ul>
 <li><code>/restingstate</code> is the main BIDS directory.</li>
-<li><code>./sourcedata</code> contains the DICOMs, in whatever haphazard organization they came in from Osirix. Note the <a href="https://github.com/bids-standard/bids-specification/blob/master/src/02-common-principles.md#sourcevs-raw-vs-derived-data">BIDS distinction between “raw” and “sourcedata”</a>: raw = unprocessed or minimally processed due to file format conversion; source = data before conversion to BIDS.</li>
-<li><code>./sub-101</code> contains two sub-directories, one for each session. Each has an <code>anat</code> and a <code>func</code> folder for the T1w and EPI images, respectively. These are where the NIFTIs go after they’re imported from <code>/sourcedata</code>.</li>
-<li><code>./derivatives</code> contains any files that result from doing anything to the raw data, including brain masks, processed images, reports, logs, metadata files, reports…</li>
+<li><code>./sourcedata</code> contains the DICOMs, in whatever haphazard
+organization they came in from Osirix. Note the <a
+href="https://github.com/bids-standard/bids-specification/blob/master/src/02-common-principles.md#sourcevs-raw-vs-derived-data">BIDS
+distinction between “raw” and “sourcedata”</a>: raw = unprocessed or
+minimally processed due to file format conversion; source = data before
+conversion to BIDS.</li>
+<li><code>./sub-101</code> contains two sub-directories, one for each
+session. Each has an <code>anat</code> and a <code>func</code> folder
+for the T1w and EPI images, respectively. These are where the NIFTIs go
+after they’re imported from <code>/sourcedata</code>.</li>
+<li><code>./derivatives</code> contains any files that result from doing
+anything to the raw data, including brain masks, processed images,
+reports, logs, metadata files, reports…</li>
 </ul>
-<p>Each pipeline/software/BIDS app you use gets its own subdirectory. Here, I just have <code>fmriprep</code>. Different apps will organize their outputs differently, but they do it automatically so you don’t have to worry about this.</p>
+<p>Each pipeline/software/BIDS app you use gets its own subdirectory.
+Here, I just have <code>fmriprep</code>. Different apps will organize
+their outputs differently, but they do it automatically so you don’t
+have to worry about this.</p>
 <p>A valid BIDS dataset also needs these three files:</p>
 <ol style="list-style-type: decimal">
-<li><strong>dataset_description.json</strong>: A JSON file with information about the dataset (BIDS version, authors, funding, license, etc.).</li>
-<li><strong>README.txt</strong>: A .txt file.<br> <em>This file should describe the nature of the raw data or the derived data. In the case of the existence of a derivatives folder, we RECOMMEND including details about the software stack and settings used to generate the results. Inclusion of non-imaging objects that improve reproducibility are encouraged (scripts, settings files, etc.)</em></li>
-<li><strong>participants.tsv</strong>: A TSV file.<br> <em>The purpose of this file is to describe properties of participants such as age, handedness, sex, etc. In case of single session studies this file has one compulsory column participant_id that consists of sub-, followed by a list of optional columns describing participants. Each participant needs to be described by one and only one row.</em></li>
+<li><strong>dataset_description.json</strong>: A JSON file with
+information about the dataset (BIDS version, authors, funding, license,
+etc.).</li>
+<li><strong>README.txt</strong>: A .txt file.<br> <em>This file should
+describe the nature of the raw data or the derived data. In the case of
+the existence of a derivatives folder, we RECOMMEND including details
+about the software stack and settings used to generate the results.
+Inclusion of non-imaging objects that improve reproducibility are
+encouraged (scripts, settings files, etc.)</em></li>
+<li><strong>participants.tsv</strong>: A TSV file.<br> <em>The purpose
+of this file is to describe properties of participants such as age,
+handedness, sex, etc. In case of single session studies this file has
+one compulsory column participant_id that consists of sub-, followed by
+a list of optional columns describing participants. Each participant
+needs to be described by one and only one row.</em></li>
 </ol>
-<p>The naming of both directories and files is highly specific, and detailed in the <a href="https://bids-specification.readthedocs.io/en/latest/">BIDS Specification document</a>.</p>
+<p>The naming of both directories and files is highly specific, and
+detailed in the <a
+href="https://bids-specification.readthedocs.io/en/latest/">BIDS
+Specification document</a>.</p>
 </div>
 </div>
 <div id="making-your-data-bids-compliant" class="section level2">
 <h2>Making your data BIDS-compliant</h2>
-<p>This is probably the steepest curve in using BIDS, but luckily there are a multitude of software packages and approaches to make this happen.</p>
-<p>Some of these only convert, some convert and create JSON sidecars, some do all of that + organize your files for you.</p>
+<p>This is probably the steepest curve in using BIDS, but luckily there
+are a multitude of software packages and approaches to make this
+happen.</p>
+<p>Some of these only convert, some convert and create JSON sidecars,
+some do all of that + organize your files for you.</p>
 <ul>
-<li><a href="https://github.com/rordenlab/dcm2niix/releases">dcm2niix</a></li>
-<li><a href="https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst">dcm2niibatch</a></li>
-<li><a href="https://github.com/nipy/heudiconv">heudiconv</a> - (Dianne Patterson has some really great documentation on this <a href="https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/heudiconv.html">here</a>)</li>
+<li><a
+href="https://github.com/rordenlab/dcm2niix/releases">dcm2niix</a></li>
+<li><a
+href="https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst">dcm2niibatch</a></li>
+<li><a href="https://github.com/nipy/heudiconv">heudiconv</a> - (Dianne
+Patterson has some really great documentation on this <a
+href="https://neuroimaging-core-docs.readthedocs.io/en/latest/pages/heudiconv.html">here</a>)</li>
 <li><a href="https://github.com/cbedetti/Dcm2Bids">dcm2bids</a></li>
-<li>Using a <a href="http://reproducibility.stanford.edu/bids-tutorial-series-part-1b/">custom shell script</a></li>
-<li>&amp; more - see the <a href="http://bids.neuroimaging.io">BIDS website</a></li>
+<li>Using a <a
+href="http://reproducibility.stanford.edu/bids-tutorial-series-part-1b/">custom
+shell script</a></li>
+<li>&amp; more - see the <a href="http://bids.neuroimaging.io">BIDS
+website</a></li>
 </ul>
 </div>
 <div id="using-dcm2niibatch" class="section level2">
 <h2>Using dcm2niibatch</h2>
-<p>For the oxytocin study, there were a ton of inconsistencies in how the DICOMs were named and organized for each participant/session (and I wasn’t savvy enough to successfully modify the custom shell script), so <strong>dcm2niibatch</strong> ended up being the best option for my dissertation.</p>
-<p>dcm2niibatch “<em>performs a batch conversion of multiple dicoms using dcm2niibatch, which is run by passing a configuration file e.g dcm2niibatch batch_config.yml</em>” (<a href="https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst">manual</a>)</p>
+<p>For the oxytocin study, there were a ton of inconsistencies in how
+the DICOMs were named and organized for each participant/session (and I
+wasn’t savvy enough to successfully modify the custom shell script), so
+<strong>dcm2niibatch</strong> ended up being the best option for my
+dissertation.</p>
+<p>dcm2niibatch “<em>performs a batch conversion of multiple dicoms
+using dcm2niibatch, which is run by passing a configuration file e.g
+dcm2niibatch batch_config.yml</em>” (<a
+href="https://github.com/rordenlab/dcm2niix/blob/master/docs/source/dcm2niibatch.rst">manual</a>)</p>
 <div id="installation-and-setup" class="section level3">
 <h3>Installation and setup</h3>
 <p><em>N.B.: All of this assumes you’re using OSX.</em></p>
-<p>First, install <a href="https://brew.sh">Homebrew</a>, which is a package manager for OSX.</p>
+<p>First, install <a href="https://brew.sh">Homebrew</a>, which is a
+package manager for OSX.</p>
 <pre><code>$ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot; </code></pre>
-<p>The script explains what it will do and then pauses before it does it.</p>
+<p>The script explains what it will do and then pauses before it does
+it.</p>
 <p>Then install dcm2niix, with a flag to install dcm2niibatch too:</p>
 <pre><code>$ brew install dcm2niix --with-batch</code></pre>
-<p>Then make the subdirectories where each subject’s raw NIFTIs will ultimately live (assuming you already set up the top level directory, in this case <code>/restingstate</code>, and moved your DICOMs into <code>/restingstate/sourcedata</code>):</p>
+<p>Then make the subdirectories where each subject’s raw NIFTIs will
+ultimately live (assuming you already set up the top level directory, in
+this case <code>/restingstate</code>, and moved your DICOMs into
+<code>/restingstate/sourcedata</code>):</p>
 <pre><code>$ cd &lt;your BIDS directory&gt;
 $ mkdir -p sub-{101,102,103,104,105,107,110,113,114,115,117,118,119,120,121,122,123,125,126,127,128,129,130,131,132,133,134,135,137,138,139,140,141,142,144,145,146,147,148,149}/ses-{txA,txB}/{func,anat}</code></pre>
 </div>
 <div id="config-files" class="section level3">
 <h3>Config files</h3>
-<p>The next step is to build the configuration files, which move each subject’s data from <code>/sourcedata</code> into where it should be according to the BIDS spec.</p>
-<p><a href="https://github.com/rordenlab/dcm2niix/blob/master/BATCH.md">Configuration files for dcm2niibatch</a> need to be in a very specific format called YAML that keeps data stored as key-value pairs. <a href="https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml">This is a good overview of YAML.</a></p>
-<p><em>Note: YAML uses whitespace as formatting, so be very careful about which text editor you use (I used Atom). TextEdit (the default on OSX) does not work. You need something that isn’t going to insert any invisible formatting whatsoever.</em></p>
-<p>In order to make the configuration file for dcm2niibatch, I needed to first get the paths for all of the DICOM source data:</p>
+<p>The next step is to build the configuration files, which move each
+subject’s data from <code>/sourcedata</code> into where it should be
+according to the BIDS spec.</p>
+<p><a
+href="https://github.com/rordenlab/dcm2niix/blob/master/BATCH.md">Configuration
+files for dcm2niibatch</a> need to be in a very specific format called
+YAML that keeps data stored as key-value pairs. <a
+href="https://github.com/Animosity/CraftIRC/wiki/Complete-idiot%27s-introduction-to-yaml">This
+is a good overview of YAML.</a></p>
+<p><em>Note: YAML uses whitespace as formatting, so be very careful
+about which text editor you use (I used Atom). TextEdit (the default on
+OSX) does not work. You need something that isn’t going to insert any
+invisible formatting whatsoever.</em></p>
+<p>In order to make the configuration file for dcm2niibatch, I needed to
+first get the paths for all of the DICOM source data:</p>
 <pre><code>$ find . -type d -name *MPRAGE* &gt; ~/Desktop/restingstate/sourcedata/mprage-files.txt
 $ find . -type d -name *Rest* &gt; ~/Desktop/restingstate/sourcedata/rest-files.txt</code></pre>
 <p>The config files follow the format:</p>
@@ -487,8 +577,13 @@ Files:
       in_dir:           /path/to/second/folder
       out_dir:          /path/to/output/folder
       filename:         secondfile</code></pre>
-<p><code>isCreateBIDS: true</code> makes a BIDS-compliant JSON sidecar that contains metadata from the NIFTI header. <br> You can specify as many files as you want, as long as they are separated by a dash.</p>
-<p>For T1w images, filenames are <code>sub-1**_ses-tx*_T1w</code>. Note the very specific naming, including the <code>sub-</code> prefix, the <code>ses-</code> prefix (for multi-session/longitudinal data), and the modality (<code>t1w</code>):</p>
+<p><code>isCreateBIDS: true</code> makes a BIDS-compliant JSON sidecar
+that contains metadata from the NIFTI header. <br> You can specify as
+many files as you want, as long as they are separated by a dash.</p>
+<p>For T1w images, filenames are <code>sub-1**_ses-tx*_T1w</code>. Note
+the very specific naming, including the <code>sub-</code> prefix, the
+<code>ses-</code> prefix (for multi-session/longitudinal data), and the
+modality (<code>t1w</code>):</p>
 <pre><code>Options:
     isGz: false
     isFlipY: false
@@ -504,7 +599,10 @@ Files:
         in_dir: &#39;./sourcedata/D101B/T1-MPRAGE - 8&#39;
         out_dir: ./sub-101/ses-txB/anat
         filename: sub-101_ses-txB_T1w</code></pre>
-<p>For the functional images, filenames will be <code>sub-1**_ses-tx*_task-*_bold</code>. Again, very specific naming, including the subject ID, session ID, task (<code>task-</code> prefix), and modality.</p>
+<p>For the functional images, filenames will be
+<code>sub-1**_ses-tx*_task-*_bold</code>. Again, very specific naming,
+including the subject ID, session ID, task (<code>task-</code> prefix),
+and modality.</p>
 <pre><code>Options:
     isGz: false
     isFlipY: false
@@ -523,25 +621,34 @@ Files:
 </div>
 <div id="bidsignore-file" class="section level3">
 <h3>.bidsignore file</h3>
-<p>The validator will throw a “NOT_INCLUDED” error due to the configuration files being in the dataset.</p>
-<p>To avoid this, add a <a href="https://github.com/bids-standard/bids-validator#bidsignore">.bidsignore file</a> containing the following:</p>
+<p>The validator will throw a “NOT_INCLUDED” error due to the
+configuration files being in the dataset.</p>
+<p>To avoid this, add a <a
+href="https://github.com/bids-standard/bids-validator#bidsignore">.bidsignore
+file</a> containing the following:</p>
 <pre><code>/restingstate
 *.yaml</code></pre>
 </div>
 <div id="run-dcm2niibatch" class="section level3">
 <h3>Run dcm2niibatch</h3>
-<p>This is pretty simple, assuming the config files are all in order:</p>
+<p>This is pretty simple, assuming the config files are all in
+order:</p>
 <pre><code>$ dcm2niibatch batch_config_anat.yaml
 $ dcm2niibatch batch_config_rest.yaml</code></pre>
 </div>
 </div>
 <div id="validate-the-dataset" class="section level2">
 <h2>Validate the dataset</h2>
-<p>The <a href="http://bids-standard.github.io/bids-validator/">BIDS validator</a> can be run online. I think you can also install the software but I haven’t. The site notes: “Selecting a dataset only performs validation. Files are never uploaded.”</p>
+<p>The <a href="http://bids-standard.github.io/bids-validator/">BIDS
+validator</a> can be run online. I think you can also install the
+software but I haven’t. The site notes: “Selecting a dataset only
+performs validation. Files are never uploaded.”</p>
 <p><strong>Note: Works in Chrome or Firefox only.</strong></p>
 <ol style="list-style-type: decimal">
-<li>Select your BIDS directory (e.g., <code>/restingstate</code>) and wait for it to finish validating.</li>
-<li>View errors and warnings. You can click the link at the bottom of the page to download the error log.</li>
+<li>Select your BIDS directory (e.g., <code>/restingstate</code>) and
+wait for it to finish validating.</li>
+<li>View errors and warnings. You can click the link at the bottom of
+the page to download the error log.</li>
 <li>Fix any errors and try it again.</li>
 </ol>
 <div id="errors-and-warnings" class="section level3">
@@ -552,36 +659,77 @@ $ dcm2niibatch batch_config_rest.yaml</code></pre>
 </div>
 <div id="fmriprep" class="section level1">
 <h1>fMRIPrep</h1>
-<p><strong>NOTE: This documentation is based on my experience with fmriprep version 1.1.8. As of 05/16/2019, the current version is 1.4.0</strong> (see <a href="https://neurostars.org/t/fmriprep-1-4-0-just-released/4265" class="uri">https://neurostars.org/t/fmriprep-1-4-0-just-released/4265</a>)</p>
+<p><strong>NOTE: This documentation is based on my experience with
+fmriprep version 1.1.8. As of 05/16/2019, the current version is
+1.4.0</strong> (see <a
+href="https://neurostars.org/t/fmriprep-1-4-0-just-released/4265"
+class="uri">https://neurostars.org/t/fmriprep-1-4-0-just-released/4265</a>)</p>
 <div id="bids-apps" class="section level2">
 <h2>BIDS apps</h2>
-<p>Generally, a BIDS app is “<em>a container image capturing a neuroimaging pipeline that takes a BIDS-formatted dataset as input. Since the input is a whole dataset, apps are able to combine multiple modalities, sessions, and/or subjects, but at the same time need to implement ways to query input datasets. Each BIDS App has the same core set of command-line arguments, making them easy to run and integrate into automated platforms.</em>” (<a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005209">Gorgolweski et al., 2017</a>)</p>
-<p>Containers are similar to Virtual Machines, but still rely on some OS subprocesses.</p>
+<p>Generally, a BIDS app is “<em>a container image capturing a
+neuroimaging pipeline that takes a BIDS-formatted dataset as input.
+Since the input is a whole dataset, apps are able to combine multiple
+modalities, sessions, and/or subjects, but at the same time need to
+implement ways to query input datasets. Each BIDS App has the same core
+set of command-line arguments, making them easy to run and integrate
+into automated platforms.</em>” (<a
+href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005209">Gorgolweski
+et al., 2017</a>)</p>
+<p>Containers are similar to Virtual Machines, but still rely on some OS
+subprocesses.</p>
 <p>BIDS apps rely on two technologies for container computing:</p>
 <ol style="list-style-type: decimal">
-<li>Docker: For building, hosting, &amp; running containers on local hardware (Windows, Mac OS X, Linux) or in the cloud <a href="https://github.com/wsargent/docker-cheat-sheet">(Docker cheat sheet)</a>.</li>
+<li>Docker: For building, hosting, &amp; running containers on local
+hardware (Windows, Mac OS X, Linux) or in the cloud <a
+href="https://github.com/wsargent/docker-cheat-sheet">(Docker cheat
+sheet)</a>.</li>
 <li>Singularity: For running containers on HPC clusters.</li>
 </ol>
-<p>Container softwares such as Docker bundle all relevant software for processing. This lets you avoid “dependencies hell” – especially important for something like fMRIPrep that uses modules from various neuroimaging software (FreeSurfer, FSL, AFNI, etc.) As well, having the exact version numbers of bundled software allows for reproducibility.</p>
-<p>Many BIDS apps are also available to run in the cloud via GUI on <a href="http://openneuro.org">OpenNeuro.org</a> (based on the idea of <a href="http://reproducibility.stanford.edu/announcing-the-openneuro-platform-open-and-reproducible-science-as-a-service/">“science as a service”</a>; datasets automatically published after 3 years if &gt;2 subjects.)</p>
-<p><a href="http://fmriprep.readthedocs.io">fMRIPrep</a> is one of many BIDS apps, or “<em>portable neuroimaging pipelines that understand BIDS datasets</em>”. fMRIPrep is a generic fMRI preprocessing pipeline providing results robust to the input data quality as well as informative reports.</p>
+<p>Container softwares such as Docker bundle all relevant software for
+processing. This lets you avoid “dependencies hell” – especially
+important for something like fMRIPrep that uses modules from various
+neuroimaging software (FreeSurfer, FSL, AFNI, etc.) As well, having the
+exact version numbers of bundled software allows for
+reproducibility.</p>
+<p>Many BIDS apps are also available to run in the cloud via GUI on <a
+href="http://openneuro.org">OpenNeuro.org</a> (based on the idea of <a
+href="http://reproducibility.stanford.edu/announcing-the-openneuro-platform-open-and-reproducible-science-as-a-service/">“science
+as a service”</a>; datasets automatically published after 3 years if
+&gt;2 subjects.)</p>
+<p><a href="http://fmriprep.readthedocs.io">fMRIPrep</a> is one of many
+BIDS apps, or “<em>portable neuroimaging pipelines that understand BIDS
+datasets</em>”. fMRIPrep is a generic fMRI preprocessing pipeline
+providing results robust to the input data quality as well as
+informative reports.</p>
 </div>
 <div id="about" class="section level2">
 <h2>About</h2>
 <ul>
-<li>fMRIPrep was developed by Russ Poldrack’s lab and the Stanford Center for Reproducible Neuroscience.</li>
-<li>Open-source Nipype-based pipeline for transparent and reproducible preprocessing workflows.</li>
-<li>Uses a combination of tools from common software packages including FSL, ANTs, FreeSurfer, and AFNI to provide the best implementation for each step of preprocessing.</li>
-<li>Performs “minimal preprocessing” (skull stripping, motion correction, segmentation, coregistration, normalization etc.)</li>
-<li>Robust to variation across datasets; intended to be “analysis-agnostic” (e.g., does not include smoothing because the smoothing parameters you choose depend in part on how you want to analyze the data).</li>
-<li>Provides optional integration of Freesurfer for surface based processing.</li>
+<li>fMRIPrep was developed by Russ Poldrack’s lab and the Stanford
+Center for Reproducible Neuroscience.</li>
+<li>Open-source Nipype-based pipeline for transparent and reproducible
+preprocessing workflows.</li>
+<li>Uses a combination of tools from common software packages including
+FSL, ANTs, FreeSurfer, and AFNI to provide the best implementation for
+each step of preprocessing.</li>
+<li>Performs “minimal preprocessing” (skull stripping, motion
+correction, segmentation, coregistration, normalization etc.)</li>
+<li>Robust to variation across datasets; intended to be
+“analysis-agnostic” (e.g., does not include smoothing because the
+smoothing parameters you choose depend in part on how you want to
+analyze the data).</li>
+<li>Provides optional integration of Freesurfer for surface based
+processing.</li>
 </ul>
 <p>fMRIPrep was built around three principles:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Robustness</strong>:
 <ul>
 <li>
-fMRIPrep adapts the preprocessing steps depending on the input dataset. The idea is that it should provide results as good as possible independently of scanner make, scanning parameters or presence of additional correction scans (such as fieldmaps).
+fMRIPrep adapts the preprocessing steps depending on the input dataset.
+The idea is that it should provide results as good as possible
+independently of scanner make, scanning parameters or presence of
+additional correction scans (such as fieldmaps).
 </ul>
 </li></li>
 <li><strong>Ease of use</strong>:
@@ -592,19 +740,36 @@ Depends on BIDS standard so requires minimal manual parameter input.
 <li><strong>“Glass box” philosophy</strong>:
 <ul>
 <li>
-Just because it’s automated doesn’t mean that you shouldn’t use your brain (i.e., look at your data/results or understand the methods.) Thus, fMRIPrep generates visual reports for each subject detailing the outcomes and accuracy of the most important steps, in service of QC and helping researchers understand the process.
+Just because it’s automated doesn’t mean that you shouldn’t use your
+brain (i.e., look at your data/results or understand the methods.) Thus,
+fMRIPrep generates visual reports for each subject detailing the
+outcomes and accuracy of the most important steps, in service of QC and
+helping researchers understand the process.
 </ul>
 </li></li>
 </ol>
 </div>
 <div id="workflow" class="section level2">
 <h2>Workflow</h2>
-<p>From <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html</a>:</p>
+<p>From <a
+href="https://fmriprep.readthedocs.io/en/latest/workflows.html"
+class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html</a>:</p>
 <ol style="list-style-type: decimal">
-<li>The anatomical sub-workflow begins by constructing an average image by conforming all found T1w images to RAS orientation and a common voxel size, and, in the case of multiple images, averages them into a single reference template. In the case of multiple T1w images (across sessions and/or runs), T1w images are merged into a single template image using FreeSurfer’s mri_robust_template.</li>
-<li>Then, the T1w image/average is skull-stripped using ANTs’ antsBrainExtraction.sh, which is an atlas-based brain extraction workflow.</li>
-<li>Once the brain mask is computed, FSL fast is utilized for brain tissue segmentation.</li>
-<li>Finally, spatial normalization to MNI-space is performed using ANTs’ antsRegistration in a multiscale, mutual-information based, nonlinear registration scheme. In particular, spatial normalization is done using the ICBM 2009c Nonlinear Asymmetric template (1×1×1mm).</li>
+<li>The anatomical sub-workflow begins by constructing an average image
+by conforming all found T1w images to RAS orientation and a common voxel
+size, and, in the case of multiple images, averages them into a single
+reference template. In the case of multiple T1w images (across sessions
+and/or runs), T1w images are merged into a single template image using
+FreeSurfer’s mri_robust_template.</li>
+<li>Then, the T1w image/average is skull-stripped using ANTs’
+antsBrainExtraction.sh, which is an atlas-based brain extraction
+workflow.</li>
+<li>Once the brain mask is computed, FSL fast is utilized for brain
+tissue segmentation.</li>
+<li>Finally, spatial normalization to MNI-space is performed using ANTs’
+antsRegistration in a multiscale, mutual-information based, nonlinear
+registration scheme. In particular, spatial normalization is done using
+the ICBM 2009c Nonlinear Asymmetric template (1×1×1mm).</li>
 <li>BOLD preprocessing is split into multiple workflows:
 <ul>
 <li>
@@ -633,7 +798,11 @@ EPI to MNI transformation
 <li>
 Confounds estimation:
 <li>
-Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy).
+Calculated confounds include the mean global signal, mean tissue class
+signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion
+parameters, DVARS, and, if the –use-aroma flag is enabled, the noise
+components identified by ICA-AROMA (those to be removed by the
+“aggressive” denoising strategy).
 </li>
 <li>
 “Non-aggressive” AROMA denoising can also be performed manually.
@@ -655,7 +824,8 @@ Calculated confounds include the mean global signal, mean tissue class signal, t
 <ul>
 <li>Motion correction (FSL MCFLIRT)</li>
 <li>Skull stripping (nilearn)</li>
-<li>Coregistration to T1 (FSL FLIRT with BBR / FreeSurfer bbregister if Freesurfer run)</li>
+<li>Coregistration to T1 (FSL FLIRT with BBR / FreeSurfer bbregister if
+Freesurfer run)</li>
 <li>Confounds estimation (nipype)
 <ul>
 <li>
@@ -675,11 +845,18 @@ Temporal &amp; anatomical CompCor
 </div>
 <div id="outputs" class="section level2">
 <h2>Outputs</h2>
-<p>Source: <a href="https://fmriprep.readthedocs.io/en/latest/outputs.html" class="uri">https://fmriprep.readthedocs.io/en/latest/outputs.html</a></p>
+<p>Source: <a
+href="https://fmriprep.readthedocs.io/en/latest/outputs.html"
+class="uri">https://fmriprep.readthedocs.io/en/latest/outputs.html</a></p>
 <ol style="list-style-type: decimal">
-<li>Visual QA (quality assessment) reports: One HTML per subject, that allows the user a thorough visual assessment of the quality of processing and ensures the transparency of fMRIPrep operation.</li>
-<li>Pre-processed imaging data which are derivatives of the original anatomical and functional images after various preparation procedures have been applied.</li>
-<li>Additional data for subsequent analysis, e.g. the transformations between different spaces or the estimated confounds.</li>
+<li>Visual QA (quality assessment) reports: One HTML per subject, that
+allows the user a thorough visual assessment of the quality of
+processing and ensures the transparency of fMRIPrep operation.</li>
+<li>Pre-processed imaging data which are derivatives of the original
+anatomical and functional images after various preparation procedures
+have been applied.</li>
+<li>Additional data for subsequent analysis, e.g. the transformations
+between different spaces or the estimated confounds.</li>
 </ol>
 <div id="t1w-outputs" class="section level3">
 <h3>T1w outputs</h3>
@@ -704,58 +881,104 @@ Temporal &amp; anatomical CompCor
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <ol style="list-style-type: decimal">
-<li>Install Docker: <a href="https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac" class="uri">https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac</a></li>
+<li>Install Docker: <a
+href="https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac"
+class="uri">https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac</a></li>
 <li>Install <code>pip</code>: <code>$ sudo easy_install pip</code>
 <ul>
-<em>Later OSX versions no longer come with <code>pip</code>. Must log in as admin user to use <code>sudo</code>. Some people suggest that you should use homebrew to install pip instead of messing with the system Python, but then you have two versions of Python on your computer - which also seems like it has high potential to lead to issues. So I’m not sure which approach is better.</em>
+<em>Later OSX versions no longer come with <code>pip</code>. Must log in
+as admin user to use <code>sudo</code>. Some people suggest that you
+should use homebrew to install pip instead of messing with the system
+Python, but then you have two versions of Python on your computer -
+which also seems like it has high potential to lead to issues. So I’m
+not sure which approach is better.</em>
 </ul></li>
-<li>Register for &amp; download a FreeSurfer license: <a href="https://surfer.nmr.mgh.harvard.edu/registration.html" class="uri">https://surfer.nmr.mgh.harvard.edu/registration.html</a>
+<li>Register for &amp; download a FreeSurfer license: <a
+href="https://surfer.nmr.mgh.harvard.edu/registration.html"
+class="uri">https://surfer.nmr.mgh.harvard.edu/registration.html</a>
 <ul>
 Put the license.txt file somewhere in your BIDS directory.
 </ul>
 <ul>
-<a href="https://fmriprep.readthedocs.io/en/latest/installation.html#the-freesurfer-license" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#the-freesurfer-license</a>
+<a
+href="https://fmriprep.readthedocs.io/en/latest/installation.html#the-freesurfer-license"
+class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#the-freesurfer-license</a>
 </ul></li>
-<li>Install <code>fmriprep</code>: <a href="https://fmriprep.readthedocs.io/en/stable/installation.html" class="uri">https://fmriprep.readthedocs.io/en/stable/installation.html</a></li>
+<li>Install <code>fmriprep</code>: <a
+href="https://fmriprep.readthedocs.io/en/stable/installation.html"
+class="uri">https://fmriprep.readthedocs.io/en/stable/installation.html</a></li>
 </ol>
-<p>To install the Docker wrapper (recommended way of running fMRIPrep):</p>
+<p>To install the Docker wrapper (recommended way of running
+fMRIPrep):</p>
 <pre><code>$ pip install --user --upgrade fmriprep-docker</code></pre>
-<p><a id="cmdnotfound"></a> The first time I tried to use the wrapper, I kept getting <code>-bash: fmriprep-docker: command not found</code>. Turns out this is because <code>pip</code> installed <code>fmriprep-docker</code> into <em>/Users/sarenseeley/Library/Python/2.7/bin/</em>. <code>which</code> didn’t turn it up, but this worked:</p>
+<p><a id="cmdnotfound"></a> The first time I tried to use the wrapper, I
+kept getting <code>-bash: fmriprep-docker: command not found</code>.
+Turns out this is because <code>pip</code> installed
+<code>fmriprep-docker</code> into
+<em>/Users/sarenseeley/Library/Python/2.7/bin/</em>. <code>which</code>
+didn’t turn it up, but this worked:</p>
 <pre><code>$ yes n | pip uninstall fmriprep-docker | grep bin </code></pre>
-<p><em>What does this command do?</em> <code>yes n | pip uninstall fmriprep-docker | grep bin</code> tells you where the program is (as if it were going to uninstall it) but doesn’t actually do so because of the <code>yes n</code> part. Then once you find out where it is, you can add the path to that location to your global environment. See effigies’ response in this thread: <a href="https://github.com/poldracklab/fmriprep/issues/909#issuecomment-353322728" class="uri">https://github.com/poldracklab/fmriprep/issues/909#issuecomment-353322728</a></p>
+<p><em>What does this command do?</em>
+<code>yes n | pip uninstall fmriprep-docker | grep bin</code> tells you
+where the program is (as if it were going to uninstall it) but doesn’t
+actually do so because of the <code>yes n</code> part. Then once you
+find out where it is, you can add the path to that location to your
+global environment. See effigies’ response in this thread: <a
+href="https://github.com/poldracklab/fmriprep/issues/909#issuecomment-353322728"
+class="uri">https://github.com/poldracklab/fmriprep/issues/909#issuecomment-353322728</a></p>
 <p><a id="freesurf"></a></p>
-<p>fMRIPrep also had issues locating the FreeSurfer license for some reason, or when it could find it, wanted to treat it as an executable file.</p>
-<p>To solve both of these issues, I had to add their paths to the global environment.</p>
-<p>To add this path permanently to the global environment, follow the instructions here: <a href="https://medium.com/@himanshuagarwal1395/setting-up-environment-variables-in-macos-sierra-f5978369b255">Setting permanent environment variable using terminal</a></p>
+<p>fMRIPrep also had issues locating the FreeSurfer license for some
+reason, or when it could find it, wanted to treat it as an executable
+file.</p>
+<p>To solve both of these issues, I had to add their paths to the global
+environment.</p>
+<p>To add this path permanently to the global environment, follow the
+instructions here: <a
+href="https://medium.com/@himanshuagarwal1395/setting-up-environment-variables-in-macos-sierra-f5978369b255">Setting
+permanent environment variable using terminal</a></p>
 <pre><code>$ cd ~/
 $ nano .bash_profile</code></pre>
-<p>When nano opens up, add the following (change to reflect where your stuff is):</p>
+<p>When nano opens up, add the following (change to reflect where your
+stuff is):</p>
 <pre><code>export PATH=$PATH:/Users/sarenseeley/Library/Python/2.7/bin
 export FS_LICENSE=$HOME/Desktop/restingstate/derivatives/license.txt</code></pre>
 <p>Then save and exit nano.</p>
 <div id="a-note-on-ram" class="section level3">
 <h3>A note on RAM</h3>
-<p>If you only have 8GB RAM on your computer, you will receive a warning:</p>
+<p>If you only have 8GB RAM on your computer, you will receive a
+warning:</p>
 <pre><code>$ fmriprep-docker /Users/sarenseeley/Desktop/test/ /Users/sarenseeley/Desktop/test/derivatives participant
  Warning: &lt;8GB of RAM is available within your Docker environment.
  Some parts of fMRIPrep may fail to complete.
  Continue anyway? [y/N]</code></pre>
-<p>2GB is the default RAM available with Docker for Mac. <code>fmriprep</code> did fail while running the test subject with 2GB RAM so I increased the RAM available to Docker:</p>
+<p>2GB is the default RAM available with Docker for Mac.
+<code>fmriprep</code> did fail while running the test subject with 2GB
+RAM so I increased the RAM available to Docker:</p>
 <ul>
-<li>Go to Docker &gt; Preferences &gt; Advanced and increase the memory to 6GB.</li>
+<li>Go to Docker &gt; Preferences &gt; Advanced and increase the memory
+to 6GB.</li>
 <li>Wait for Docker to restart.</li>
 <li>Re-run <code>fmriprep-docker</code>.</li>
 </ul>
-<p>I still get the warning about RAM, but it runs. FYI: This will probably slow down your system like crazy, so don’t forget to quit Docker when you’re done.</p>
-<p>Upgrading to 24GB RAM and increasing the memory available to Docker to 16GB RAM sped things up significantly: 4 hours/subject vs. 12 hours/subject (no FreeSurfer). (My lab computer is a late-2013 iMac with 3.2 GHz Intel Core i5 processor.)</p>
+<p>I still get the warning about RAM, but it runs. FYI: This will
+probably slow down your system like crazy, so don’t forget to quit
+Docker when you’re done.</p>
+<p>Upgrading to 24GB RAM and increasing the memory available to Docker
+to 16GB RAM sped things up significantly: 4 hours/subject vs. 12
+hours/subject (no FreeSurfer). (My lab computer is a late-2013 iMac with
+3.2 GHz Intel Core i5 processor.)</p>
 </div>
 </div>
 <div id="usage" class="section level2">
 <h2>Usage</h2>
 <p>Helpful links:</p>
 <ul>
-<li>A simple <a href="http://reproducibility.stanford.edu/fmriprep-tutorial-running-the-docker-image/">tutorial on running the fmriprep Docker image</a></li>
-<li><a href="https://fmriprep.readthedocs.io/en/stable/usage.html">fMRIPrep ReadTheDocs page with details of usage</a></li>
+<li>A simple <a
+href="http://reproducibility.stanford.edu/fmriprep-tutorial-running-the-docker-image/">tutorial
+on running the fmriprep Docker image</a></li>
+<li><a
+href="https://fmriprep.readthedocs.io/en/stable/usage.html">fMRIPrep
+ReadTheDocs page with details of usage</a></li>
 </ul>
 <p>Using the Docker wrapper is recommended:</p>
 <pre><code>$ fmriprep-docker /Users/sarenseeley/Desktop/restingstate/ /Users/sarenseeley/Desktop/restingstate/derivatives --longitudinal --participant_label sub-110 sub-113 sub-114 sub-115 sub-117</code></pre>
@@ -769,7 +992,9 @@ export FS_LICENSE=$HOME/Desktop/restingstate/derivatives/license.txt</code></pre
 <div id="usage-wspecific-cli-arguments" class="section level3">
 <h3>Usage w/specific CLI arguments</h3>
 <p>Lots of different options!</p>
-<p>From <a href="https://fmriprep.readthedocs.io/en/stable/usage.html#command-line-arguments" class="uri">https://fmriprep.readthedocs.io/en/stable/usage.html#command-line-arguments</a>:</p>
+<p>From <a
+href="https://fmriprep.readthedocs.io/en/stable/usage.html#command-line-arguments"
+class="uri">https://fmriprep.readthedocs.io/en/stable/usage.html#command-line-arguments</a>:</p>
 <pre><code>[-h] [--version]
 [--participant_label PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]
 [-t TASK_ID] [--debug] [--nthreads NTHREADS]
@@ -795,41 +1020,111 @@ export FS_LICENSE=$HOME/Desktop/restingstate/derivatives/license.txt</code></pre
 bids_dir output_dir {participant}</code></pre>
 <p>Example of how you might use these arguments:</p>
 <pre><code>fmriprep-docker --low-mem --resource-monitor --stop-on-first-crash --longitudinal --use-syn-sdc --use-aroma  /Users/sarenseeley/Desktop/restingstate/ /Users/sarenseeley/Desktop/restingstate/derivatives -w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch --participant_label sub-110 sub-113 sub-114 sub-115 sub-117</code></pre>
-<p>(I am only running a few participants at a time because I’m not yet sure how many I can run together before it crashes.)</p>
+<p>(I am only running a few participants at a time because I’m not yet
+sure how many I can run together before it crashes.)</p>
 <p>These are some of the ones I am using:</p>
-<code>--use-aroma</code>: “Given a motion-corrected fMRI, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy)" &amp; see section on ICA-AROMA <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html?highlight=--use_aroma#confounds-estimation">(source)</a>
+<code>--use-aroma</code>: “Given a motion-corrected fMRI, a brain mask,
+mcflirt movement parameters and a segmentation, the discover_wf
+sub-workflow calculates potential confounds per volume. Calculated
+confounds include the mean global signal, mean tissue class signal,
+tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS,
+and, if the –use-aroma flag is enabled, the noise components identified
+by ICA-AROMA (those to be removed by the “aggressive” denoising
+strategy)” &amp; see section on ICA-AROMA <a
+href="https://fmriprep.readthedocs.io/en/stable/workflows.html?highlight=--use_aroma#confounds-estimation">(source)</a>
 <ul>
 <li>
-<em><strong>Notes on aggressive vs non-aggressive ICA AROMA from 2017 UNC workshop:</strong></em>
+<em><strong>Notes on aggressive vs non-aggressive ICA AROMA from 2017
+UNC workshop:</strong></em>
 <ul>
 <li>
-Aggressive: use nuisance time courses as regressors - problem is that they can share variance with signal, they are spatially independent but not necessarily temporally independent.
+Aggressive: use nuisance time courses as regressors - problem is that
+they can share variance with signal, they are spatially independent but
+not necessarily temporally independent.
 </li>
 <li>
-Non-aggressive: leaves in more signal variance (<em>this is what you should do</em>) but means you have to run two models to avoid multicollinearity from dumping signal, noise, motion, and task regressors all in the same model (i.e., task-correlated signal).
+Non-aggressive: leaves in more signal variance (<em>this is what you
+should do</em>) but means you have to run two models to avoid
+multicollinearity from dumping signal, noise, motion, and task
+regressors all in the same model (i.e., task-correlated signal).
 </li>
 </ul>
 </ul>
-<code>--use-syn-sdc</code>: “In the absence of direct measurements of fieldmap data, we provide an (experimental) option to estimate the susceptibility distortion based on the ANTs symmetric normalization (SyN) technique. This feature may be enabled, using the –use-syn-sdc flag, and will only be applied if fieldmaps are unavailable.” <a href="https://fmriprep.readthedocs.io/en/stable/api/index.html#sdc-fieldmapless">(source)</a>
+<code>--use-syn-sdc</code>: “In the absence of direct measurements of
+fieldmap data, we provide an (experimental) option to estimate the
+susceptibility distortion based on the ANTs symmetric normalization
+(SyN) technique. This feature may be enabled, using the –use-syn-sdc
+flag, and will only be applied if fieldmaps are unavailable.” <a
+href="https://fmriprep.readthedocs.io/en/stable/api/index.html#sdc-fieldmapless">(source)</a>
 <ul>
 <li>
 So far, this seems to be helping.
 <ul>
 <li>
-<em>“Fieldmap-less susceptibility-derived distortion correction (SDC)…takes a skull-stripped T1w image and reference BOLD image, and estimates a field of displacements that compensates for the warp caused by susceptibility distortion. The tool uses ANTs’ antsRegistration configured with symmetric normalization (SyN) to align a fieldmap template 18 and applies the template as prior information to regularize a follow-up registration process. The follow-up registration process also uses antsRegistration with SyN deformation, with displacements restricted to the PE direction. If no PE direction is specified, anterior-posterior PE is assumed. Based on the fieldmap atlas, the displacement field is optimized only within regions that are expected to have a &gt;3mm (approximately 1 voxel) warp. This technique is a variation on previous work5,19.”</em> <a href="https://www.biorxiv.org/content/biorxiv/suppl/2018/04/25/306951.DC1/306951-1.pdf">(source)</a>
+<em>“Fieldmap-less susceptibility-derived distortion correction
+(SDC)…takes a skull-stripped T1w image and reference BOLD image, and
+estimates a field of displacements that compensates for the warp caused
+by susceptibility distortion. The tool uses ANTs’ antsRegistration
+configured with symmetric normalization (SyN) to align a fieldmap
+template 18 and applies the template as prior information to regularize
+a follow-up registration process. The follow-up registration process
+also uses antsRegistration with SyN deformation, with displacements
+restricted to the PE direction. If no PE direction is specified,
+anterior-posterior PE is assumed. Based on the fieldmap atlas, the
+displacement field is optimized only within regions that are expected to
+have a &gt;3mm (approximately 1 voxel) warp. This technique is a
+variation on previous work5,19.”</em> <a
+href="https://www.biorxiv.org/content/biorxiv/suppl/2018/04/25/306951.DC1/306951-1.pdf">(source)</a>
 </li>
 </ul>
 </ul>
-<p><code>--longitudinal</code>: “In the case of multiple T1w images (across sessions and/or runs), T1w images are merged into a single template image using FreeSurfer’s mri_robust_template. This template may be unbiased, or equidistant from all source images, or aligned to the first image (determined lexicographically by session label). For two images, the additional cost of estimating an unbiased template is trivial and is the default behavior, but, for greater than two images, the cost can be a slowdown of an order of magnitude. Therefore, in the case of three or more images, fmriprep constructs templates aligned to the first image, unless passed the –longitudinal flag, which forces the estimation of an unbiased template.” <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html#longitudinal-processing">(source)</a></p>
-<p><code>--low-mem</code>: Option to reduce memory usage for large BOLD series (will increase disk usage in working directory). “This will wait until the end of the pipeline to compress the resampled BOLD series, which allows tasks that need to read these files to read only the necessary parts of the file into memory.” (<a href="https://neurostars.org/t/memory-usage-of-fmriprep/1552/3" class="uri">https://neurostars.org/t/memory-usage-of-fmriprep/1552/3</a>)</p>
-<p><code>--fs-no-reconall</code>: Disables surface preprocessing, which saves a ton of time. If your registration looks okay without it, then great! If you’re seeing issues with the registration, like “brain” is identified outside of the brain, then give it a try using Freesurfer’s <code>bbregister</code> instead (this is the default, so don’t need to specify, just remove <code>--fs-no-reconall</code>).</p>
-<p><code>-w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch</code>: Specifies your own local scratch directory (vs. having interim files written somewhere in the Docker container). <strong>This is really helpful because if fMRIPrep crashes, it can use the previously computed outputs to pick up where it left off, saving you from having to wait for it to rerun the whole thing.</strong></p>
+<p><code>--longitudinal</code>: “In the case of multiple T1w images
+(across sessions and/or runs), T1w images are merged into a single
+template image using FreeSurfer’s mri_robust_template. This template may
+be unbiased, or equidistant from all source images, or aligned to the
+first image (determined lexicographically by session label). For two
+images, the additional cost of estimating an unbiased template is
+trivial and is the default behavior, but, for greater than two images,
+the cost can be a slowdown of an order of magnitude. Therefore, in the
+case of three or more images, fmriprep constructs templates aligned to
+the first image, unless passed the –longitudinal flag, which forces the
+estimation of an unbiased template.” <a
+href="https://fmriprep.readthedocs.io/en/stable/workflows.html#longitudinal-processing">(source)</a></p>
+<p><code>--low-mem</code>: Option to reduce memory usage for large BOLD
+series (will increase disk usage in working directory). “This will wait
+until the end of the pipeline to compress the resampled BOLD series,
+which allows tasks that need to read these files to read only the
+necessary parts of the file into memory.” (<a
+href="https://neurostars.org/t/memory-usage-of-fmriprep/1552/3"
+class="uri">https://neurostars.org/t/memory-usage-of-fmriprep/1552/3</a>)</p>
+<p><code>--fs-no-reconall</code>: Disables surface preprocessing, which
+saves a ton of time. If your registration looks okay without it, then
+great! If you’re seeing issues with the registration, like “brain” is
+identified outside of the brain, then give it a try using Freesurfer’s
+<code>bbregister</code> instead (this is the default, so don’t need to
+specify, just remove <code>--fs-no-reconall</code>).</p>
+<p><code>-w /Users/sarenseeley/Desktop/restingstate/derivatives/scratch</code>:
+Specifies your own local scratch directory (vs. having interim files
+written somewhere in the Docker container). <strong>This is really
+helpful because if fMRIPrep crashes, it can use the previously computed
+outputs to pick up where it left off, saving you from having to wait for
+it to rerun the whole thing.</strong></p>
 </div>
 </div>
 <div id="reports" class="section level2">
 <h2>Reports</h2>
 <p>(SECTION IN PROGRESS)</p>
-<p><img src="https://fmriprep.readthedocs.io/en/stable/_images/sub-01_task-mixedgamblestask_run-01_bold_carpetplot.svg" /> <em>The figure shows on top several confounds estimated for the BOLD series: global signals (‘GlobalSignal’, ‘WM’, ‘GM’), standardized DVARS (‘stdDVARS’), and framewise-displacement (‘FramewiseDisplacement’). At the bottom, a ‘carpetplot’ summarizing the BOLD series. The colormap on the left-side of the carpetplot denotes signals located in cortical gray matter regions (blue), subcortical gray matter (orange), cerebellum (green) and the union of white-matter and CSF compartments (red).</em> <a href="https://fmriprep.readthedocs.io/en/stable/outputs.html">(source)</a></p>
+<p><img
+src="https://fmriprep.readthedocs.io/en/stable/_images/sub-01_task-mixedgamblestask_run-01_bold_carpetplot.svg" />
+<em>The figure shows on top several confounds estimated for the BOLD
+series: global signals (‘GlobalSignal’, ‘WM’, ‘GM’), standardized DVARS
+(‘stdDVARS’), and framewise-displacement (‘FramewiseDisplacement’). At
+the bottom, a ‘carpetplot’ summarizing the BOLD series. The colormap on
+the left-side of the carpetplot denotes signals located in cortical gray
+matter regions (blue), subcortical gray matter (orange), cerebellum
+(green) and the union of white-matter and CSF compartments (red).</em>
+<a
+href="https://fmriprep.readthedocs.io/en/stable/outputs.html">(source)</a></p>
 </div>
 </div>
 <div id="mriqc" class="section level1">
@@ -837,7 +1132,9 @@ So far, this seems to be helping.
 <div id="installation-1" class="section level2">
 <h2>Installation</h2>
 <pre><code>$ docker run -it poldracklab/mriqc:latest --version</code></pre>
-<p>It will say first that it’s unable to find poldracklab/mriqc, then proceed to download what it needs. When it’s done, it will display something like this in your Terminal window:</p>
+<p>It will say first that it’s unable to find poldracklab/mriqc, then
+proceed to download what it needs. When it’s done, it will display
+something like this in your Terminal window:</p>
 <pre><code>Unable to find image &#39;poldracklab/mriqc:latest&#39; locally
 latest: Pulling from poldracklab/mriqc
 c83208261473: Already exists 
@@ -859,24 +1156,38 @@ mriqc v0.14.2</code></pre>
 <h2>Usage</h2>
 <pre><code>$ docker run -it --rm -v /Users/sarenseeley/Desktop/restingstate:/data:ro -v /Users/sarenseeley/Desktop/restingstate/derivatives/mriqc:/out poldracklab/mriqc:latest /data /out participant -m T1w bold</code></pre>
 <p>This runs both the participant- and group-level analysis.</p>
-<p><code>/Users/sarenseeley/Desktop/restingstate</code> is the input directory. Must be a valid BIDS directory.</p>
-<p><code>/Users/sarenseeley/Desktop/restingstate/derivatives/mriqc</code> is wherever you want MRIQC to put the output.</p>
-<p><code>-m T1w bold</code> indicates that the dataset contains images in T1w and BOLD modalities.</p>
+<p><code>/Users/sarenseeley/Desktop/restingstate</code> is the input
+directory. Must be a valid BIDS directory.</p>
+<p><code>/Users/sarenseeley/Desktop/restingstate/derivatives/mriqc</code>
+is wherever you want MRIQC to put the output.</p>
+<p><code>-m T1w bold</code> indicates that the dataset contains images
+in T1w and BOLD modalities.</p>
 <p>To run a single subject (or set of subjects):</p>
 <pre><code>$ docker run -it --rm -v /Users/sarenseeley/Desktop/restingstate:/data:ro -v /Users/sarenseeley/Desktop/restingstate/derivatives/mriqc:/out poldracklab/mriqc:latest /data /out participant --participant_label 138 -m T1w bold</code></pre>
-<p>Note that you only have to put the number, and not the <code>sub-</code> prefix (i.e., <code>--participant_label 138</code> vs. <code>--participant_label sub-138</code> - the latter will not run.)</p>
+<p>Note that you only have to put the number, and not the
+<code>sub-</code> prefix (i.e., <code>--participant_label 138</code>
+vs. <code>--participant_label sub-138</code> - the latter will not
+run.)</p>
 </div>
 <div id="reports-1" class="section level2">
 <h2>Reports</h2>
-<p>Example (MRIQC on the ABIDE dataset - this is a clinical population so more quality issues than might see in non-clinical dataset):</p>
+<p>Example (MRIQC on the ABIDE dataset - this is a clinical population
+so more quality issues than might see in non-clinical dataset):</p>
 <ul>
-<li><a href="https://mriqc.s3.amazonaws.com/abide/bold_group.html">T1w group report</a></li>
-<li><a href="https://mriqc.s3.amazonaws.com/abide/T1w_group.html">BOLD group report</a></li>
+<li><a href="https://mriqc.s3.amazonaws.com/abide/bold_group.html">T1w
+group report</a></li>
+<li><a href="https://mriqc.s3.amazonaws.com/abide/T1w_group.html">BOLD
+group report</a></li>
 </ul>
 <div id="iqms" class="section level3">
 <h3>IQMs</h3>
-<p>These are the summary metrics currently provided by MRIQC <em>(with thanks to my <a href="https://github.com/elizabethbeard/mriqception/">MRIQCEPTION team</a> members at Neurohackademy 2019 for their help creating more user-friendly definitions)</em>:</p>
-<p><a href="https://mriqc.readthedocs.io/en/stable/measures.html">MRIQC documentation</a></p>
+<p>These are the summary metrics currently provided by MRIQC <em>(with
+thanks to my
+<a href="https://github.com/elizabethbeard/mriqception/">MRIQCEPTION
+team</a> members at Neurohackademy 2019 for their help creating more
+user-friendly definitions)</em>:</p>
+<p><a href="https://mriqc.readthedocs.io/en/stable/measures.html">MRIQC
+documentation</a></p>
 <table dir="ltr" border="1" cellspacing="0" cellpadding="0">
 <colgroup>
 <col width="100">
@@ -914,7 +1225,9 @@ cjv
 Coefficient of joint variation
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Coefficient of joint variation between white matter and gray matter.<br />Higher values indicate more head motion and/or intensity non-uniformity artifacts.
+Coefficient of joint variation between white matter and gray
+matter.<br />Higher values indicate more head motion and/or intensity
+non-uniformity artifacts.
 </td>
 </tr>
 <tr>
@@ -928,7 +1241,8 @@ cnr
 Contrast-to-noise ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Contrast-to-noise ratio, reflecting separation between GM &amp; WM.<br />Higher values indicate higher quality.
+Contrast-to-noise ratio, reflecting separation between GM &amp;
+WM.<br />Higher values indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -942,7 +1256,8 @@ snr_dietrich
 Dietrich’s SNR
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Dietrich et al. (2007)’s signal-to-noise ratio.<br />Higher values indicate higher quality.
+Dietrich et al. (2007)’s signal-to-noise ratio.<br />Higher values
+indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -956,7 +1271,9 @@ art_qi2
 Mortamet’s quality index 2
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-A quality index accounting for effects of both clustered and subtle artifacts in the air background.<br />Higher values indicate lower quality.
+A quality index accounting for effects of both clustered and subtle
+artifacts in the air background.<br />Higher values indicate lower
+quality.
 </td>
 </tr>
 <tr>
@@ -970,7 +1287,9 @@ art_qi1
 Mortamet’s quality index 1
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-The proportion of voxels outside the brain with artifacts to the total number of voxels outside the brain.<br />Higher values indicate lower quality
+The proportion of voxels outside the brain with artifacts to the total
+number of voxels outside the brain.<br />Higher values indicate lower
+quality
 </td>
 </tr>
 <tr>
@@ -984,7 +1303,9 @@ wm2max
 White matter-to-maximum intensity ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Captures skewed distributions within the WM mask, caused by fat and vascular-related hyperintensities.<br />Ideal values fall within the interval [0.6, 0.8]
+Captures skewed distributions within the WM mask, caused by fat and
+vascular-related hyperintensities.<br />Ideal values fall within the
+interval [0.6, 0.8]
 </td>
 </tr>
 <tr>
@@ -998,7 +1319,8 @@ fwhm_
 Full-width half-maximum smoothness
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Image blurriness (full-width half-maximum).<br />Higher values indicate a blurrier image.
+Image blurriness (full-width half-maximum).<br />Higher values indicate
+a blurrier image.
 </td>
 </tr>
 <tr>
@@ -1012,7 +1334,8 @@ volume_fraction
 Volume fraction
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Summary statistics for the intra-cranial volume fractions of CSF, GM, and WM.<br />Be aware of potential outliers.
+Summary statistics for the intra-cranial volume fractions of CSF, GM,
+and WM.<br />Be aware of potential outliers.
 </td>
 </tr>
 <tr>
@@ -1026,7 +1349,8 @@ rpve
 Residual partial voluming error
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Residual partial volume error.<br />Higher values indicate lower quality.
+Residual partial volume error.<br />Higher values indicate lower
+quality.
 </td>
 </tr>
 <tr>
@@ -1040,7 +1364,9 @@ overlap_
 Overlap of tissue probabilities
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-How well the image tissue probability maps overlap with those from the MNI ICBM 2009 template.<br />Higher values indicate better spatial normalization.
+How well the image tissue probability maps overlap with those from the
+MNI ICBM 2009 template.<br />Higher values indicate better spatial
+normalization.
 </td>
 </tr>
 <tr>
@@ -1054,7 +1380,8 @@ efc
 Entropy-focus criterion
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Shannon entropy criterion. <br />Higher values indicate more ghosting and/or head motion blurring. 
+Shannon entropy criterion. <br />Higher values indicate more ghosting
+and/or head motion blurring. 
 </td>
 </tr>
 <tr>
@@ -1068,7 +1395,8 @@ fber
 Foreground-background energy ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-The variance of voxels inside the brain divided by the variance of voxels outside the brain.<br />Higher values indicate higher quality.
+The variance of voxels inside the brain divided by the variance of
+voxels outside the brain.<br />Higher values indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -1082,7 +1410,9 @@ inu_
 Intensity non-uniformity
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Intensity non-uniformity (bias field) summary statistics.<br />Values closer to 1 indicate higher quality; further from zero indicate greater RF field inhomogeneity.
+Intensity non-uniformity (bias field) summary statistics.<br />Values
+closer to 1 indicate higher quality; further from zero indicate greater
+RF field inhomogeneity.
 </td>
 </tr>
 <tr>
@@ -1096,7 +1426,8 @@ snr
 Signal-to-noise ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Signal-to-noise ratio within the tissue mask.<br />Higher values indicate higher quality.
+Signal-to-noise ratio within the tissue mask.<br />Higher values
+indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -1124,7 +1455,9 @@ dvars
 Derivatives of variance
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-The average change in mean intensity between each pair of fMRI volumes in a series.<br />Higher values indicate more dramatic changes (e.g., due to motion or spiking).
+The average change in mean intensity between each pair of fMRI volumes
+in a series.<br />Higher values indicate more dramatic changes (e.g.,
+due to motion or spiking).
 </td>
 </tr>
 <tr>
@@ -1138,7 +1471,9 @@ gcor
 Global correlation
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Average correlation of all pairs of voxel time series inside of the brain. Illustrates differences between data due to motion/physiological noise/imaging artifacts.<br />Values closer to zero are better.
+Average correlation of all pairs of voxel time series inside of the
+brain. Illustrates differences between data due to motion/physiological
+noise/imaging artifacts.<br />Values closer to zero are better.
 </td>
 </tr>
 <tr>
@@ -1152,7 +1487,8 @@ tsnr
 Temporal signal-to-noise ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Temporal signal-to-noise ratio taking into account mean signal over time.<br />Higher values indicate higher quality.
+Temporal signal-to-noise ratio taking into account mean signal over
+time.<br />Higher values indicate higher quality.
 </td>
 </tr>
 <tr>
@@ -1166,7 +1502,8 @@ fd_mean
 Framewise displacement - mean
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-A measure of subject head motion, which compares the motion between the current and previous volumes.<br />Higher values indicate lower quality.
+A measure of subject head motion, which compares the motion between the
+current and previous volumes.<br />Higher values indicate lower quality.
 </td>
 </tr>
 <tr>
@@ -1180,7 +1517,8 @@ fd_num
 Framewise displacement - number
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Number of timepoints with framewise displacement &gt;0.2mm.<br />Higher values indicate lower quality.
+Number of timepoints with framewise displacement &gt;0.2mm.<br />Higher
+values indicate lower quality.
 </td>
 </tr>
 <tr>
@@ -1194,7 +1532,8 @@ fd_perc
 Framewise displacement - percent
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Percent of timepoints with framewise displacement &gt;0.2mm.<br />Higher values indicate lower quality.
+Percent of timepoints with framewise displacement &gt;0.2mm.<br />Higher
+values indicate lower quality.
 </td>
 </tr>
 <tr>
@@ -1208,7 +1547,8 @@ gsr
 Ghost-to-signal ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Ghost-to-signal ratio along the x or y encoding axes.<br />Higher values indicate lower quality.
+Ghost-to-signal ratio along the x or y encoding axes.<br />Higher values
+indicate lower quality.
 </td>
 </tr>
 <tr>
@@ -1222,7 +1562,8 @@ aor
 AFNI’S outlier ratio
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Mean fraction of outliers per fMRI volume, from AFNI’s 3dToutcount.<br />Higher values indicate lower quality.
+Mean fraction of outliers per fMRI volume, from AFNI’s
+3dToutcount.<br />Higher values indicate lower quality.
 </td>
 </tr>
 <tr>
@@ -1236,7 +1577,8 @@ aqi
 AFNI’s quality index
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Mean quality index, from AFNI’s 3dTqual.<br />Values close to 0 indicate higher quality.
+Mean quality index, from AFNI’s 3dTqual.<br />Values close to 0 indicate
+higher quality.
 </td>
 </tr>
 <tr>
@@ -1250,14 +1592,21 @@ dummy
 Dummy scans
 </td>
 <td style="border-color: #cccccc #000000 #000000 #cccccc;">
-Number of volumes in the beginning of the fMRI timeseries identified as non-steady state.
+Number of volumes in the beginning of the fMRI timeseries identified as
+non-steady state.
 </td>
 </tr>
 </tbody>
 </table>
 <p>
-<p>Note that many of the IQMs calculated are “no-reference” metrics: <em>“A no-reference IQM is a measurement of some aspect of the actual image which cannot be compared to a reference value for the metric since there is no ground-truth about what this number should be.”</em> <a href="https://mriqc.readthedocs.io/en/stable/measures.html">source</a></p>
-We’re working on <a href="https://github.com/elizabethbeard/mriqception/">a project</a> to help you interpret your MRIQC results…stay tuned :)
+<p>Note that many of the IQMs calculated are “no-reference” metrics:
+<em>“A no-reference IQM is a measurement of some aspect of the actual
+image which cannot be compared to a reference value for the metric since
+there is no ground-truth about what this number should be.”</em> <a
+href="https://mriqc.readthedocs.io/en/stable/measures.html">source</a></p>
+We’re working on <a
+href="https://github.com/elizabethbeard/mriqception/">a project</a> to
+help you interpret your MRIQC results…stay tuned :)
 <p>
  
 </p>
@@ -1265,57 +1614,103 @@ We’re working on <a href="https://github.com/elizabethbeard/mriqception/">a pr
 </div>
 <div id="using-the-t1w-image-classifier" class="section level2">
 <h2>Using the T1w image classifier</h2>
-<p>Read more about the classifier here: <a href="https://mriqc.readthedocs.io/en/stable/classifier.html" class="uri">https://mriqc.readthedocs.io/en/stable/classifier.html</a></p>
+<p>Read more about the classifier here: <a
+href="https://mriqc.readthedocs.io/en/stable/classifier.html"
+class="uri">https://mriqc.readthedocs.io/en/stable/classifier.html</a></p>
 <p>Usage with docker:</p>
 <pre><code>$ docker run -v $PWD:/scratch -w /scratch --entrypoint=mriqc_clf poldracklab/mriqc:latest --load-classifier -X group_T1w.tsv`</code></pre>
-<p>Explanation from <a href="https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU" class="uri">https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU</a> (commands modified to work on my data): <code>docker run</code> - invokes Docker. <code>-v $PWD:/scratch</code> - provides a folder to communicate data into the container and off the container. <code>-w /scratch</code> - changes the working directory to read the input file and write the results. <code>--entrypoint=mriqc_clf</code> - tells Docker to run a different binary (<code>mriqc_clf</code>) rather than the default (<code>mriqc</code>). <code>poldracklab/mriqc:latest</code> - pulls the latest version of MRIQC. You can also have it pull a specific version (e.g., <code>poldracklab/mriqc:0.9.6</code>). <code>--load-classifier -X</code> - loads the classifier trained on the ABIDE dataset (default) or your custom classifier, if you created one. <code>group_T1w.tsv</code> - tells MRIQC to apply the classifier to group T1w report.</p>
+<p>Explanation from <a
+href="https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU"
+class="uri">https://groups.google.com/forum/#!topic/mriqc-users/P3LwhuIagaU</a>
+(commands modified to work on my data): <code>docker run</code> -
+invokes Docker. <code>-v $PWD:/scratch</code> - provides a folder to
+communicate data into the container and off the container.
+<code>-w /scratch</code> - changes the working directory to read the
+input file and write the results. <code>--entrypoint=mriqc_clf</code> -
+tells Docker to run a different binary (<code>mriqc_clf</code>) rather
+than the default (<code>mriqc</code>).
+<code>poldracklab/mriqc:latest</code> - pulls the latest version of
+MRIQC. You can also have it pull a specific version (e.g.,
+<code>poldracklab/mriqc:0.9.6</code>). <code>--load-classifier -X</code>
+- loads the classifier trained on the ABIDE dataset (default) or your
+custom classifier, if you created one. <code>group_T1w.tsv</code> -
+tells MRIQC to apply the classifier to group T1w report.</p>
 <p>There is currently no MRIQC classifier for BOLD or T2 images.</p>
 </div>
 <div id="results-template" class="section level2">
 <h2>Results template</h2>
-<p>Here’s a template I made for inspecting the MRIQC group reports, listing each metric and its definition: <a href="https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing</a></p>
+<p>Here’s a template I made for inspecting the MRIQC group reports,
+listing each metric and its definition: <a
+href="https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing"
+class="uri">https://docs.google.com/spreadsheets/d/1OsWJFxzXaDFjSwCXbAwv1YonPEd4f9a7cFb7ITLVVnI/edit?usp=sharing</a></p>
 </div>
 </div>
 <div id="singularity" class="section level1">
 <h1>Singularity</h1>
-<p>Broadly, in order to run fMRIPrep or MRIQC on the HPC, several things need to happen:</p>
+<p>Broadly, in order to run fMRIPrep or MRIQC on the HPC, several things
+need to happen:</p>
 <ol style="list-style-type: decimal">
 <li>You need to create a Singularity image of the Docker container.</li>
 <li>You need to transfer that image to the HPC.
 <ul>
 <li>
-If your HPC does not automatically bind (mount or expose) host folders to the container, you will need to bind the necessary folders using the <code>-B &lt;host_folder&gt;:&lt;container_folder&gt;</code> Singularity argument.
+If your HPC does not automatically bind (mount or expose) host folders
+to the container, you will need to bind the necessary folders using the
+<code>-B &lt;host_folder&gt;:&lt;container_folder&gt;</code> Singularity
+argument.
 </li>
 </ul></li>
 <li>Your data need to be on the HPC.
 <ul>
 <li>
-Images must first be de-identified before transfering to the HPC, so that someone’s identity could not be obtained from facial structure. There are several utilities for this out there, including pydeface and mri_deface: <a href="https://openfmri.org/de-identification/" class="uri">https://openfmri.org/de-identification/</a>
+Images must first be de-identified before transfering to the HPC, so
+that someone’s identity could not be obtained from facial structure.
+There are several utilities for this out there, including pydeface and
+mri_deface: <a href="https://openfmri.org/de-identification/"
+class="uri">https://openfmri.org/de-identification/</a>
 </li>
 </ul>
 <ul>
 <li>
-Any potential identifying elements should also be removed from text files and image headers.
+Any potential identifying elements should also be removed from text
+files and image headers.
 </li>
 </ul></li>
 </ol>
-<p>See <a href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container" class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
-<p>See also <a href="https://osf.io/7m25y/">Chidi’s slides</a> from Nov. 16th ’18 BMW meeting:.</p>
+<p>See <a
+href="https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container"
+class="uri">https://fmriprep.readthedocs.io/en/latest/installation.html#singularity-container</a></p>
+<p>See also <a href="https://osf.io/7m25y/">Chidi’s slides</a> from
+Nov. 16th ’18 BMW meeting:.</p>
  
 <p>
 </div>
 <div id="problems-solutions" class="section level1">
 <h1>Problems &amp; solutions</h1>
-<p><a id="problems"></a> Below are some miscellaneous problems we have encountered, and how we solved them.</p>
+<p><a id="problems"></a> Below are some miscellaneous problems we have
+encountered, and how we solved them.</p>
 <div id="dcm2niixdcm2niibatch" class="section level2">
 <h2>dcm2niix/dcm2niibatch</h2>
-<div id="warning-slices-stacked-despite-varying-acquisition-numbers" class="section level3">
+<div id="warning-slices-stacked-despite-varying-acquisition-numbers"
+class="section level3">
 <h3>Warning: “slices stacked despite varying acquisition numbers”</h3>
-<p>What does dcm2niix’s message <em>“slices stacked despite varying acquisition numbers (if this is not desired please recompile)”</em> mean?</p>
+<p>What does dcm2niix’s message <em>“slices stacked despite varying
+acquisition numbers (if this is not desired please recompile)”</em>
+mean?</p>
 <div id="solution" class="section level4">
 <h4>Solution</h4>
-<p>Look at your data to know whether this is okay or not. You can look at the DICOMs (converted to .nii) in your image viewer of choice (SPM, Mango, FSLview…) against the .nii files generated by <code>dcm2niix</code> to check that they look the same.</p>
-<p>From Dianne Patterson:<br> <i>There are different ways to order the data, especially 4d data like fmri… slice 1 vol1, slice 1 vol2, slice 1 vol3… vs vol1, slice1, slice 2, slice3 etc….vol2 slice1, slice2, slice 3 etc….<br> I think there can be a difference between the way the scanner exports them and the program stacks them, though I generally don’t learn these gory details unless something breaks. Did you look at the fmris to make sure the volumes display all their slices in order (I suspect it’ll seem okay or look like a total hot mess)?</i></p>
+<p>Look at your data to know whether this is okay or not. You can look
+at the DICOMs (converted to .nii) in your image viewer of choice (SPM,
+Mango, FSLview…) against the .nii files generated by
+<code>dcm2niix</code> to check that they look the same.</p>
+<p>From Dianne Patterson:<br> <i>There are different ways to order the
+data, especially 4d data like fmri… slice 1 vol1, slice 1 vol2, slice 1
+vol3… vs vol1, slice1, slice 2, slice3 etc….vol2 slice1, slice2, slice 3
+etc….<br> I think there can be a difference between the way the scanner
+exports them and the program stacks them, though I generally don’t learn
+these gory details unless something breaks. Did you look at the fmris to
+make sure the volumes display all their slices in order (I suspect it’ll
+seem okay or look like a total hot mess)?</i></p>
 </div>
 </div>
 <div id="error-no-valid-dicoms-found" class="section level3">
@@ -1323,46 +1718,72 @@ Any potential identifying elements should also be removed from text files and im
 <p>This means exactly what it says.</p>
 <div id="solution-1" class="section level4">
 <h4>Solution</h4>
-<p>When running <code>dcm2niibatch</code>, I specified <code>isVerbose: true</code> and copied the command line output into a .txt file to inspect for any issues with files that <code>dcm2niix</code> was unable to covert. For D110B, there was the following error:</p>
+<p>When running <code>dcm2niibatch</code>, I specified
+<code>isVerbose: true</code> and copied the command line output into a
+.txt file to inspect for any issues with files that
+<code>dcm2niix</code> was unable to covert. For D110B, there was the
+following error:</p>
 <pre><code>Found 192 DICOM file(s) #repeated 192x
 Unsupported transfer syntax &#39;1.2.840.10008.1.2.4.90&#39; (see www.nitrc.org/plugins/mwiki/index.php/dcm2nii:MainPage)
 No valid DICOM images were found
 Conversion required 0.165132 seconds.</code></pre>
-<p>The problem is that for some weird reason, these DICOMs were JPEG-compressed so <code>dcm2niix</code> doesn’t know what to do with them.</p>
+<p>The problem is that for some weird reason, these DICOMs were
+JPEG-compressed so <code>dcm2niix</code> doesn’t know what to do with
+them.</p>
 <ul>
-<li>“Transfer syntax 1.2.840.10008.1.2.4.90” = JPEG 2000 Image Compression (Lossless Only)<br></li>
+<li>“Transfer syntax 1.2.840.10008.1.2.4.90” = JPEG 2000 Image
+Compression (Lossless Only)<br></li>
 <li><ul>
-<li><a href="http://www.mccauslandcenter.sc.edu/crnl/tools/jpeg-formats" class="uri">http://www.mccauslandcenter.sc.edu/crnl/tools/jpeg-formats</a></li>
+<li><a href="http://www.mccauslandcenter.sc.edu/crnl/tools/jpeg-formats"
+class="uri">http://www.mccauslandcenter.sc.edu/crnl/tools/jpeg-formats</a></li>
 </ul></li>
 <li><ul>
-<li><a href="https://www.dicomlibrary.com/dicom/transfer-syntax/" class="uri">https://www.dicomlibrary.com/dicom/transfer-syntax/</a></li>
+<li><a href="https://www.dicomlibrary.com/dicom/transfer-syntax/"
+class="uri">https://www.dicomlibrary.com/dicom/transfer-syntax/</a></li>
 </ul></li>
 </ul>
-<p>I had to decompress the files, using GDCM (<a href="https://github.com/malaterre/GDCM/releases" class="uri">https://github.com/malaterre/GDCM/releases</a>; <a href="http://gdcm.sourceforge.net/wiki/index.php/Main_Page" class="uri">http://gdcm.sourceforge.net/wiki/index.php/Main_Page</a>).</p>
-<p>How to install and compile GDCM, following instructions in the <code>INSTALL.txt</code> file in <code>/gdcm</code> (included when you clone <code>/gdcm</code> to your local machine):</p>
+<p>I had to decompress the files, using GDCM (<a
+href="https://github.com/malaterre/GDCM/releases"
+class="uri">https://github.com/malaterre/GDCM/releases</a>; <a
+href="http://gdcm.sourceforge.net/wiki/index.php/Main_Page"
+class="uri">http://gdcm.sourceforge.net/wiki/index.php/Main_Page</a>).</p>
+<p>How to install and compile GDCM, following instructions in the
+<code>INSTALL.txt</code> file in <code>/gdcm</code> (included when you
+clone <code>/gdcm</code> to your local machine):</p>
 <pre><code>$ git clone --branch release git://git.code.sf.net/p/gdcm/gdcm
 $ mkdir gdcmbin
 $ cd gdcmbin
 $ ccmake ../gdcm</code></pre>
-<p>Then you need to add the path to <code>/gdcm</code> so that the software can be located and used:</p>
+<p>Then you need to add the path to <code>/gdcm</code> so that the
+software can be located and used:</p>
 <pre><code>$ export PATH=$PATH:~/gdcmbin/bin 
 $ echo $PATH</code></pre>
-<p>For-loop to decompress each of the DICOMs in the specified directory and print <code>converting [filename]...</code> while doing so (<em>note that GDCM cannot handle spaces in the directory names</em>):</p>
+<p>For-loop to decompress each of the DICOMs in the specified directory
+and print <code>converting [filename]...</code> while doing so (<em>note
+that GDCM cannot handle spaces in the directory names</em>):</p>
 <pre><code>$ DIR=&#39;/Users/sarenseeley/Desktop/restingstate/data/sourcedata/D110B/AnonymizedD1D0D305/OconnorSequences/T1MPRAGE5/*.dcm&#39;; for f in  $DIR; do echo &quot;converting $f...&quot;; gdcmconv -w $f $f; done
 $ DIR=&#39;/Users/sarenseeley/Desktop/restingstate/data/sourcedata/D110B/AnonymizedD1D0D305/OconnorSequences/RestingState8/*.dcm&#39;; for f in  $DIR; do echo &quot;converting $f...&quot;; gdcmconv -w $f $f; done</code></pre>
-<p>Then the next step is to build two more configuration files (anat and rest) specific to D110B, and run <code>dcm2niix</code> on just those files:</p>
+<p>Then the next step is to build two more configuration files (anat and
+rest) specific to D110B, and run <code>dcm2niix</code> on just those
+files:</p>
 <pre><code>$ dcm2niibatch /Users/sarenseeley/Desktop/restingstate/data/batch_config_anat-D110B.yaml
 $ dcm2niibatch /Users/sarenseeley/Desktop/restingstate/data/batch_config_rest-D110B.yaml</code></pre>
-<p>After this, I went back to the original configuration files and updated them to reflect the new directory path for D110B, then ran the BIDS validator again on the dataset.</p>
+<p>After this, I went back to the original configuration files and
+updated them to reflect the new directory path for D110B, then ran the
+BIDS validator again on the dataset.</p>
 </div>
 </div>
 </div>
 <div id="bids-validator" class="section level2">
 <h2>BIDS validator</h2>
-<p>Below are some errors and warnings that the validator gave me. Warnings can be ignored (at your own peril), but errors mean that your dataset is not BIDS-compliant.</p>
-<div id="warning-not-all-subjects-contain-the-same-files" class="section level3">
+<p>Below are some errors and warnings that the validator gave me.
+Warnings can be ignored (at your own peril), but errors mean that your
+dataset is not BIDS-compliant.</p>
+<div id="warning-not-all-subjects-contain-the-same-files"
+class="section level3">
 <h3>Warning: “Not all subjects contain the same files”</h3>
-<p>This means you’re probably missing some files for certain participants in your BIDS dataset. Example:</p>
+<p>This means you’re probably missing some files for certain
+participants in your BIDS dataset. Example:</p>
 <pre><code>Warning: 1 (4 files)
 Not all subjects contain the same files. Each subject should contain the same number of files with the same naming unless some files are known to be missing.
 
@@ -1395,15 +1816,30 @@ Reason:
 This file is missing for subject sub-110, but is present for at least one other subject.</code></pre>
 <div id="solution-2" class="section level4">
 <h4>Solution</h4>
-<p>The BIDS validator will tell you which subjects are missing files, as shown above. Figure out why they are missing files (for me, it was the “<code>dcm2niibatch</code> doesn’t read compressed DICOMs” issue described above), fix it, and re-run the validator.</p>
+<p>The BIDS validator will tell you which subjects are missing files, as
+shown above. Figure out why they are missing files (for me, it was the
+“<code>dcm2niibatch</code> doesn’t read compressed DICOMs” issue
+described above), fix it, and re-run the validator.</p>
 </div>
 </div>
 <div id="error-not_included" class="section level3">
 <h3>Error: “NOT_INCLUDED”</h3>
 <blockquote>
-<p>Files with such naming scheme are not part of BIDS specification. This error is most commonly caused by typos in file names that make them not BIDS compatible. Please consult the specification and make sure your files are named correctly. If this is not a file naming issue (for example when including files not yet covered by the BIDS specification) you should include a “.bidsignore” file in your dataset (see <a href="https://github.com/bids-standard/bids-validator#bidsignore" class="uri">https://github.com/bids-standard/bids-validator#bidsignore</a> for details). Please note that derived (processed) data should be placed in /derivatives folder and source data (such as DICOMS or behavioural logs in proprietary formats) should be placed in the /sourcedata folder.</p>
+<p>Files with such naming scheme are not part of BIDS specification.
+This error is most commonly caused by typos in file names that make them
+not BIDS compatible. Please consult the specification and make sure your
+files are named correctly. If this is not a file naming issue (for
+example when including files not yet covered by the BIDS specification)
+you should include a “.bidsignore” file in your dataset (see <a
+href="https://github.com/bids-standard/bids-validator#bidsignore"
+class="uri">https://github.com/bids-standard/bids-validator#bidsignore</a>
+for details). Please note that derived (processed) data should be placed
+in /derivatives folder and source data (such as DICOMS or behavioural
+logs in proprietary formats) should be placed in the /sourcedata
+folder.</p>
 </blockquote>
-<p>Why did this happen? The YAML configuration files that I used for <code>dcm2niibatch</code> are in <code>/data</code>.</p>
+<p>Why did this happen? The YAML configuration files that I used for
+<code>dcm2niibatch</code> are in <code>/data</code>.</p>
 <div id="solution-3" class="section level4">
 <h4>Solution</h4>
 <p>Added a .bidsignore file containing the following:</p>
@@ -1425,9 +1861,17 @@ Reason:
 You have to define &#39;TaskName&#39; for this file. It can be included one of the following locations: /bold.json, /task-rest_bold.json, /sub-101/sub-101_bold.json, /sub-101/sub-101_task-rest_bold.json, /sub-101/ses-txA/sub-101_ses-txA_bold.json, /sub-101/ses-txA/sub-101_ses-txA_task-rest_bold.json, /sub-101/ses-txA/func/sub-101_ses-txA_task-rest_bold.json</code></pre>
 <div id="solution-4" class="section level4">
 <h4>Solution</h4>
-<p>That info (<code>TaskName</code>) wasn’t stored in the image header so <code>dcm2niix</code> can’t pull it. See Chris G.’s response here: <a href="https://github.com/rordenlab/dcm2niix/issues/148" class="uri">https://github.com/rordenlab/dcm2niix/issues/148</a></p>
-<p>But you don’t need to add a TaskName field individually into each of the .json sidecars for each subject/session. Just stick a <code>task-rest_bold.json</code> file containing the task name (as shown below) into the top level of your BIDS directory, and that will apply to all of the <code>task-rest_bold</code> files in that location:</p>
-<p>The .json file should contain the following (adapted for your task name):</p>
+<p>That info (<code>TaskName</code>) wasn’t stored in the image header
+so <code>dcm2niix</code> can’t pull it. See Chris G.’s response here: <a
+href="https://github.com/rordenlab/dcm2niix/issues/148"
+class="uri">https://github.com/rordenlab/dcm2niix/issues/148</a></p>
+<p>But you don’t need to add a TaskName field individually into each of
+the .json sidecars for each subject/session. Just stick a
+<code>task-rest_bold.json</code> file containing the task name (as shown
+below) into the top level of your BIDS directory, and that will apply to
+all of the <code>task-rest_bold</code> files in that location:</p>
+<p>The .json file should contain the following (adapted for your task
+name):</p>
 <pre><code>{
   &quot;TaskName&quot;: &quot;rest&quot;
 }</code></pre>
@@ -1444,20 +1888,25 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
  Warning: &lt;8GB of RAM is available within your Docker environment.
  Some parts of fMRIPrep may fail to complete.
  Continue anyway? [y/N]</code></pre>
-<p>2GB is the default RAM available in Docker for Mac, at least for my installation. fMRIPrep needs at least 8GB to run (more is better), even if using the <code>--low-mem</code> flag to reduce memory usage.</p>
+<p>2GB is the default RAM available in Docker for Mac, at least for my
+installation. fMRIPrep needs at least 8GB to run (more is better), even
+if using the <code>--low-mem</code> flag to reduce memory usage.</p>
 <div id="solution-5" class="section level4">
 <h4>Solution</h4>
 <ul>
-<li>Go to <em>Docker &gt; Preferences &gt; Advanced</em> and increase the memory to &gt;=8GB.</li>
+<li>Go to <em>Docker &gt; Preferences &gt; Advanced</em> and increase
+the memory to &gt;=8GB.</li>
 <li>Restart Docker.</li>
 <li>Wait for Docker to finish restarting.</li>
 <li>Re-run <code>fmriprep-docker</code>.</li>
 </ul>
 </div>
 </div>
-<div id="warning-spatial-transformations-on-oblique-dataset" class="section level3">
+<div id="warning-spatial-transformations-on-oblique-dataset"
+class="section level3">
 <h3>Warning: “spatial transformations on oblique dataset”</h3>
-<p>You might see something like this in the command window as fMRIPrep is running:</p>
+<p>You might see something like this in the command window as fMRIPrep
+is running:</p>
 <pre><code>181026-21:01:38,622 nipype.interface INFO:
      stderr 2018-10-26T21:01:38.622139:*+ WARNING:   If you are performing spatial transformations on an oblique dset, 
 181026-21:01:38,623 nipype.interface INFO:
@@ -1476,43 +1925,70 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
      stderr 2018-10-26T21:01:38.622139:++ Oblique dataset:/tmp/work/fmriprep_wf/single_subject_120_wf/func_preproc_ses_txB_task_rest_wf/bold_reference_wf/gen_ref/slice.nii.gz is 13.716262 degrees from plumb.</code></pre>
 <div id="solution-6" class="section level4">
 <h4>Solution</h4>
-<p>It seems that <a href="https://neurostars.org/t/warning-if-you-are-performing-spatial-transformations-on-an-oblique-dset/2065">this warning can be safely ignored.</a></p>
+<p>It seems that <a
+href="https://neurostars.org/t/warning-if-you-are-performing-spatial-transformations-on-an-oblique-dset/2065">this
+warning can be safely ignored.</a></p>
 </div>
 </div>
 <div id="error-valid-license-file-is-required" class="section level3">
 <h3>Error: “valid license file is required”</h3>
-<p>If fmriprep can’t find the license file, this error message appears:</p>
+<p>If fmriprep can’t find the license file, this error message
+appears:</p>
 <pre><code>$ RuntimeError: ERROR: a valid license file is required for FreeSurfer to run. FMRIPREP looked for an existing license file at several paths, in this order: 1) command line argument ``--fs-license-file``; 2) ``$FS_LICENSE`` environment variable; and 3) the ``$FREESURFER_HOME/license.txt`` path. Get it (for free) by registering at https://surfer.nmr.mgh.harvard.edu/registration.html</code></pre>
 <div id="solution-7" class="section level4">
 <h4>Solution</h4>
-<p>See the section in <a href="#freesurf">installing fMRIPrep</a>. Note that if you get an error message saying that you need an updated license file, you actually may not (especially if you just downloaded one). I encountered that issue when it was still having trouble finding the license.</p>
+<p>See the section in <a href="#freesurf">installing fMRIPrep</a>. Note
+that if you get an error message saying that you need an updated license
+file, you actually may not (especially if you just downloaded one). I
+encountered that issue when it was still having trouble finding the
+license.</p>
 </div>
 </div>
 <div id="error-command-not-found" class="section level3">
 <h3>Error: “command not found”</h3>
-<p>This means that <code>pip</code> installed the Docker wrapper somewhere obscure.</p>
+<p>This means that <code>pip</code> installed the Docker wrapper
+somewhere obscure.</p>
 <div id="solution-8" class="section level4">
 <h4>Solution</h4>
-<p>Find out where <code>pip</code> installed it, and add that path to your global environment as described <a href="#cmdnotfound">here</a>.</p>
+<p>Find out where <code>pip</code> installed it, and add that path to
+your global environment as described <a
+href="#cmdnotfound">here</a>.</p>
 </div>
 </div>
-<div id="error-brokenprocesspool-or-fmriprep-is-hanging" class="section level3">
+<div id="error-brokenprocesspool-or-fmriprep-is-hanging"
+class="section level3">
 <h3>Error: “BrokenProcessPool”, or fMRIPrep is hanging</h3>
 <p>This is a memory allocation issue.</p>
-<p>From the <a href="https://fmriprep.readthedocs.io/en/stable/faq_tips_tricks.html">fMRIPrep documentation:</a></p>
+<p>From the <a
+href="https://fmriprep.readthedocs.io/en/stable/faq_tips_tricks.html">fMRIPrep
+documentation:</a></p>
 <blockquote>
-<p>When running on Linux platforms (or containerized environments, because they are built around Ubuntu), there is a Python bug that affects fMRIPrep that drives the Linux kernel to kill processes as a response to running out of memory. Depending on the process killed by the kernel, fMRIPrep may crash with a BrokenProcessPool error or hang indefinitely, depending on settings. While we are working on finding a solution that does not run up against this bug, this may take some time. This can be most easily resolved by allocating more memory to the process, if possible.</p>
+<p>When running on Linux platforms (or containerized environments,
+because they are built around Ubuntu), there is a Python bug that
+affects fMRIPrep that drives the Linux kernel to kill processes as a
+response to running out of memory. Depending on the process killed by
+the kernel, fMRIPrep may crash with a BrokenProcessPool error or hang
+indefinitely, depending on settings. While we are working on finding a
+solution that does not run up against this bug, this may take some time.
+This can be most easily resolved by allocating more memory to the
+process, if possible.</p>
 </blockquote>
 <blockquote>
-<p>Additionally, consider using the –low-mem flag, which will make some memory optimizations at the cost of disk space in the working directory.</p>
+<p>Additionally, consider using the –low-mem flag, which will make some
+memory optimizations at the cost of disk space in the working
+directory.</p>
 </blockquote>
 </div>
-<div id="error-slice-timing-fails-for-siemens-moco-data" class="section level3">
+<div id="error-slice-timing-fails-for-siemens-moco-data"
+class="section level3">
 <h3>Error: Slice timing fails for Siemens MOCO data</h3>
-<p>The presence of Siemens MOCO (motion-corrected) files prevents fMRIprep from doing slice timing.</p>
+<p>The presence of Siemens MOCO (motion-corrected) files prevents
+fMRIprep from doing slice timing.</p>
 <div id="solution-9" class="section level4">
 <h4>Solution</h4>
-<p>You either have to say <code>--ignore slicetiming</code> (if you really love the scanner motion correction) OR remove those files from the dataset.</p>
+<p>You either have to say <code>--ignore slicetiming</code> (if you
+really love the scanner motion correction) OR remove those files from
+the dataset.</p>
  
 <p>
 </p>
@@ -1523,62 +1999,164 @@ You have to define &#39;TaskName&#39; for this file. It can be included one of t
 </div>
 <div id="denoising-confounds-and-ica-aroma" class="section level1">
 <h1>Denoising, confounds, and ICA-AROMA</h1>
-<p>Making this its own section since I’ve had lots of questions on this topic.</p>
-<p>See also: <a href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation" class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a></p>
+<p>Making this its own section since I’ve had lots of questions on this
+topic.</p>
+<p>See also: <a
+href="https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation"
+class="uri">https://fmriprep.readthedocs.io/en/latest/workflows.html#confounds-estimation</a></p>
 <p>
  
 <p>
-<div id="whats-the-deal-with-aggressive-vs.-non-aggressive-ica-aroma" class="section level3">
+<div id="whats-the-deal-with-aggressive-vs.-non-aggressive-ica-aroma"
+class="section level3">
 <h3>What’s the deal with aggressive vs. non-aggressive ICA-AROMA?!</h3>
-<p>As described by Chris Markiewicz <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16">here</a>, ICA-AROMA has two denoising strategies: aggressive and non-aggressive.</p>
+<p>As described by Chris Markiewicz <a
+href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/16">here</a>,
+ICA-AROMA has two denoising strategies: aggressive and
+non-aggressive.</p>
 <ul>
-<li>Aggressive is the normal approach of detrending based on the regressors marked as “noise”.</li>
-<li>Non-aggressive fits all regressors, and then re-adds the components attributed to the “signal” regressors.</li>
-<li>Non-aggressive denoising removes a lot less signal-related variance than aggressive denoising, so non-aggressive is usually what you want to do.</li>
+<li>Aggressive is the normal approach of detrending based on the
+regressors marked as “noise”.</li>
+<li>Non-aggressive fits all regressors, and then re-adds the components
+attributed to the “signal” regressors.</li>
+<li>Non-aggressive denoising removes a lot less signal-related variance
+than aggressive denoising, so non-aggressive is usually what you want to
+do.</li>
 <li>fMRIprep only ever performs non-aggressive denoising.</li>
 </ul>
-<p>When you pass the <code>--use-aroma</code> flag, fmriprep performs non-aggressive denoising on the preprocessed data as a last step, and generates those non-aggressively denoised images. Even using the flag, fmriprep will still produce the non-denoised regular preprocessed files (<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) in addition to the denoised ones (<code>*smoothAROMAnonaggr_preproc.nii.gz</code>).</p>
-<p>For more details and a simulation comparing the two strategies, see <a href="https://github.com/oesteban/aroma-chris-notebook/blob/master/Denoising%2Bthe%2Bdenoising.ipynb">Chris’s notebook here</a>. This is a really helpful resource for understanding what the strategies do and how they differ.</p>
-<p>Note again that the ICA-AROMA algorithm is trained to pick up motion artifacts specifically, so won’t take care of any physio-related denoising that needs to occur. For this, you may want to use the “aCompCor” regressors. Some people suggest that you also use the cosine regressors in the <code>confounds.csv</code> file if using “aCompCor” (or even if not - <a href="https://neurostars.org/t/fmriprep-which-regressors-for-best-global-signal-regression-comparison/1878">they perform high-pass filtering</a>).</p>
+<p>When you pass the <code>--use-aroma</code> flag, fmriprep performs
+non-aggressive denoising on the preprocessed data as a last step, and
+generates those non-aggressively denoised images. Even using the flag,
+fmriprep will still produce the non-denoised regular preprocessed files
+(<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) in addition
+to the denoised ones
+(<code>*smoothAROMAnonaggr_preproc.nii.gz</code>).</p>
+<p>For more details and a simulation comparing the two strategies, see
+<a
+href="https://github.com/oesteban/aroma-chris-notebook/blob/master/Denoising%2Bthe%2Bdenoising.ipynb">Chris’s
+notebook here</a>. This is a really helpful resource for understanding
+what the strategies do and how they differ.</p>
+<p>Note again that the ICA-AROMA algorithm is trained to pick up motion
+artifacts specifically, so won’t take care of any physio-related
+denoising that needs to occur. For this, you may want to use the
+“aCompCor” regressors. Some people suggest that you also use the cosine
+regressors in the <code>confounds.csv</code> file if using “aCompCor”
+(or even if not - <a
+href="https://neurostars.org/t/fmriprep-which-regressors-for-best-global-signal-regression-comparison/1878">they
+perform high-pass filtering</a>).</p>
 </div>
-<div id="are-the-preprocessed-images-from-fmriprep-motion-corrected" class="section level3">
+<div id="are-the-preprocessed-images-from-fmriprep-motion-corrected"
+class="section level3">
 <h3>Are the preprocessed images from fMRIprep motion-corrected?</h3>
-<p>A: <strong>Yes</strong>, the preprocessed images (<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) are motion-corrected, based on the following parts of the documentation from <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html" class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html</a>:</p>
+<p>A: <strong>Yes</strong>, the preprocessed images
+(<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code>) are
+motion-corrected, based on the following parts of the documentation from
+<a href="https://fmriprep.readthedocs.io/en/stable/workflows.html"
+class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html</a>:</p>
 <blockquote>
-<p>Using the previously estimated reference scan, FSL mcflirt is used to estimate head-motion. As a result, one rigid-body transform with respect to the reference image is written for each BOLD time-step. Additionally, a list of 6-parameters (three rotations, three translations) per time-step is written and fed to the confounds workflow. For a more accurate estimation of head-motion, we calculate its parameters before any time-domain filtering (i.e. slice-timing correction), as recommended in [Power2017].</p>
+<p>Using the previously estimated reference scan, FSL mcflirt is used to
+estimate head-motion. As a result, one rigid-body transform with respect
+to the reference image is written for each BOLD time-step. Additionally,
+a list of 6-parameters (three rotations, three translations) per
+time-step is written and fed to the confounds workflow. For a more
+accurate estimation of head-motion, we calculate its parameters before
+any time-domain filtering (i.e. slice-timing correction), as recommended
+in [Power2017].</p>
 </blockquote>
 <blockquote>
-<p>Given a motion-corrected fMRI <em>[my note: so this motion-corrected images must have been generated at some point if they’re required as inputs for this step]</em>, a brain mask, mcflirt movement parameters and a segmentation, the discover_wf sub-workflow calculates potential confounds per volume. Calculated confounds include the mean global signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is enabled, the noise components identified by ICA-AROMA (those to be removed by the “aggressive” denoising strategy).</p>
+<p>Given a motion-corrected fMRI <em>[my note: so this motion-corrected
+images must have been generated at some point if they’re required as
+inputs for this step]</em>, a brain mask, mcflirt movement parameters
+and a segmentation, the discover_wf sub-workflow calculates potential
+confounds per volume. Calculated confounds include the mean global
+signal, mean tissue class signal, tCompCor, aCompCor, Frame-wise
+Displacement, 6 motion parameters, DVARS, and, if the –use-aroma flag is
+enabled, the noise components identified by ICA-AROMA (those to be
+removed by the “aggressive” denoising strategy).</p>
 </blockquote>
 </div>
-<div id="are-confounds-in-the-confounds.tsv-file-generated-after-ica-aroma-or-before" class="section level3">
-<h3>Are confounds in the confounds.TSV file generated after ICA-AROMA or before?</h3>
-<p>A: If you used the <code>--use-aroma</code> flag, confounds are calculated <em>before</em> ICA-AROMA is applied to the preprocessed <code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code> files, as confirmed here: <a href="https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077" class="uri">https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077</a>.</p>
-<p><a href="https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb">James Kent’s simulation</a> suggests a slight benefit to extracting confounds prior to ICA-AROMA. See also the discussions <a href="https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137">here</a> and <a href="https://github.com/poldracklab/fmriprep/issues/817">here</a>.</p>
+<div
+id="are-confounds-in-the-confounds.tsv-file-generated-after-ica-aroma-or-before"
+class="section level3">
+<h3>Are confounds in the confounds.TSV file generated after ICA-AROMA or
+before?</h3>
+<p>A: If you used the <code>--use-aroma</code> flag, confounds are
+calculated <em>before</em> ICA-AROMA is applied to the preprocessed
+<code>*_bold_space-MNI152NLin2009cAsym_preproc.nii</code> files, as
+confirmed here: <a
+href="https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077"
+class="uri">https://neurostars.org/t/fmriprep-confounds-extracted-before-or-after-ica-aroma/4077</a>.</p>
+<p><a
+href="https://github.com/poldracklab/fmriprep-notebooks/blob/9933a628dfb759dc73e61701c144d67898b92de0/05%20-%20Discussion%20AROMA%20confounds%20-%20issue-817%20%5BJ.%20Kent%5D.ipynb">James
+Kent’s simulation</a> suggests a slight benefit to extracting confounds
+prior to ICA-AROMA. See also the discussions <a
+href="https://neurostars.org/t/fmriprep-ica-aroma-filtering-including-wm-csf-etc-confounds-in-fsl-regfilt/3137">here</a>
+and <a
+href="https://github.com/poldracklab/fmriprep/issues/817">here</a>.</p>
  
 <p>
 </div>
-<div id="which-of-the-fmriprep-confounds-should-i-use-with-ica-aroma-files" class="section level3">
-<h3>Which of the fmriprep confounds should I use with ICA-AROMA files?</h3>
-<p>When using AROMA-denoised data (<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code> files), you would likely NOT want to regress out motion-related variables from <code>confounds.tsv</code> as this may reintroduce motion. However, the ICA-AROMA algorithm is fairly specific to motion-related artifacts and will not address physiological artifacts such as those from CSF and blood flow. (For what it’s worth, I’ve seen this in my data when using the <a href="http://mialab.mrn.org/software/gift/index.html">GIFT toolbox</a> to run a subsequent ICA on both the non-AROMA and AROMA-denoised data from <code>fmriprep</code>. ICA-AROMA handles motion beautifully, as evidenced by the number of motion-related components being vastly reduced. However, I see basically the same physiological components either way.)</p>
-The suggested implementation from the <a href="https://www.sciencedirect.com/science/article/pii/S1053811915001822?via%3Dihub#s0010">ICA-AROMA article</a> is to perform nuisance regression for WM, CSF, and linear trend:  
+<div
+id="which-of-the-fmriprep-confounds-should-i-use-with-ica-aroma-files"
+class="section level3">
+<h3>Which of the fmriprep confounds should I use with ICA-AROMA
+files?</h3>
+<p>When using AROMA-denoised data
+(<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code>
+files), you would likely NOT want to regress out motion-related
+variables from <code>confounds.tsv</code> as this may reintroduce
+motion. However, the ICA-AROMA algorithm is fairly specific to
+motion-related artifacts and will not address physiological artifacts
+such as those from CSF and blood flow. (For what it’s worth, I’ve seen
+this in my data when using the <a
+href="http://mialab.mrn.org/software/gift/index.html">GIFT toolbox</a>
+to run a subsequent ICA on both the non-AROMA and AROMA-denoised data
+from <code>fmriprep</code>. ICA-AROMA handles motion beautifully, as
+evidenced by the number of motion-related components being vastly
+reduced. However, I see basically the same physiological components
+either way.)</p>
+The suggested implementation from the <a
+href="https://www.sciencedirect.com/science/article/pii/S1053811915001822?via%3Dihub#s0010">ICA-AROMA
+article</a> is to perform nuisance regression for WM, CSF, and linear
+trend:  
 <p>
 <p>
-<p><img src="https://ars.els-cdn.com/content/image/1-s2.0-S1053811915001822-gr1.jpg" /></p>
-<p>CSF and WM are the “CSF” and “WhiteMatter” columns in <code>confounds.tsv</code>.</p>
+<p><img
+src="https://ars.els-cdn.com/content/image/1-s2.0-S1053811915001822-gr1.jpg" /></p>
+<p>CSF and WM are the “CSF” and “WhiteMatter” columns in
+<code>confounds.tsv</code>.</p>
  
 <p>
-<p>If you’re using the non-aggressively denoised AROMA files (<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code>), you do NOT need to use the confounds “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ” as you would with the regular preprocessed files.</p>
-<p><a href="https://neurostars.org/t/best-practices-for-aroma-and-fmriprep/1619/6">Discussion of best practices for ICA-AROMA and fMRIPrep</a></p>
+<p>If you’re using the non-aggressively denoised AROMA files
+(<code>*_bold_space-MNI152NLin2009cAsym_variant-smoothAROMAnonaggr_preproc.nii</code>),
+you do NOT need to use the confounds “X”, “Y”, “Z”, “RotX”, “RotY”,
+“RotZ” as you would with the regular preprocessed files.</p>
+<p><a
+href="https://neurostars.org/t/best-practices-for-aroma-and-fmriprep/1619/6">Discussion
+of best practices for ICA-AROMA and fMRIPrep</a></p>
  
 <p>
 </div>
-<div id="which-of-the-fmriprep-confounds-should-i-use-if-im-not-using-the-aroma-files" class="section level3">
-<h3>Which of the fmriprep confounds should I use if I’m NOT using the AROMA files?</h3>
-<p>It is up to you as the researcher. fMRIPrep gives you lots of options but as part of its “minimal preprocessing” philosophy, does not dictate which you should or shouldn’t use.</p>
-<p>See this lengthy discussion: <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326" class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326</a> (the six motion parameters in the confounds file are “X”, “Y”, “Z”, “RotX”, “RotY”, “RotZ”).</p>
-<p>Suggestions for how to select number of aCompCor components: <a href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/35" class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/35</a></p>
-<p>See also the new tools <a href="https://github.com/nbraingroup/fmridenoise">fMRIdenoise</a> and <a href="https://github.com/arielletambini/denoiser">Denoiser: A nuisance regression tool for fMRI BOLD data</a>.</p>
+<div
+id="which-of-the-fmriprep-confounds-should-i-use-if-im-not-using-the-aroma-files"
+class="section level3">
+<h3>Which of the fmriprep confounds should I use if I’m NOT using the
+AROMA files?</h3>
+<p>It is up to you as the researcher. fMRIPrep gives you lots of options
+but as part of its “minimal preprocessing” philosophy, does not dictate
+which you should or shouldn’t use.</p>
+<p>See this lengthy discussion: <a
+href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326"
+class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326</a>
+(the six motion parameters in the confounds file are “X”, “Y”, “Z”,
+“RotX”, “RotY”, “RotZ”).</p>
+<p>Suggestions for how to select number of aCompCor components: <a
+href="https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/35"
+class="uri">https://neurostars.org/t/confounds-from-fmriprep-which-one-would-you-use-for-glm/326/35</a></p>
+<p>See also the new tools <a
+href="https://github.com/nbraingroup/fmridenoise">fMRIdenoise</a> and <a
+href="https://github.com/arielletambini/denoiser">Denoiser: A nuisance
+regression tool for fMRI BOLD data</a>.</p>
  
 <p>
  
@@ -1587,55 +2165,117 @@ The suggested implementation from the <a href="https://www.sciencedirect.com/sci
 </div>
 <div id="misc.-tidbits" class="section level1">
 <h1>Misc. tidbits</h1>
-<p>Various things I and/or others using these tools at UA have discovered along the way.</p>
+<p>Various things I and/or others using these tools at UA have
+discovered along the way.</p>
 <div id="fmriprep-2" class="section level2">
 <h2>fMRIPrep</h2>
 <div id="reverting-to-an-earlier-version" class="section level3">
 <h3>Reverting to an earlier version</h3>
-<p>In some cases, you may want to go back to using a previous version of fmriprep (for example, you upgrade, then realize you need to go back and reprocess some participants you did earlier). In this case, you can run from Terminal:</p>
+<p>In some cases, you may want to go back to using a previous version of
+fmriprep (for example, you upgrade, then realize you need to go back and
+reprocess some participants you did earlier). In this case, you can run
+from Terminal:</p>
 <pre><code>$ pip install fmriprep-docker==&lt;version number, e.g. 1.1.8&gt;</code></pre>
-<p>I initially got error: <code>[Errno 13] Permission denied: '/Library/Python/2.7/site-packages/fmriprep_docker.py'</code> As it says on the label, this is a permissions issue. Use <code>$ login &lt;yourusername&gt;</code> to switch users to one with admin privileges, then <code>sudo pip install fmriprep-docker==1.1.8</code></p>
-<p>Alternatively, if you don’t have root access on the server you can try appending the <code>--user</code> flag to the <code>pip</code> command to install the package in your local home directory:</p>
+<p>I initially got error:
+<code>[Errno 13] Permission denied: '/Library/Python/2.7/site-packages/fmriprep_docker.py'</code>
+As it says on the label, this is a permissions issue. Use
+<code>$ login &lt;yourusername&gt;</code> to switch users to one with
+admin privileges, then
+<code>sudo pip install fmriprep-docker==1.1.8</code></p>
+<p>Alternatively, if you don’t have root access on the server you can
+try appending the <code>--user</code> flag to the <code>pip</code>
+command to install the package in your local home directory:</p>
 <pre><code>$ pip install fmriprep-docker==1.1.8 --user</code></pre>
 <p>You might get the following warning:</p>
 <pre><code>The script fmriprep-docker is installed in ‘/Users/rblair/.local/bin’ which is not on PATH.
 Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 If this doesn’t work you may need to setup a virtual environment using a program like conda or virtualenv</code></pre>
-<p>If you get this error you could try adding <code>$HOME/.local/bin</code> to your path variable, or call it directly with <code>$ $HOME/.local/bin/fmriprep-docker</code></p>
-<p>See <a href="https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645" class="uri">https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645</a></p>
+<p>If you get this error you could try adding
+<code>$HOME/.local/bin</code> to your path variable, or call it directly
+with <code>$ $HOME/.local/bin/fmriprep-docker</code></p>
+<p>See <a
+href="https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645"
+class="uri">https://neurostars.org/t/how-to-use-earlier-version-of-fmriprep-docker-wrapper/3645</a></p>
 </div>
 <div id="ica-aroma-for-multiband-data" class="section level3">
 <h3>ICA-AROMA for multiband data?</h3>
-<p>See this article comparing denoising approaches for multi-echo data: <a href="https://doi.org/10.1371/journal.pone.0173289" class="uri">https://doi.org/10.1371/journal.pone.0173289</a></p>
+<p>See this article comparing denoising approaches for multi-echo data:
+<a href="https://doi.org/10.1371/journal.pone.0173289"
+class="uri">https://doi.org/10.1371/journal.pone.0173289</a></p>
 </div>
-<div id="multi-session-data-bad-t1w-at-one-session" class="section level3">
+<div id="multi-session-data-bad-t1w-at-one-session"
+class="section level3">
 <h3>Multi-session data, bad T1w at one session</h3>
-<p>Example: You want to use the T1w scan from session 2 for both sessions, since there was too much movement in the one from session 1.</p>
-<p>See <a href="https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851" class="uri">https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851</a></p>
-<p>Another option is to copy the “good” image from session 2 into the session 1 <code>anat</code> folder, making sure to rename it as session 1. This isn’t optimal IMO because it would be nice to make it obvious that this image is from a different session, but that’s how I made it work. You could note that in the metadata associated with the dataset (i.e., the README file)</p>
+<p>Example: You want to use the T1w scan from session 2 for both
+sessions, since there was too much movement in the one from session
+1.</p>
+<p>See <a
+href="https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851"
+class="uri">https://neurostars.org/t/multiple-scan-sessions-some-bad-anatomicals/3851</a></p>
+<p>Another option is to copy the “good” image from session 2 into the
+session 1 <code>anat</code> folder, making sure to rename it as session
+1. This isn’t optimal IMO because it would be nice to make it obvious
+that this image is from a different session, but that’s how I made it
+work. You could note that in the metadata associated with the dataset
+(i.e., the README file)</p>
 </div>
-<div id="what-if-ive-already-run-freesurfer-on-my-data" class="section level3">
+<div id="what-if-ive-already-run-freesurfer-on-my-data"
+class="section level3">
 <h3>What if I’ve already run Freesurfer on my data?</h3>
-<p>From <a href="https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing" class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing</a>:</p>
+<p>From <a
+href="https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing"
+class="uri">https://fmriprep.readthedocs.io/en/stable/workflows.html#surface-preprocessing</a>:</p>
 <blockquote>
-<p>Surface processing will be skipped if the outputs already exist. In order to bypass reconstruction in fmriprep, place existing reconstructed subjects in &lt; output dir &gt;/freesurfer prior to the run. fmriprep will perform any missing recon-all steps, but will not perform any steps whose outputs already exist.</p>
+<p>Surface processing will be skipped if the outputs already exist. In
+order to bypass reconstruction in fmriprep, place existing reconstructed
+subjects in &lt; output dir &gt;/freesurfer prior to the run. fmriprep
+will perform any missing recon-all steps, but will not perform any steps
+whose outputs already exist.</p>
 </blockquote>
-<p>Indeed, this works well (when data in the Freesurfer folder are organized in a BIDS-compliant manner).</p>
+<p>Indeed, this works well (when data in the Freesurfer folder are
+organized in a BIDS-compliant manner).</p>
 </div>
-<div id="artifacts-in-t1w-epi-registration-visualization" class="section level3">
+<div id="artifacts-in-t1w-epi-registration-visualization"
+class="section level3">
 <h3>“Artifacts” in T1w-EPI registration visualization?</h3>
-<p>See this thread I started on NeuroStars: <a href="https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5" class="uri">https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5</a> Summary: It’s not an artifact in your data, it’s an artifact of using a different method of interpolation for how registration between the two images is visualized in the reports. Check the registration in SPM (or other program) and if it looks good there, then it’s good.</p>
+<p>See this thread I started on NeuroStars: <a
+href="https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5"
+class="uri">https://neurostars.org/t/fmriprep-weird-epi-t1-registration-artifact-problems/3811/5</a>
+Summary: It’s not an artifact in your data, it’s an artifact of using a
+different method of interpolation for how registration between the two
+images is visualized in the reports. Check the registration in SPM (or
+other program) and if it looks good there, then it’s good.</p>
 </div>
-<div id="fmriprep-not-updating-precomputed-outputs-after-data-are-changed" class="section level3">
-<h3>fMRIPrep not updating precomputed outputs after data are changed</h3>
-<p>Example: I ran <code>fmriprep-docker</code> on sub-138. Reports showed that registration failed (because for some random reason, the files in their T1w folder from one of the sessions was…a scan of a phantom). I swapped out those images for the correct images and re-ran. Even after deleting the local scratch directory that I was using, fMRIPrep was still “collecting precomputed outputs” from the initial run and generating the same results in both the reports and images. I ultimately was successful after I replaced <code>sub-138</code> anywhere in the file or folder names with <code>sub-138b</code>, reran <code>fmriprep-docker</code> and then changed the names back to <code>sub-138</code>. Need to ask on NeuroStars if there’s a better way to do this.</p>
+<div
+id="fmriprep-not-updating-precomputed-outputs-after-data-are-changed"
+class="section level3">
+<h3>fMRIPrep not updating precomputed outputs after data are
+changed</h3>
+<p>Example: I ran <code>fmriprep-docker</code> on sub-138. Reports
+showed that registration failed (because for some random reason, the
+files in their T1w folder from one of the sessions was…a scan of a
+phantom). I swapped out those images for the correct images and re-ran.
+Even after deleting the local scratch directory that I was using,
+fMRIPrep was still “collecting precomputed outputs” from the initial run
+and generating the same results in both the reports and images. I
+ultimately was successful after I replaced <code>sub-138</code> anywhere
+in the file or folder names with <code>sub-138b</code>, reran
+<code>fmriprep-docker</code> and then changed the names back to
+<code>sub-138</code>. Need to ask on NeuroStars if there’s a better way
+to do this.</p>
 </div>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
-<p>Thanks to Dianne Patterson, Ramsey Wilcox, Jessica Andrews-Hanna, Aneta Kielar, others in the <a href="https://sites.google.com/a/email.arizona.edu/bmw/">UA Brain Mapping Workgroup</a>, and the <a href="https://neurostars.org">Neurostars community</a> for contributing questions and answers to this document.</p>
-<p>Major thanks also to the teams behind the BIDS initiative, fMRIPrep, and MRIQC.</p>
+<p>Thanks to Dianne Patterson, Ramsey Wilcox, Jessica Andrews-Hanna,
+Aneta Kielar, others in the <a
+href="https://sites.google.com/a/email.arizona.edu/bmw/">UA Brain
+Mapping Workgroup</a>, and the <a
+href="https://neurostars.org">Neurostars community</a> for contributing
+questions and answers to this document.</p>
+<p>Major thanks also to the teams behind the BIDS initiative, fMRIPrep,
+and MRIQC.</p>
 </div>
 
 
